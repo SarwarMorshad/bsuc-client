@@ -1,22 +1,31 @@
 import type { Metadata } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
+import { Fraunces, Inter, Tiro_Bangla } from "next/font/google";
 import "./globals.css";
 import { Providers } from "./providers";
+import { siteConfig } from "@/config/site";
 
-const geistSans = Geist({
-  variable: "--font-geist-sans",
+const inter = Inter({
   subsets: ["latin"],
+  variable: "--font-inter",
+  display: "swap",
 });
 
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
+const fraunces = Fraunces({
   subsets: ["latin"],
+  variable: "--font-fraunces",
+  display: "swap",
+});
+
+const tiroBangla = Tiro_Bangla({
+  weight: "400",
+  subsets: ["bengali", "latin"],
+  variable: "--font-tiro-bangla",
+  display: "swap",
 });
 
 export const metadata: Metadata = {
-  title: "Bangladesh Student Union Chemnitz",
-  description:
-    "Community of Bangladeshi students in Chemnitz — events, support, and belonging.",
+  title: siteConfig.name,
+  description: siteConfig.description,
 };
 
 export default function RootLayout({
@@ -26,8 +35,8 @@ export default function RootLayout({
 }>) {
   return (
     <html
-      lang="en"
-      className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
+      lang={siteConfig.defaultLocale}
+      className={`${inter.variable} ${fraunces.variable} ${tiroBangla.variable} h-full antialiased`}
     >
       <body className="min-h-full flex flex-col">
         <Providers>{children}</Providers>

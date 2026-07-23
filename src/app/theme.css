@@ -1,0 +1,43 @@
+/**
+ * theme.css — central design tokens (single source of truth for the palette).
+ *
+ * Colors come from the BSUC logo. Change a value here and it updates site-wide.
+ * These @theme tokens auto-generate Tailwind utilities, e.g.
+ *   --color-brand-blue  -> bg-brand-blue / text-brand-blue / border-brand-blue
+ *   --color-background   -> bg-background
+ *   --font-display       -> font-display
+ *
+ * Rule: components must NOT hardcode hex — always reference a token.
+ */
+
+@theme {
+  /* ---- Layer 1: raw brand palette (from the BSUC logo) ---- */
+  --color-bd-green: #006a4e; /* Bangladesh flag green */
+  --color-bd-red: #f42a41; /* flag red             */
+  --color-brand-blue: #0067b1; /* BSUC / TU blue       */
+  --color-brand-green: #3aaa35; /* fresh green (gradient) */
+  --color-silver: #c9cdd2; /* metallic trim        */
+  --color-cream: #f5f3ec; /* cloth background     */
+  --color-ink: #1b1b1a; /* near-black text      */
+
+  /* ---- Nakshi Kantha thread accents (immersive) ---- */
+  --color-madder: #b23a48; /* deep rose-red thread */
+  --color-marigold: #e5a32b; /* golden yellow thread */
+  --color-indigo: #2a3d66; /* indigo thread        */
+
+  /* ---- Layer 2: semantic tokens (what components use) ---- */
+  --color-background: var(--color-cream);
+  --color-foreground: var(--color-ink);
+  --color-primary: var(--color-brand-blue);
+  --color-primary-foreground: #ffffff;
+  --color-accent: var(--color-bd-green);
+  --color-accent-foreground: #ffffff;
+  --color-muted: var(--color-silver);
+  --color-muted-foreground: #5b5f63;
+  --color-border: #e4e0d6;
+
+  /* ---- Fonts (self-hosted via next/font; see layout.tsx) ---- */
+  --font-sans: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
+  --font-display: var(--font-fraunces), ui-serif, Georgia, serif;
+  --font-bangla: var(--font-tiro-bangla), var(--font-inter), serif;
+}
