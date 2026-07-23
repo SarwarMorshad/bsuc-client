@@ -1,9 +1,68 @@
 {
+  "nav": {
+    "language": "Sprache",
+    "about": "Über uns",
+    "doing": "Was wir tun",
+    "events": "Veranstaltungen",
+    "support": "Hilfe",
+    "join": "Mitmachen"
+  },
   "home": {
     "welcome": "Willkommen in unserer Gemeinschaft.",
-    "tagline": "Ein immersives Nakshi-Kantha-Erlebnis wird zusammengefügt."
+    "tagline": "Ein immersives Nakshi-Kantha-Erlebnis wird zusammengefügt.",
+    "scrollCue": "Zum Entfalten scrollen",
+    "introTitle": "Von Zuhause nach Chemnitz",
+    "introBody": "Eine aus vielen Fäden genähte Gemeinschaft — Studierende, die fern der Heimat zusammen ein neues Zuhause aufbauen."
   },
-  "nav": {
-    "language": "Sprache"
+  "doing": {
+    "title": "Was wir tun",
+    "subtitle": "Vier Fäden, die unsere Gemeinschaft zusammenhalten.",
+    "cultureTitle": "Kultur",
+    "cultureBody": "Pohela Boishakh, Eid-Feiern und Abende voller Musik, Essen und Adda.",
+    "supportTitle": "Hilfe",
+    "supportBody": "Unterstützung bei Behördengängen, Wohnung und Uni-Alltag für alle Neuankömmlinge.",
+    "communityTitle": "Gemeinschaft",
+    "communityBody": "Eine Familie fern der Familie — Menschen, die man anrufen kann.",
+    "eventsTitle": "Veranstaltungen",
+    "eventsBody": "Willkommensessen, Sporttage, Picknicks und Ausflüge durch Deutschland."
+  },
+  "events": {
+    "title": "Kommende Veranstaltungen",
+    "subtitle": "Komm, wie du bist — alle sind willkommen.",
+    "e1Title": "Willkommensessen",
+    "e1Date": "Wintersemester",
+    "e1Place": "TU Chemnitz",
+    "e2Title": "Pohela Boishakh",
+    "e2Date": "April",
+    "e2Place": "Chemnitz",
+    "e3Title": "Gemeinschaftspicknick",
+    "e3Date": "Sommer",
+    "e3Place": "Küchwald-Park",
+    "cta": "Alle Veranstaltungen"
+  },
+  "support": {
+    "title": "Neu in Chemnitz?",
+    "subtitle": "Deine Checkliste für die erste Woche.",
+    "i1": "Anmeldung — Wohnsitz anmelden",
+    "i2": "Deutsches Bankkonto eröffnen",
+    "i3": "Semesterticket abholen",
+    "i4": "SIM-Karte und Internet besorgen"
+  },
+  "stats": {
+    "membersValue": "150+",
+    "membersLabel": "Studierende",
+    "sinceValue": "6.500 km",
+    "sinceLabel": "Von Zuhause",
+    "eventsValue": "20+",
+    "eventsLabel": "Events pro Jahr"
+  },
+  "join": {
+    "title": "Werde Teil der Union",
+    "body": "Ob gerade erst in Chemnitz angekommen oder schon seit Jahren hier — hier ist Platz für dich.",
+    "cta": "Mitmachen"
+  },
+  "footer": {
+    "tagline": "Bangladeschische Studierende in Chemnitz, zusammengenäht.",
+    "rights": "Alle Rechte vorbehalten."
   }
 }

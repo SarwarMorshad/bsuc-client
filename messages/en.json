@@ -1,9 +1,68 @@
 {
+  "nav": {
+    "language": "Language",
+    "about": "About",
+    "doing": "What we do",
+    "events": "Events",
+    "support": "Support",
+    "join": "Join"
+  },
   "home": {
     "welcome": "Welcome to our community.",
-    "tagline": "An immersive Nakshi Kantha experience is being stitched together."
+    "tagline": "An immersive Nakshi Kantha experience is being stitched together.",
+    "scrollCue": "Scroll to unfold",
+    "introTitle": "From home to Chemnitz",
+    "introBody": "A community stitched from many threads — students building a new home together, far from home."
   },
-  "nav": {
-    "language": "Language"
+  "doing": {
+    "title": "What we do",
+    "subtitle": "Four threads that hold our community together.",
+    "cultureTitle": "Culture",
+    "cultureBody": "Pohela Boishakh, Eid gatherings and evenings of music, food and adda.",
+    "supportTitle": "Support",
+    "supportBody": "Help with paperwork, housing and university life for every new arrival.",
+    "communityTitle": "Community",
+    "communityBody": "A family away from family — people to call when you need someone.",
+    "eventsTitle": "Events",
+    "eventsBody": "Welcome dinners, sports days, picnics and trips across Germany."
+  },
+  "events": {
+    "title": "Upcoming events",
+    "subtitle": "Come as you are — everyone is welcome.",
+    "e1Title": "Welcome Dinner",
+    "e1Date": "Autumn semester",
+    "e1Place": "TU Chemnitz",
+    "e2Title": "Pohela Boishakh",
+    "e2Date": "April",
+    "e2Place": "Chemnitz",
+    "e3Title": "Community Picnic",
+    "e3Date": "Summer",
+    "e3Place": "Küchwald Park",
+    "cta": "See all events"
+  },
+  "support": {
+    "title": "New in Chemnitz?",
+    "subtitle": "Your first-week survival kit.",
+    "i1": "Anmeldung — register your address",
+    "i2": "Open a German bank account",
+    "i3": "Get your semester ticket",
+    "i4": "Pick up a SIM card and internet"
+  },
+  "stats": {
+    "membersValue": "150+",
+    "membersLabel": "Students",
+    "sinceValue": "6,500 km",
+    "sinceLabel": "From home",
+    "eventsValue": "20+",
+    "eventsLabel": "Events a year"
+  },
+  "join": {
+    "title": "Become part of the union",
+    "body": "Whether you just landed in Chemnitz or have been here for years — there is a place for you here.",
+    "cta": "Join us"
+  },
+  "footer": {
+    "tagline": "Bangladeshi students in Chemnitz, stitched together.",
+    "rights": "All rights reserved."
   }
 }

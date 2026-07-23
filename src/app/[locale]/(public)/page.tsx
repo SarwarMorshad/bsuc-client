@@ -1,20 +1,12 @@
-import Image from "next/image";
 import { setRequestLocale, getTranslations } from "next-intl/server";
-import { siteConfig } from "@/config/site";
-
-/**
- * Temporary Phase 1 starting hero — showcases the brand palette, fonts, logo,
- * and locale-aware copy. This will be replaced by the Nakshi Kantha scroll panels.
- */
-
-const palette = [
-  { name: "Blue", className: "bg-brand-blue" },
-  { name: "Green", className: "bg-bd-green" },
-  { name: "Red", className: "bg-bd-red" },
-  { name: "Marigold", className: "bg-marigold" },
-  { name: "Indigo", className: "bg-indigo" },
-  { name: "Silver", className: "bg-silver" },
-];
+import { Hero } from "@/components/panels/hero";
+import { Intro } from "@/components/panels/intro";
+import { WhatWeDo } from "@/components/panels/what-we-do";
+import { Events } from "@/components/panels/events";
+import { Stats } from "@/components/panels/stats";
+import { Support } from "@/components/panels/support";
+import { Join } from "@/components/panels/join";
+import { MotifStrip } from "@/components/motifs/motif-strip";
 
 export default async function Home({
   params,
@@ -23,43 +15,98 @@ export default async function Home({
 }) {
   const { locale } = await params;
   setRequestLocale(locale);
+
   const t = await getTranslations("home");
+  const d = await getTranslations("doing");
+  const e = await getTranslations("events");
+  const s = await getTranslations("support");
+  const st = await getTranslations("stats");
+  const j = await getTranslations("join");
 
   return (
-    <main className="flex flex-1 flex-col items-center justify-center gap-10 px-6 py-16 text-center">
-      <Image
-        src="/logo.png"
-        alt={`${siteConfig.shortName} logo`}
-        width={180}
-        height={180}
-        priority
-        className="rounded-full shadow-lg ring-1 ring-border"
+    <div id="top">
+      <Hero
+        welcome={t("welcome")}
+        tagline={t("tagline")}
+        scrollCue={t("scrollCue")}
       />
 
-      <div className="flex flex-col items-center gap-4">
-        <p className="text-sm font-medium uppercase tracking-[0.25em] text-brand-blue">
-          {siteConfig.shortName}
-        </p>
-        <h1 className="max-w-3xl font-display text-4xl leading-tight font-semibold text-foreground sm:text-6xl">
-          {siteConfig.name}
-        </h1>
-      </div>
+      <Intro title={t("introTitle")} body={t("introBody")} />
 
-      <p className="text-xl text-foreground">{t("welcome")}</p>
+      <MotifStrip />
 
-      <p className="max-w-md text-balance text-accent">{t("tagline")}</p>
+      <WhatWeDo
+        title={d("title")}
+        subtitle={d("subtitle")}
+        items={[
+          {
+            title: d("cultureTitle"),
+            body: d("cultureBody"),
+            icon: "flower",
+            accent: "text-madder",
+          },
+          {
+            title: d("supportTitle"),
+            body: d("supportBody"),
+            icon: "star",
+            accent: "text-brand-blue",
+          },
+          {
+            title: d("communityTitle"),
+            body: d("communityBody"),
+            icon: "leaf",
+            accent: "text-bd-green",
+          },
+          {
+            title: d("eventsTitle"),
+            body: d("eventsBody"),
+            icon: "paisley",
+            accent: "text-marigold",
+          },
+        ]}
+      />
 
-      {/* Palette preview — confirms the central theme tokens */}
-      <div className="mt-4 flex flex-wrap items-center justify-center gap-3">
-        {palette.map((c) => (
-          <div key={c.name} className="flex flex-col items-center gap-1">
-            <span
-              className={`h-8 w-8 rounded-full ring-1 ring-border ${c.className}`}
-            />
-            <span className="text-xs text-muted-foreground">{c.name}</span>
-          </div>
-        ))}
-      </div>
-    </main>
+      <Events
+        title={e("title")}
+        subtitle={e("subtitle")}
+        cta={e("cta")}
+        items={[
+          {
+            title: e("e1Title"),
+            date: e("e1Date"),
+            place: e("e1Place"),
+            accent: "text-bd-green",
+          },
+          {
+            title: e("e2Title"),
+            date: e("e2Date"),
+            place: e("e2Place"),
+            accent: "text-madder",
+          },
+          {
+            title: e("e3Title"),
+            date: e("e3Date"),
+            place: e("e3Place"),
+            accent: "text-indigo",
+          },
+        ]}
+      />
+
+      <Stats
+        items={[
+          { value: st("membersValue"), label: st("membersLabel") },
+          { value: st("sinceValue"), label: st("sinceLabel") },
+          { value: st("eventsValue"), label: st("eventsLabel") },
+        ]}
+      />
+
+      <Support
+        title={s("title")}
+        subtitle={s("subtitle")}
+        items={[s("i1"), s("i2"), s("i3"), s("i4")]}
+      />
+
+      <Join title={j("title")} body={j("body")} cta={j("cta")} />
+    </div>
   );
 }
