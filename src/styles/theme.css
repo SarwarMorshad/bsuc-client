@@ -25,6 +25,15 @@
   --color-marigold: #e5a32b; /* golden yellow thread */
   --color-indigo: #2a3d66; /* indigo thread        */
 
+  /* ---- Authentic textile palette (block-printed kantha reference) ----
+     Softer, faded cotton tones used for the CLOTH pattern and borders,
+     so the fabric reads as real textile rather than saturated graphics. */
+  --color-textile-ground: #f7f4ec; /* off-white cotton ground */
+  --color-textile-coral: #e0836f; /* coral lattice           */
+  --color-textile-rose: #d4736a; /* deeper rose border      */
+  --color-textile-sage: #9cb98f; /* sage green rosettes     */
+  --color-textile-sage-deep: #7d9c74; /* deeper sage             */
+
   /* ---- Layer 2: semantic tokens (what components use) ---- */
   --color-background: var(--color-cream);
   --color-foreground: var(--color-ink);
