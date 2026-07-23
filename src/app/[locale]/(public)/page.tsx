@@ -1,9 +1,10 @@
 import Image from "next/image";
+import { setRequestLocale, getTranslations } from "next-intl/server";
 import { siteConfig } from "@/config/site";
 
 /**
  * Temporary Phase 1 starting hero — showcases the brand palette, fonts, logo,
- * and trilingual copy. This will be replaced by the Nakshi Kantha scroll panels.
+ * and locale-aware copy. This will be replaced by the Nakshi Kantha scroll panels.
  */
 
 const palette = [
@@ -15,9 +16,17 @@ const palette = [
   { name: "Silver", className: "bg-silver" },
 ];
 
-export default function Home() {
+export default async function Home({
+  params,
+}: {
+  params: Promise<{ locale: string }>;
+}) {
+  const { locale } = await params;
+  setRequestLocale(locale);
+  const t = await getTranslations("home");
+
   return (
-    <main className="flex flex-1 flex-col items-center justify-center gap-10 px-6 py-20 text-center">
+    <main className="flex flex-1 flex-col items-center justify-center gap-10 px-6 py-16 text-center">
       <Image
         src="/logo.png"
         alt={`${siteConfig.shortName} logo`}
@@ -36,18 +45,9 @@ export default function Home() {
         </h1>
       </div>
 
-      {/* Trilingual welcome — English (primary), Bangla, Deutsch */}
-      <div className="flex flex-col items-center gap-2 text-lg text-muted-foreground">
-        <p>Welcome to our community.</p>
-        <p className="font-bangla text-xl text-foreground" lang="bn">
-          আমাদের কমিউনিটিতে স্বাগতম।
-        </p>
-        <p lang="de">Willkommen in unserer Gemeinschaft.</p>
-      </div>
+      <p className="text-xl text-foreground">{t("welcome")}</p>
 
-      <p className="max-w-md text-balance text-accent">
-        An immersive Nakshi Kantha experience is being stitched together.
-      </p>
+      <p className="max-w-md text-balance text-accent">{t("tagline")}</p>
 
       {/* Palette preview — confirms the central theme tokens */}
       <div className="mt-4 flex flex-wrap items-center justify-center gap-3">

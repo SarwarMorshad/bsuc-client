@@ -2,7 +2,7 @@
  * Central website configuration — the single source of truth for site-wide
  * values (identity, languages, fonts, links).
  *
- * Colors live in the design tokens (src/app/theme.css). This file holds the
+ * Colors live in the design tokens (src/styles/theme.css). This file holds the
  * non-styling config so it can be changed in one place.
  */
 
