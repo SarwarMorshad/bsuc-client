@@ -25,6 +25,19 @@
     "s4Title": "Wir sind für dich da",
     "s4Text": "Von der Anmeldung bis zu den ersten Freunden — Hilfe für alle Neuen."
   },
+  "about": {
+    "eyebrow": "Wer wir sind",
+    "title": "Von Zuhause nach Chemnitz",
+    "lead": "Die Bangladesh Student Union Chemnitz ist eine Gemeinschaft bangladeschischer Studierender, die zusammen ein neues Zuhause aufbauen — fern der Heimat, aber nie allein.",
+    "body": "Von der allerersten Woche bis zum Abschluss bringen wir Menschen zusammen — durch Kultur, Freundschaft und echte Unterstützung im neuen Land.",
+    "p1Title": "Zugehörigkeit",
+    "p1Text": "Eine Familie fern der Familie, vom ersten Tag an.",
+    "p2Title": "Kultur",
+    "p2Text": "Wir feiern unsere Wurzeln — Boishakh, Eid, Musik und Essen.",
+    "p3Title": "Unterstützung",
+    "p3Text": "Hilfe bei Behörden, Wohnung und Uni-Alltag.",
+    "imageCaption": "Gemeinsam in Chemnitz"
+  },
   "doing": {
     "title": "Was wir tun",
     "subtitle": "Vier Fäden, die unsere Gemeinschaft zusammenhalten.",

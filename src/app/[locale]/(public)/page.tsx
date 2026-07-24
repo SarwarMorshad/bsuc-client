@@ -1,6 +1,6 @@
 import { setRequestLocale, getTranslations } from "next-intl/server";
 import { HeroCarousel } from "@/components/panels/hero-carousel";
-import { Intro } from "@/components/panels/intro";
+import { About } from "@/components/panels/about";
 import { WhatWeDo } from "@/components/panels/what-we-do";
 import { Events } from "@/components/panels/events";
 import { Stats } from "@/components/panels/stats";
@@ -18,6 +18,7 @@ export default async function Home({
 
   const t = await getTranslations("home");
   const sl = await getTranslations("slides");
+  const a = await getTranslations("about");
   const d = await getTranslations("doing");
   const e = await getTranslations("events");
   const s = await getTranslations("support");
@@ -39,7 +40,18 @@ export default async function Home({
 
       <MotifStrip />
 
-      <Intro title={t("introTitle")} body={t("introBody")} />
+      <About
+        eyebrow={a("eyebrow")}
+        title={a("title")}
+        lead={a("lead")}
+        body={a("body")}
+        imageCaption={a("imageCaption")}
+        points={[
+          { title: a("p1Title"), text: a("p1Text"), icon: "leaf", accent: "text-bd-green" },
+          { title: a("p2Title"), text: a("p2Text"), icon: "flower", accent: "text-madder" },
+          { title: a("p3Title"), text: a("p3Text"), icon: "star", accent: "text-brand-blue" },
+        ]}
+      />
 
       <MotifStrip />
 
