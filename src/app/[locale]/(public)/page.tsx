@@ -1,5 +1,5 @@
 import { setRequestLocale, getTranslations } from "next-intl/server";
-import { Hero } from "@/components/panels/hero";
+import { HeroCarousel } from "@/components/panels/hero-carousel";
 import { Intro } from "@/components/panels/intro";
 import { WhatWeDo } from "@/components/panels/what-we-do";
 import { Events } from "@/components/panels/events";
@@ -17,6 +17,7 @@ export default async function Home({
   setRequestLocale(locale);
 
   const t = await getTranslations("home");
+  const sl = await getTranslations("slides");
   const d = await getTranslations("doing");
   const e = await getTranslations("events");
   const s = await getTranslations("support");
@@ -25,11 +26,18 @@ export default async function Home({
 
   return (
     <div id="top">
-      <Hero
-        welcome={t("welcome")}
-        tagline={t("tagline")}
-        scrollCue={t("scrollCue")}
+      <HeroCarousel
+        slides={[
+          { title: sl("s1Title"), text: sl("s1Text") },
+          { title: sl("s2Title"), text: sl("s2Text") },
+          { title: sl("s3Title"), text: sl("s3Text") },
+          { title: sl("s4Title"), text: sl("s4Text") },
+        ]}
+        ctaPrimary={j("cta")}
+        ctaSecondary={e("cta")}
       />
+
+      <MotifStrip />
 
       <Intro title={t("introTitle")} body={t("introBody")} />
 
@@ -65,6 +73,8 @@ export default async function Home({
           },
         ]}
       />
+
+      <MotifStrip />
 
       <Events
         title={e("title")}

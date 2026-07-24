@@ -8,11 +8,22 @@
     "join": "Mitmachen"
   },
   "home": {
-    "welcome": "Willkommen in unserer Gemeinschaft.",
-    "tagline": "Ein immersives Nakshi-Kantha-Erlebnis wird zusammengefügt.",
+    "badge": "Bangladeschische Studierende in Chemnitz",
+    "welcome": "Ein Zuhause fern der Heimat — Kultur, Freundschaft und Unterstützung für bangladeschische Studierende in Chemnitz.",
+    "tagline": "Jede Reise fügt unserer gemeinsamen Geschichte einen neuen Stich hinzu.",
     "scrollCue": "Zum Entfalten scrollen",
     "introTitle": "Von Zuhause nach Chemnitz",
     "introBody": "Eine aus vielen Fäden genähte Gemeinschaft — Studierende, die fern der Heimat zusammen ein neues Zuhause aufbauen."
+  },
+  "slides": {
+    "s1Title": "Ein Zuhause fern der Heimat",
+    "s1Text": "Bangladeschische Studierende in Chemnitz — gemeinsam bei jedem Schritt.",
+    "s2Title": "Wir feiern unsere Wurzeln",
+    "s2Text": "Pohela Boishakh, Eid, Musik, Essen und Adda — unsere Kultur lebt.",
+    "s3Title": "Das ganze Jahr über etwas los",
+    "s3Text": "Willkommensessen, Feste, Sporttage und Ausflüge durch Deutschland.",
+    "s4Title": "Wir sind für dich da",
+    "s4Text": "Von der Anmeldung bis zu den ersten Freunden — Hilfe für alle Neuen."
   },
   "doing": {
     "title": "Was wir tun",
