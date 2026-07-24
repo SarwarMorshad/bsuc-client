@@ -1,6 +1,6 @@
 /**
- * KanthaField — the all-over block-printed field: a coral diamond lattice with
- * a sage rosette inside every cell, modelled on a real kantha quilt. Tight,
+ * KanthaField — the all-over block-printed field: a madder diamond lattice with
+ * a green rosette inside every cell, modelled on a real kantha quilt. Tight,
  * regular and dense rather than randomly scattered.
  */
 export function KanthaField({
@@ -23,17 +23,17 @@ export function KanthaField({
             height="120"
             patternUnits="userSpaceOnUse"
           >
-            {/* Coral diamond lattice (stepped/printed look via dashes) */}
+            {/* Madder diamond lattice (stepped/printed look via dashes) */}
             <path
               d="M60 0 L120 60 L60 120 L0 60 Z"
               fill="none"
-              stroke="var(--color-textile-coral)"
+              stroke="var(--color-madder)"
               strokeWidth="3.5"
               strokeDasharray="7 5"
               strokeLinecap="square"
             />
 
-            {/* Sage rosette at the centre of each diamond */}
+            {/* Green rosette at the centre of each diamond */}
             <g transform="translate(60 60)">
               {[0, 90, 180, 270].map((a) => (
                 <ellipse
@@ -42,7 +42,7 @@ export function KanthaField({
                   cy={-8}
                   rx={5}
                   ry={8.5}
-                  fill="var(--color-textile-sage)"
+                  fill="var(--color-bd-green)"
                   transform={`rotate(${a})`}
                 />
               ))}
@@ -53,14 +53,14 @@ export function KanthaField({
                   cy={-7}
                   rx={3.2}
                   ry={6}
-                  fill="var(--color-textile-sage-deep)"
+                  fill="var(--color-indigo)"
                   transform={`rotate(${a})`}
                 />
               ))}
-              <circle r={3.4} fill="var(--color-textile-ground)" />
+              <circle r={3.4} fill="var(--color-cream)" />
             </g>
 
-            {/* Coral seeds at the lattice vertices */}
+            {/* Marigold seeds at the lattice vertices */}
             {[
               [60, 0],
               [120, 60],
@@ -72,11 +72,11 @@ export function KanthaField({
                 cx={cx}
                 cy={cy}
                 r={3}
-                fill="var(--color-textile-rose)"
+                fill="var(--color-marigold)"
               />
             ))}
 
-            {/* Sage dots filling the interstitial cells */}
+            {/* Green dots filling the interstitial cells */}
             {[
               [0, 0],
               [120, 0],
@@ -88,7 +88,7 @@ export function KanthaField({
                 cx={cx}
                 cy={cy}
                 r={4}
-                fill="var(--color-textile-sage)"
+                fill="var(--color-bd-green)"
               />
             ))}
           </pattern>

@@ -25,10 +25,10 @@ export function Hero({
 
         {/* Cream scrim so the title stays legible below the cloth */}
         <div
-          className="pointer-events-none absolute inset-x-0 bottom-0 h-[38%]"
+          className="pointer-events-none absolute inset-x-0 bottom-0 h-[26%]"
           style={{
             background:
-              "linear-gradient(to top, var(--color-cream) 42%, color-mix(in srgb, var(--color-cream) 55%, transparent) 72%, transparent 100%)",
+              "linear-gradient(to top, var(--color-cream) 30%, color-mix(in srgb, var(--color-cream) 40%, transparent) 62%, transparent 100%)",
           }}
           aria-hidden="true"
         />
@@ -40,7 +40,7 @@ export function Hero({
             width={104}
             height={104}
             priority
-            className="animate-fade-up rounded-full bg-cream shadow-md ring-2 ring-textile-rose/40"
+            className="animate-fade-up rounded-full bg-cream shadow-md ring-2 ring-madder/40"
           />
           <p
             className="animate-fade-up text-xs font-medium tracking-[0.3em] text-brand-blue uppercase"
@@ -54,7 +54,7 @@ export function Hero({
           >
             {siteConfig.name}
           </h1>
-          <RunningStitch className="w-40 text-textile-coral" delayMs={700} />
+          <RunningStitch className="w-40 text-madder" delayMs={700} />
           <p
             className="animate-fade-up text-lg text-foreground"
             style={{ animationDelay: "0.35s" }}

@@ -4,13 +4,18 @@ import { useMemo, useRef } from "react";
 import { Canvas, useFrame } from "@react-three/fiber";
 import * as THREE from "three";
 
-// Authentic block-printed kantha palette (soft cotton tones).
-const GROUND = "#f7f4ec";
-const BAND_BG = "#f6e3dc";
-const CORAL = "#e0836f";
-const ROSE = "#cf6f66";
-const SAGE = "#9cb98f";
-const SAGE_DEEP = "#7d9c74";
+/**
+ * Cloth palette — BSUC brand colours (DESIGN_BRIEF §14-15).
+ * Foundation: cream + Bangladesh green + indigo.
+ * Thread work: madder + marigold. Bangladesh red is reserved for highlights.
+ */
+const GROUND = "#f5f3ec"; // cream — the fabric
+const BAND_BG = "#ebe5d3"; // deeper cream for the border band
+const MADDER = "#b23a48"; // madder — lattice thread
+const MARIGOLD = "#e5a32b"; // marigold — seeds and warm accents
+const GREEN = "#006a4e"; // Bangladesh green — rosettes, leaves
+const INDIGO = "#2a3d66"; // indigo — depth, seams, edging
+const SILVER = "#c9cdd2"; // silver — the needle
 
 const W = 2048;
 const H = 1280;
@@ -18,15 +23,23 @@ const B = 210; // border band depth
 const E = 52; // outer striped edging
 const S = 96; // lattice cell
 
+const PLANE_W = 5.6;
+const PLANE_H = 3.4;
+
 /** How many viewport-heights of scroll the stitching spans (matches hero height). */
 export const STITCH_SPAN = 1.8;
 
-type Op = { d: number; draw: (ctx: CanvasRenderingContext2D) => void };
+type Op = {
+  d: number;
+  x: number;
+  y: number;
+  color: string;
+  draw: (ctx: CanvasRenderingContext2D) => void;
+};
 
 /**
  * Builds the bare cloth plus an ordered list of embroidery operations.
- * Ops are sorted by distance from the centre so the kantha "blooms" outward
- * as it is stitched.
+ * Ops are sorted by distance from the centre so the kantha "blooms" outward.
  */
 function buildKantha() {
   const cx0 = W / 2;
@@ -55,13 +68,16 @@ function buildKantha() {
       if (mx > W - B || my > H - B) continue;
       ops.push({
         d: dist(mx, my),
+        x: mx,
+        y: my,
+        color: MADDER,
         draw: (ctx) => {
           ctx.save();
           ctx.beginPath();
           ctx.rect(B, B, W - B * 2, H - B * 2);
           ctx.clip();
 
-          ctx.strokeStyle = CORAL;
+          ctx.strokeStyle = MADDER;
           ctx.lineWidth = 4;
           ctx.setLineDash([7, 5]);
           ctx.beginPath();
@@ -79,7 +95,7 @@ function buildKantha() {
             ctx.rotate((p * Math.PI) / 2);
             ctx.beginPath();
             ctx.ellipse(0, -9, 6, 10, 0, 0, Math.PI * 2);
-            ctx.fillStyle = SAGE;
+            ctx.fillStyle = GREEN;
             ctx.fill();
             ctx.restore();
           }
@@ -89,7 +105,7 @@ function buildKantha() {
             ctx.rotate((p * Math.PI) / 2 + Math.PI / 4);
             ctx.beginPath();
             ctx.ellipse(0, -7, 4, 7, 0, 0, Math.PI * 2);
-            ctx.fillStyle = SAGE_DEEP;
+            ctx.fillStyle = INDIGO;
             ctx.fill();
             ctx.restore();
           }
@@ -100,7 +116,7 @@ function buildKantha() {
 
           ctx.beginPath();
           ctx.arc(mx, cy, 3.5, 0, Math.PI * 2);
-          ctx.fillStyle = ROSE;
+          ctx.fillStyle = MARIGOLD;
           ctx.fill();
           ctx.restore();
         },
@@ -115,27 +131,24 @@ function buildKantha() {
       ctx.save();
       ctx.translate(px, py);
       ctx.rotate(rot);
-      // stem
-      ctx.strokeStyle = SAGE_DEEP;
+      ctx.strokeStyle = INDIGO;
       ctx.lineWidth = 4;
       ctx.beginPath();
       ctx.moveTo(-52, 14);
       ctx.quadraticCurveTo(0, -22, 52, 14);
       ctx.stroke();
-      // leaves
       for (const dir of [-1, 1]) {
         ctx.beginPath();
         ctx.ellipse(dir * 34, 6, 19, 9.5, dir * 0.5, 0, Math.PI * 2);
-        ctx.fillStyle = SAGE;
+        ctx.fillStyle = GREEN;
         ctx.fill();
       }
-      // five-petal rose
       for (let p = 0; p < 5; p++) {
         ctx.save();
         ctx.rotate((p * 2 * Math.PI) / 5);
         ctx.beginPath();
         ctx.ellipse(0, -17, 11, 17, 0, 0, Math.PI * 2);
-        ctx.fillStyle = p % 2 ? ROSE : CORAL;
+        ctx.fillStyle = p % 2 ? MARIGOLD : MADDER;
         ctx.fill();
         ctx.restore();
       }
@@ -147,22 +160,49 @@ function buildKantha() {
     };
 
   for (let x = 60; x < W; x += 104) {
-    ops.push({ d: dist(x, mid), draw: vineUnit(x, mid, 0) });
-    ops.push({ d: dist(x, H - mid), draw: vineUnit(x, H - mid, Math.PI) });
+    ops.push({
+      d: dist(x, mid),
+      x,
+      y: mid,
+      color: GREEN,
+      draw: vineUnit(x, mid, 0),
+    });
+    ops.push({
+      d: dist(x, H - mid),
+      x,
+      y: H - mid,
+      color: GREEN,
+      draw: vineUnit(x, H - mid, Math.PI),
+    });
   }
   for (let y = 60; y < H; y += 104) {
-    ops.push({ d: dist(mid, y), draw: vineUnit(mid, y, Math.PI / 2) });
-    ops.push({ d: dist(W - mid, y), draw: vineUnit(W - mid, y, -Math.PI / 2) });
+    ops.push({
+      d: dist(mid, y),
+      x: mid,
+      y,
+      color: GREEN,
+      draw: vineUnit(mid, y, Math.PI / 2),
+    });
+    ops.push({
+      d: dist(W - mid, y),
+      x: W - mid,
+      y,
+      color: GREEN,
+      draw: vineUnit(W - mid, y, -Math.PI / 2),
+    });
   }
 
   // ── Separator seams ──
   ops.push({
     d: dist(B, B) * 0.98,
+    x: W / 2,
+    y: B - 20,
+    color: MARIGOLD,
     draw: (ctx) => {
-      ctx.strokeStyle = ROSE;
+      ctx.strokeStyle = MARIGOLD;
       ctx.lineWidth = 5;
       ctx.strokeRect(B - 14, B - 14, W - (B - 14) * 2, H - (B - 14) * 2);
-      ctx.strokeStyle = SAGE_DEEP;
+      ctx.strokeStyle = INDIGO;
       ctx.lineWidth = 2.5;
       ctx.strokeRect(B - 26, B - 26, W - (B - 26) * 2, H - (B - 26) * 2);
     },
@@ -172,8 +212,11 @@ function buildKantha() {
   for (let bx = 0; bx < W; bx += 260) {
     ops.push({
       d: dist(bx, 0) * 1.02,
+      x: bx + 130,
+      y: E / 2,
+      color: INDIGO,
       draw: (ctx) => {
-        ctx.strokeStyle = SAGE_DEEP;
+        ctx.strokeStyle = INDIGO;
         ctx.lineWidth = 5;
         for (let x = bx; x < bx + 260 && x < W; x += 26) {
           ctx.beginPath();
@@ -189,8 +232,11 @@ function buildKantha() {
   for (let by = 0; by < H; by += 260) {
     ops.push({
       d: dist(0, by) * 1.02,
+      x: E / 2,
+      y: by + 130,
+      color: INDIGO,
       draw: (ctx) => {
-        ctx.strokeStyle = SAGE_DEEP;
+        ctx.strokeStyle = INDIGO;
         ctx.lineWidth = 5;
         for (let y = by; y < by + 260 && y < H; y += 26) {
           ctx.beginPath();
@@ -204,22 +250,44 @@ function buildKantha() {
     });
   }
 
-  ops.sort((a, b) => a.d - b.d);
+  // Spiral order: concentric rings outward, walking around each ring by angle.
+  // Keeps consecutive stitches spatially adjacent so the thread follows the
+  // needle instead of jumping across the cloth.
+  const RING = 70;
+  const angleOf = (o: Op) => Math.atan2(o.y - cy0, o.x - cx0);
+  ops.sort((a, b) => {
+    const ra = Math.floor(a.d / RING);
+    const rb = Math.floor(b.d / RING);
+    if (ra !== rb) return ra - rb;
+    return angleOf(a) - angleOf(b);
+  });
   return { drawBase, ops };
 }
 
 const clamp = (v: number, lo: number, hi: number) =>
   Math.max(lo, Math.min(hi, v));
 
+/** Canvas pixel coords → plane-local coords. */
+const toLocalX = (x: number) => (x / W - 0.5) * PLANE_W;
+const toLocalY = (y: number) => (0.5 - y / H) * PLANE_H;
+
+/** Height of the cloth surface at a local point (matches the vertex maths). */
+const clothZ = (x: number, y: number, fold: number, t: number) =>
+  Math.sin(x * 2.6) * 0.22 * fold +
+  Math.sin(x * 1.3 + t) * 0.038 +
+  Math.sin(y * 1.9 + t * 1.2) * 0.032;
+
+const TRAIL = 7;
+
 function Cloth({ reduced }: { reduced: boolean }) {
   const mesh = useRef<THREE.Mesh>(null);
-  const geo = useMemo(() => new THREE.PlaneGeometry(5.6, 3.4, 72, 46), []);
+  const geo = useMemo(() => new THREE.PlaneGeometry(PLANE_W, PLANE_H, 72, 46), []);
   const base = useMemo(
     () => Float32Array.from(geo.attributes.position.array as Float32Array),
     [geo],
   );
 
-  const { canvas, ctx, texture, ops, drawBase } = useMemo(() => {
+  const { ctx, texture, ops, drawBase } = useMemo(() => {
     const canvas = document.createElement("canvas");
     canvas.width = W;
     canvas.height = H;
@@ -229,7 +297,31 @@ function Cloth({ reduced }: { reduced: boolean }) {
     const texture = new THREE.CanvasTexture(canvas);
     texture.colorSpace = THREE.SRGBColorSpace;
     texture.anisotropy = 8;
-    return { canvas, ctx, texture, ops, drawBase };
+    return { ctx, texture, ops, drawBase };
+  }, []);
+
+  // Needle (silver) and the working thread trailing behind it.
+  const { needle, thread, threadGeo, threadMat } = useMemo(() => {
+    const needle = new THREE.Group();
+    const shaft = new THREE.Mesh(
+      new THREE.ConeGeometry(0.028, 0.42, 12),
+      new THREE.MeshStandardMaterial({
+        color: SILVER,
+        metalness: 0.7,
+        roughness: 0.3,
+      }),
+    );
+    shaft.rotation.z = Math.PI * 0.82; // angled like a held needle
+    needle.add(shaft);
+
+    const threadGeo = new THREE.BufferGeometry();
+    threadGeo.setAttribute(
+      "position",
+      new THREE.BufferAttribute(new Float32Array(TRAIL * 3), 3),
+    );
+    const threadMat = new THREE.LineBasicMaterial({ color: MADDER });
+    const thread = new THREE.Line(threadGeo, threadMat);
+    return { needle, thread, threadGeo, threadMat };
   }, []);
 
   const stitched = useRef(0);
@@ -238,7 +330,6 @@ function Cloth({ reduced }: { reduced: boolean }) {
   useFrame((state) => {
     const t = reduced ? 0 : state.clock.elapsedTime;
 
-    // Scroll progress across the pinned stitching section.
     const target =
       typeof window !== "undefined"
         ? clamp(window.scrollY / (window.innerHeight * STITCH_SPAN), 0, 1)
@@ -266,10 +357,7 @@ function Cloth({ reduced }: { reduced: boolean }) {
     for (let i = 0; i < pos.count; i++) {
       const x = base[i * 3];
       const y = base[i * 3 + 1];
-      const crease = Math.sin(x * 2.6) * 0.22 * fold;
-      const ripple =
-        Math.sin(x * 1.3 + t * 1.0) * 0.038 + Math.sin(y * 1.9 + t * 1.2) * 0.032;
-      pos.setZ(i, crease + ripple);
+      pos.setZ(i, clothZ(x, y, fold, t));
     }
     pos.needsUpdate = true;
     geo.computeVertexNormals();
@@ -277,6 +365,41 @@ function Cloth({ reduced }: { reduced: boolean }) {
     if (mesh.current) {
       mesh.current.rotation.x = -0.16 * fold + Math.sin(t * 0.3) * 0.02;
       mesh.current.rotation.y = Math.sin(t * 0.22) * 0.04;
+    }
+
+    // ── Needle + working thread ride the surface at the stitching front ──
+    const active = !reduced && p > 0.002 && p < 0.998;
+    needle.visible = active;
+    thread.visible = active;
+
+    if (active) {
+      const head = clamp(want, 0, ops.length - 1);
+      const op = ops[head];
+      const hx = toLocalX(op.x);
+      const hy = toLocalY(op.y);
+      const hz = clothZ(hx, hy, fold, t) + 0.02;
+
+      needle.position.set(hx, hy + 0.13, hz + 0.12);
+      threadMat.color.set(op.color);
+
+      // Thread lies along the last few stitches, up to the needle.
+      const arr = threadGeo.attributes.position.array as Float32Array;
+      for (let k = 0; k < TRAIL; k++) {
+        if (k === TRAIL - 1) {
+          arr[k * 3] = hx;
+          arr[k * 3 + 1] = hy + 0.11;
+          arr[k * 3 + 2] = hz + 0.1;
+          continue;
+        }
+        const src = ops[clamp(head - (TRAIL - 1 - k), 0, ops.length - 1)];
+        const sx = toLocalX(src.x);
+        const sy = toLocalY(src.y);
+        arr[k * 3] = sx;
+        arr[k * 3 + 1] = sy;
+        arr[k * 3 + 2] = clothZ(sx, sy, fold, t) + 0.012;
+      }
+      threadGeo.attributes.position.needsUpdate = true;
+      threadGeo.computeBoundingSphere();
     }
   });
 
@@ -288,6 +411,8 @@ function Cloth({ reduced }: { reduced: boolean }) {
         roughness={0.95}
         metalness={0}
       />
+      <primitive object={needle} />
+      <primitive object={thread} />
     </mesh>
   );
 }
