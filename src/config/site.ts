@@ -50,11 +50,12 @@ export const siteConfig = {
     },
   },
 
-  /** Social / contact links (fill in when available). */
+  /** Social / contact links (placeholders — replace with real handles). */
   links: {
-    facebook: "",
-    instagram: "",
-    email: "",
+    email: "hello@bsuc-chemnitz.de",
+    facebook: "https://facebook.com/",
+    instagram: "https://instagram.com/",
+    whatsapp: "https://chat.whatsapp.com/",
   },
 } as const;
 

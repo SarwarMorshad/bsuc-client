@@ -1,10 +1,8 @@
 import { setRequestLocale, getTranslations } from "next-intl/server";
 import { HeroCarousel } from "@/components/panels/hero-carousel";
-import { About } from "@/components/panels/about";
-import { WhatWeDo } from "@/components/panels/what-we-do";
-import { Events } from "@/components/panels/events";
+import { HomeIntro } from "@/components/panels/home-intro";
 import { Stats } from "@/components/panels/stats";
-import { Support } from "@/components/panels/support";
+import { Highlights } from "@/components/panels/highlights";
 import { Join } from "@/components/panels/join";
 import { MotifStrip } from "@/components/motifs/motif-strip";
 
@@ -19,11 +17,12 @@ export default async function Home({
   const t = await getTranslations("home");
   const sl = await getTranslations("slides");
   const a = await getTranslations("about");
-  const d = await getTranslations("doing");
-  const e = await getTranslations("events");
-  const s = await getTranslations("support");
   const st = await getTranslations("stats");
+  const n = await getTranslations("nav");
+  const p = await getTranslations("pages");
+  const f = await getTranslations("footer");
   const j = await getTranslations("join");
+  const e = await getTranslations("events");
 
   return (
     <div id="top">
@@ -40,78 +39,11 @@ export default async function Home({
 
       <MotifStrip />
 
-      <About
+      <HomeIntro
         eyebrow={a("eyebrow")}
         title={a("title")}
         lead={a("lead")}
-        body={a("body")}
-        imageCaption={a("imageCaption")}
-        points={[
-          { title: a("p1Title"), text: a("p1Text"), icon: "leaf", accent: "text-bd-green" },
-          { title: a("p2Title"), text: a("p2Text"), icon: "flower", accent: "text-madder" },
-          { title: a("p3Title"), text: a("p3Text"), icon: "star", accent: "text-brand-blue" },
-        ]}
-      />
-
-      <MotifStrip />
-
-      <WhatWeDo
-        title={d("title")}
-        subtitle={d("subtitle")}
-        items={[
-          {
-            title: d("cultureTitle"),
-            body: d("cultureBody"),
-            icon: "flower",
-            accent: "text-madder",
-          },
-          {
-            title: d("supportTitle"),
-            body: d("supportBody"),
-            icon: "star",
-            accent: "text-brand-blue",
-          },
-          {
-            title: d("communityTitle"),
-            body: d("communityBody"),
-            icon: "leaf",
-            accent: "text-bd-green",
-          },
-          {
-            title: d("eventsTitle"),
-            body: d("eventsBody"),
-            icon: "paisley",
-            accent: "text-marigold",
-          },
-        ]}
-      />
-
-      <MotifStrip />
-
-      <Events
-        title={e("title")}
-        subtitle={e("subtitle")}
-        cta={e("cta")}
-        items={[
-          {
-            title: e("e1Title"),
-            date: e("e1Date"),
-            place: e("e1Place"),
-            accent: "text-bd-green",
-          },
-          {
-            title: e("e2Title"),
-            date: e("e2Date"),
-            place: e("e2Place"),
-            accent: "text-madder",
-          },
-          {
-            title: e("e3Title"),
-            date: e("e3Date"),
-            place: e("e3Place"),
-            accent: "text-indigo",
-          },
-        ]}
+        learnMore={t("learnMore")}
       />
 
       <Stats
@@ -122,10 +54,33 @@ export default async function Home({
         ]}
       />
 
-      <Support
-        title={s("title")}
-        subtitle={s("subtitle")}
-        items={[s("i1"), s("i2"), s("i3"), s("i4")]}
+      <Highlights
+        title={t("discoverTitle")}
+        subtitle={t("discoverSubtitle")}
+        cta={f("explore")}
+        cards={[
+          {
+            href: "/events",
+            title: n("events"),
+            text: p("eventsSubtitle"),
+            image: "https://loremflickr.com/600/400/bangladesh,festival?lock=71",
+            fallbackColor: "#22335c",
+          },
+          {
+            href: "/new-students",
+            title: n("newStudents"),
+            text: p("newStudentsSubtitle"),
+            image: "https://loremflickr.com/600/400/student,germany?lock=72",
+            fallbackColor: "#006a4e",
+          },
+          {
+            href: "/gallery",
+            title: n("gallery"),
+            text: p("gallerySubtitle"),
+            image: "https://loremflickr.com/600/400/bangladesh,people?lock=73",
+            fallbackColor: "#b23a48",
+          },
+        ]}
       />
 
       <Join title={j("title")} body={j("body")} cta={j("cta")} />

@@ -1,11 +1,36 @@
 {
   "nav": {
     "language": "Sprache",
+    "home": "Start",
     "about": "Über uns",
-    "doing": "Was wir tun",
     "events": "Veranstaltungen",
-    "support": "Hilfe",
+    "newStudents": "Neue Studierende",
+    "gallery": "Galerie",
+    "contact": "Kontakt",
     "join": "Mitmachen"
+  },
+  "pages": {
+    "aboutTitle": "Über uns",
+    "aboutSubtitle": "Wer wir sind und wofür wir stehen.",
+    "eventsTitle": "Veranstaltungen",
+    "eventsSubtitle": "Was in unserer Gemeinschaft ansteht.",
+    "newStudentsTitle": "Neu in Chemnitz?",
+    "newStudentsSubtitle": "Alles, was du für deine ersten Wochen brauchst.",
+    "galleryTitle": "Galerie",
+    "gallerySubtitle": "Momente aus unserer Gemeinschaft.",
+    "contactTitle": "Kontakt",
+    "contactSubtitle": "Melde dich — wir freuen uns von dir zu hören.",
+    "joinTitle": "Werde Teil der Gemeinschaft",
+    "joinSubtitle": "Werde Teil von BSUC."
+  },
+  "contact": {
+    "emailLabel": "Schreib uns",
+    "socialLabel": "Folge uns",
+    "addressLabel": "Finde uns",
+    "address": "TU Chemnitz, Chemnitz, Deutschland"
+  },
+  "gallery": {
+    "note": "Ein Einblick in unsere Veranstaltungen und Treffen. Weitere Fotos folgen bald."
   },
   "home": {
     "badge": "Bangladeschische Studierende in Chemnitz",
@@ -13,7 +38,10 @@
     "tagline": "Jede Reise fügt unserer gemeinsamen Geschichte einen neuen Stich hinzu.",
     "scrollCue": "Zum Entfalten scrollen",
     "introTitle": "Von Zuhause nach Chemnitz",
-    "introBody": "Eine aus vielen Fäden genähte Gemeinschaft — Studierende, die fern der Heimat zusammen ein neues Zuhause aufbauen."
+    "introBody": "Eine aus vielen Fäden genähte Gemeinschaft — Studierende, die fern der Heimat zusammen ein neues Zuhause aufbauen.",
+    "learnMore": "Mehr über uns",
+    "discoverTitle": "Finde deinen Platz",
+    "discoverSubtitle": "Entdecke, was unsere Gemeinschaft für dich bereithält."
   },
   "slides": {
     "s1Title": "Ein Zuhause fern der Heimat",
@@ -87,6 +115,10 @@
   },
   "footer": {
     "tagline": "Bangladeschische Studierende in Chemnitz, zusammengenäht.",
-    "rights": "Alle Rechte vorbehalten."
+    "rights": "Alle Rechte vorbehalten.",
+    "explore": "Entdecken",
+    "getInvolved": "Mitmachen",
+    "connect": "Verbinden",
+    "madeWith": "Mit Herz in Chemnitz gemacht."
   }
 }

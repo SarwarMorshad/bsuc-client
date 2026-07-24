@@ -1,6 +1,7 @@
 "use client";
 
 import { useCallback, useEffect, useRef, useState } from "react";
+import { Link } from "@/i18n/navigation";
 import { siteConfig } from "@/config/site";
 
 export type Slide = { title: string; text: string };
@@ -126,18 +127,18 @@ export function HeroCarousel({
           </p>
 
           <div className="flex flex-wrap items-center gap-3">
-            <a
-              href="#join"
+            <Link
+              href="/join"
               className="rounded-full bg-marigold px-7 py-3 font-medium text-ink shadow-sm transition-transform hover:scale-[1.03]"
             >
               {ctaPrimary}
-            </a>
-            <a
-              href="#events"
+            </Link>
+            <Link
+              href="/events"
               className="rounded-full border border-cream/50 px-7 py-3 font-medium text-cream transition-colors hover:bg-cream/10"
             >
               {ctaSecondary}
-            </a>
+            </Link>
           </div>
         </div>
       </div>

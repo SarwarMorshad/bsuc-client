@@ -53,14 +53,13 @@ export default async function LocaleLayout({
   setRequestLocale(locale);
 
   const tn = await getTranslations("nav");
-  const tf = await getTranslations("footer");
   const navLinks = [
-    { href: "#about", label: tn("about") },
-    { href: "#doing", label: tn("doing") },
-    { href: "#events", label: tn("events") },
-    { href: "#support", label: tn("support") },
-    { href: "#join", label: tn("join") },
+    { href: "/events", label: tn("events") },
+    { href: "/new-students", label: tn("newStudents") },
+    { href: "/gallery", label: tn("gallery") },
+    { href: "/contact", label: tn("contact") },
   ];
+  const joinLabel = tn("join");
 
   return (
     <html
@@ -71,13 +70,9 @@ export default async function LocaleLayout({
         <NextIntlClientProvider>
           <Providers>
             <SmoothScroll>
-              <SiteHeader links={navLinks} />
+              <SiteHeader links={navLinks} joinLabel={joinLabel} />
               <main className="flex-1">{children}</main>
-              <SiteFooter
-                tagline={tf("tagline")}
-                rights={tf("rights")}
-                links={navLinks}
-              />
+              <SiteFooter />
             </SmoothScroll>
           </Providers>
         </NextIntlClientProvider>
