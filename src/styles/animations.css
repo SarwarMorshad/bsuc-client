@@ -1,5 +1,5 @@
 /**
- * animations.css — keyframes and animation utilities for the immersive site.
+ * animations.css — keyframes and animation utilities.
  * All motion is disabled under prefers-reduced-motion (see bottom).
  */
 
@@ -23,13 +23,21 @@
   }
 }
 
-@keyframes bob {
+@keyframes glow {
   0%,
   100% {
-    transform: translateY(0);
+    opacity: 0.45;
+    transform: scale(1);
   }
   50% {
-    transform: translateY(6px);
+    opacity: 0.8;
+    transform: scale(1.08);
+  }
+}
+
+@keyframes spin-slow {
+  to {
+    transform: rotate(360deg);
   }
 }
 
@@ -45,15 +53,19 @@
   animation: fade-up 0.8s ease forwards;
 }
 
-/* Gentle idle bob for the scroll cue. */
-.animate-bob {
-  animation: bob 1.8s ease-in-out infinite;
+/* Pulsing glow + slow ring for the auth welcome panel. */
+.animate-glow {
+  animation: glow 4s ease-in-out infinite;
+}
+.animate-spin-slow {
+  animation: spin-slow 40s linear infinite;
 }
 
 @media (prefers-reduced-motion: reduce) {
   .animate-stitch,
   .animate-fade-up,
-  .animate-bob {
+  .animate-glow,
+  .animate-spin-slow {
     animation: none;
     clip-path: none;
     opacity: 1;

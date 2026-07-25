@@ -1,6 +1,5 @@
-import { setRequestLocale, getTranslations } from "next-intl/server";
-import { PageHeader } from "@/components/layout/page-header";
-import { LoginForm } from "@/components/panels/login-form";
+import { setRequestLocale } from "next-intl/server";
+import { AuthFlip } from "@/components/auth/auth-flip";
 
 export default async function LoginPage({
   params,
@@ -9,21 +8,5 @@ export default async function LoginPage({
 }) {
   const { locale } = await params;
   setRequestLocale(locale);
-  const p = await getTranslations("pages");
-  const l = await getTranslations("login");
-  const n = await getTranslations("nav");
-
-  return (
-    <>
-      <PageHeader title={p("loginTitle")} subtitle={p("loginSubtitle")} />
-      <LoginForm
-        note={l("note")}
-        emailLabel={l("emailLabel")}
-        passwordLabel={l("passwordLabel")}
-        button={l("button")}
-        noAccount={l("noAccount")}
-        joinCta={n("join")}
-      />
-    </>
-  );
+  return <AuthFlip initial="login" />;
 }

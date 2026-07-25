@@ -1,6 +1,5 @@
-import { setRequestLocale, getTranslations } from "next-intl/server";
-import { PageHeader } from "@/components/layout/page-header";
-import { Join } from "@/components/panels/join";
+import { setRequestLocale } from "next-intl/server";
+import { AuthFlip } from "@/components/auth/auth-flip";
 
 export default async function JoinPage({
   params,
@@ -9,13 +8,5 @@ export default async function JoinPage({
 }) {
   const { locale } = await params;
   setRequestLocale(locale);
-  const p = await getTranslations("pages");
-  const j = await getTranslations("join");
-
-  return (
-    <>
-      <PageHeader title={p("joinTitle")} subtitle={p("joinSubtitle")} />
-      <Join title={j("title")} body={j("body")} cta={j("cta")} />
-    </>
-  );
+  return <AuthFlip initial="join" />;
 }

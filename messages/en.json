@@ -37,11 +37,33 @@
     "cat4": "Part-time and mini-jobs"
   },
   "login": {
-    "note": "Member accounts are coming soon. Join the community to be first in line.",
     "emailLabel": "Email",
+    "emailPlaceholder": "you@example.com",
     "passwordLabel": "Password",
+    "passwordPlaceholder": "Your password",
     "button": "Sign in",
+    "forgot": "Forgot password?",
     "noAccount": "New here?"
+  },
+  "auth": {
+    "communityTitle": "Welcome to our community",
+    "communitySubtitle": "Culture, friendship and support for Bangladeshi students in Chemnitz. Sign in to stay connected.",
+    "joinPanelTitle": "Start your journey with us",
+    "joinPanelSubtitle": "Become part of a community that feels like home — far from home.",
+    "google": "Continue with Google",
+    "orEmail": "or continue with email",
+    "remember": "Remember me",
+    "tagline": "One community · three languages · a home away from home."
+  },
+  "form": {
+    "required": "This field is required.",
+    "invalidEmail": "Please enter a valid email address.",
+    "passwordShort": "Password must be at least 8 characters.",
+    "passwordMismatch": "Passwords do not match.",
+    "submitting": "Please wait…",
+    "showPassword": "Show password",
+    "hidePassword": "Hide password",
+    "demoNote": "Looks good! The backend is not connected yet, so your details were not saved — accounts go live in the next phase."
   },
   "contact": {
     "emailLabel": "Email us",
@@ -53,12 +75,6 @@
     "note": "A glimpse of our events and gatherings. More photos coming soon."
   },
   "home": {
-    "badge": "Bangladeshi students in Chemnitz",
-    "welcome": "A home away from home — culture, friendship and support for Bangladeshi students in Chemnitz.",
-    "tagline": "Every journey adds a new stitch to our shared story.",
-    "scrollCue": "Scroll to unfold",
-    "introTitle": "From home to Chemnitz",
-    "introBody": "A community stitched from many threads — students building a new home together, far from home.",
     "learnMore": "Learn more about us",
     "discoverTitle": "Find your place",
     "discoverSubtitle": "Explore what our community has for you."
@@ -131,7 +147,19 @@
   "join": {
     "title": "Become part of the union",
     "body": "Whether you just landed in Chemnitz or have been here for years — there is a place for you here.",
-    "cta": "Join us"
+    "cta": "Join us",
+    "nameLabel": "Full name",
+    "namePlaceholder": "Your name",
+    "emailLabel": "Email",
+    "emailPlaceholder": "you@example.com",
+    "programLabel": "Study programme",
+    "programPlaceholder": "e.g. M.Sc. Web Engineering",
+    "passwordLabel": "Password",
+    "passwordPlaceholder": "At least 8 characters",
+    "confirmLabel": "Confirm password",
+    "submit": "Create account",
+    "haveAccount": "Already a member?",
+    "loginCta": "Log in"
   },
   "footer": {
     "tagline": "Bangladeshi students in Chemnitz, stitched together.",
