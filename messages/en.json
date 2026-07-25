@@ -6,7 +6,9 @@
     "events": "Events",
     "newStudents": "New Students",
     "gallery": "Gallery",
+    "jobPortal": "Job Portal",
     "contact": "Contact",
+    "login": "Log in",
     "join": "Join"
   },
   "pages": {
@@ -21,7 +23,25 @@
     "contactTitle": "Contact",
     "contactSubtitle": "Reach out — we would love to hear from you.",
     "joinTitle": "Join the community",
-    "joinSubtitle": "Become part of BSUC."
+    "joinSubtitle": "Become part of BSUC.",
+    "jobsTitle": "Job Portal",
+    "jobsSubtitle": "Part-time jobs and internships for students.",
+    "loginTitle": "Member login",
+    "loginSubtitle": "Sign in to your BSUC account."
+  },
+  "jobs": {
+    "note": "A job portal for our community is on the way. Soon you will find:",
+    "cat1": "Student assistant (HiWi) positions",
+    "cat2": "Werkstudent roles",
+    "cat3": "Internships with industry partners",
+    "cat4": "Part-time and mini-jobs"
+  },
+  "login": {
+    "note": "Member accounts are coming soon. Join the community to be first in line.",
+    "emailLabel": "Email",
+    "passwordLabel": "Password",
+    "button": "Sign in",
+    "noAccount": "New here?"
   },
   "contact": {
     "emailLabel": "Email us",

@@ -57,9 +57,10 @@ export default async function LocaleLayout({
     { href: "/events", label: tn("events") },
     { href: "/new-students", label: tn("newStudents") },
     { href: "/gallery", label: tn("gallery") },
-    { href: "/contact", label: tn("contact") },
+    { href: "/jobs", label: tn("jobPortal") },
   ];
   const joinLabel = tn("join");
+  const loginLabel = tn("login");
 
   return (
     <html
@@ -70,7 +71,11 @@ export default async function LocaleLayout({
         <NextIntlClientProvider>
           <Providers>
             <SmoothScroll>
-              <SiteHeader links={navLinks} joinLabel={joinLabel} />
+              <SiteHeader
+                links={navLinks}
+                joinLabel={joinLabel}
+                loginLabel={loginLabel}
+              />
               <main className="flex-1">{children}</main>
               <SiteFooter />
             </SmoothScroll>

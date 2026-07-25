@@ -6,7 +6,9 @@
     "events": "Veranstaltungen",
     "newStudents": "Neue Studierende",
     "gallery": "Galerie",
+    "jobPortal": "Jobbörse",
     "contact": "Kontakt",
+    "login": "Anmelden",
     "join": "Mitmachen"
   },
   "pages": {
@@ -21,7 +23,25 @@
     "contactTitle": "Kontakt",
     "contactSubtitle": "Melde dich — wir freuen uns von dir zu hören.",
     "joinTitle": "Werde Teil der Gemeinschaft",
-    "joinSubtitle": "Werde Teil von BSUC."
+    "joinSubtitle": "Werde Teil von BSUC.",
+    "jobsTitle": "Jobbörse",
+    "jobsSubtitle": "Teilzeitjobs und Praktika für Studierende.",
+    "loginTitle": "Mitglieder-Login",
+    "loginSubtitle": "Melde dich in deinem BSUC-Konto an."
+  },
+  "jobs": {
+    "note": "Eine Jobbörse für unsere Gemeinschaft ist in Arbeit. Bald findest du:",
+    "cat1": "Stellen als studentische Hilfskraft (HiWi)",
+    "cat2": "Werkstudentenstellen",
+    "cat3": "Praktika bei Industriepartnern",
+    "cat4": "Teilzeit- und Minijobs"
+  },
+  "login": {
+    "note": "Mitgliederkonten kommen bald. Werde Teil der Gemeinschaft, um von Anfang an dabei zu sein.",
+    "emailLabel": "E-Mail",
+    "passwordLabel": "Passwort",
+    "button": "Anmelden",
+    "noAccount": "Neu hier?"
   },
   "contact": {
     "emailLabel": "Schreib uns",

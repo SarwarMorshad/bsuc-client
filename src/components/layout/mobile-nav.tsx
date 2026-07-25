@@ -7,9 +7,11 @@ import { Link } from "@/i18n/navigation";
 export function MobileNav({
   links,
   joinLabel,
+  loginLabel,
 }: {
   links: { href: string; label: string }[];
   joinLabel: string;
+  loginLabel: string;
 }) {
   const [open, setOpen] = useState(false);
 
@@ -41,9 +43,16 @@ export function MobileNav({
               </Link>
             ))}
             <Link
+              href="/login"
+              onClick={() => setOpen(false)}
+              className="mt-2 rounded-full border border-indigo/40 px-5 py-2.5 text-center text-sm font-medium text-indigo"
+            >
+              {loginLabel}
+            </Link>
+            <Link
               href="/join"
               onClick={() => setOpen(false)}
-              className="mt-2 rounded-full bg-bd-green px-5 py-2.5 text-center text-sm font-medium text-cream"
+              className="rounded-full bg-bd-green px-5 py-2.5 text-center text-sm font-medium text-cream"
             >
               {joinLabel}
             </Link>
