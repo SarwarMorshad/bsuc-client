@@ -1,6 +1,6 @@
 import { setRequestLocale } from "next-intl/server";
-import { AuthFlip } from "@/components/auth/auth-flip";
 
+/** Route marker — the (auth) layout renders the slider based on the URL. */
 export default async function LoginPage({
   params,
 }: {
@@ -8,5 +8,5 @@ export default async function LoginPage({
 }) {
   const { locale } = await params;
   setRequestLocale(locale);
-  return <AuthFlip initial="login" />;
+  return null;
 }

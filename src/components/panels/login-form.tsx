@@ -12,7 +12,7 @@ import {
 } from "@/components/forms/form-ui";
 
 /** Interactive member login form (client-side only; auth wiring lands in Phase 2). */
-export function LoginForm({ onSwitch }: { onSwitch?: () => void }) {
+export function LoginForm() {
   const t = useTranslations("login");
   const f = useTranslations("form");
   const au = useTranslations("auth");
@@ -133,19 +133,9 @@ export function LoginForm({ onSwitch }: { onSwitch?: () => void }) {
 
       <p className="text-center text-sm text-muted-foreground">
         {t("noAccount")}{" "}
-        {onSwitch ? (
-          <button
-            type="button"
-            onClick={onSwitch}
-            className="font-medium text-brand-blue underline-offset-4 hover:underline"
-          >
-            {j("cta")}
-          </button>
-        ) : (
-          <Link href="/join" className="font-medium text-brand-blue underline-offset-4 hover:underline">
-            {j("cta")}
-          </Link>
-        )}
+        <Link href="/join" className="font-medium text-brand-blue underline-offset-4 hover:underline">
+          {j("cta")}
+        </Link>
       </p>
     </div>
   );

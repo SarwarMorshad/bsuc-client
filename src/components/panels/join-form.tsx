@@ -16,7 +16,7 @@ type Errors = Partial<
 >;
 
 /** Interactive join / sign-up form (client-side only; auth wiring lands in Phase 2). */
-export function JoinForm({ onSwitch }: { onSwitch?: () => void }) {
+export function JoinForm() {
   const t = useTranslations("join");
   const f = useTranslations("form");
   const au = useTranslations("auth");
@@ -170,19 +170,9 @@ export function JoinForm({ onSwitch }: { onSwitch?: () => void }) {
 
       <p className="text-center text-sm text-muted-foreground">
         {t("haveAccount")}{" "}
-        {onSwitch ? (
-          <button
-            type="button"
-            onClick={onSwitch}
-            className="font-medium text-brand-blue underline-offset-4 hover:underline"
-          >
-            {t("loginCta")}
-          </button>
-        ) : (
-          <Link href="/login" className="font-medium text-brand-blue underline-offset-4 hover:underline">
-            {t("loginCta")}
-          </Link>
-        )}
+        <Link href="/login" className="font-medium text-brand-blue underline-offset-4 hover:underline">
+          {t("loginCta")}
+        </Link>
       </p>
     </div>
   );
