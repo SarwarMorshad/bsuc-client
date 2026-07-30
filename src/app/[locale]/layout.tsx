@@ -7,6 +7,7 @@ import "../globals.css";
 import { Providers } from "../providers";
 import { routing } from "@/i18n/routing";
 import { siteConfig } from "@/config/site";
+import { buildMetadata } from "@/lib/metadata";
 import { SmoothScroll } from "@/components/layout/smooth-scroll";
 import { SiteHeader } from "@/components/layout/site-header";
 import { SiteFooter } from "@/components/layout/site-footer";
@@ -30,10 +31,38 @@ const tiroBangla = Tiro_Bangla({
   display: "swap",
 });
 
-export const metadata: Metadata = {
-  title: siteConfig.name,
-  description: siteConfig.description,
-};
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ locale: string }>;
+}): Promise<Metadata> {
+  const { locale } = await params;
+  const t = await getTranslations({ locale, namespace: "pages" });
+
+  return {
+    ...buildMetadata({
+      locale,
+      path: "",
+      title: siteConfig.name,
+      description: siteConfig.description,
+    }),
+    metadataBase: new URL(siteConfig.url),
+    // Child pages render as "Events · Bangladesh Student Union Chemnitz"
+    title: {
+      default: siteConfig.name,
+      template: `%s · ${siteConfig.shortName}`,
+    },
+    applicationName: siteConfig.name,
+    keywords: [
+      "Bangladesh Student Union",
+      "Chemnitz",
+      "TU Chemnitz",
+      "Bangladeshi students",
+      "BSUC",
+      t("eventsTitle"),
+    ],
+  };
+}
 
 export function generateStaticParams() {
   return routing.locales.map((locale) => ({ locale }));

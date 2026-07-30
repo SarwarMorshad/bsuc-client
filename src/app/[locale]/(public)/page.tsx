@@ -1,10 +1,27 @@
+import type { Metadata } from "next";
 import { setRequestLocale, getTranslations } from "next-intl/server";
+import { siteConfig } from "@/config/site";
+import { buildMetadata } from "@/lib/metadata";
 import { HeroCarousel } from "@/components/panels/hero-carousel";
 import { HomeIntro } from "@/components/panels/home-intro";
 import { Stats } from "@/components/panels/stats";
 import { Highlights } from "@/components/panels/highlights";
 import { Join } from "@/components/panels/join";
 import { MotifStrip } from "@/components/motifs/motif-strip";
+
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ locale: string }>;
+}): Promise<Metadata> {
+  const { locale } = await params;
+  return buildMetadata({
+    locale,
+    path: "",
+    title: siteConfig.name,
+    description: siteConfig.description,
+  });
+}
 
 export default async function Home({
   params,

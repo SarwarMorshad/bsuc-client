@@ -14,8 +14,12 @@ export const siteConfig = {
   /** Used for meta description, OG tags, etc. */
   description:
     "Community of Bangladeshi students in Chemnitz — events, support, and belonging.",
-  /** Public URL (set once deployed). */
-  url: "https://bsuc.example",
+  /**
+   * Public URL, used for canonical links, hreflang alternates, sitemap and
+   * Open Graph images. Set NEXT_PUBLIC_SITE_URL in the environment once the
+   * real domain is live; the fallback is only for local development.
+   */
+  url: process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000",
 
   /** Internationalization. English is primary/default. */
   locales: ["en", "bn", "de"] as const,

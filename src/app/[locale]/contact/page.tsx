@@ -1,6 +1,23 @@
+import type { Metadata } from "next";
 import { setRequestLocale, getTranslations } from "next-intl/server";
 import { PageHeader } from "@/components/layout/page-header";
 import { Contact } from "@/components/panels/contact";
+import { buildMetadata } from "@/lib/metadata";
+
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ locale: string }>;
+}): Promise<Metadata> {
+  const { locale } = await params;
+  const p = await getTranslations({ locale, namespace: "pages" });
+  return buildMetadata({
+    locale,
+    path: "/contact",
+    title: p("contactTitle"),
+    description: p("contactSubtitle"),
+  });
+}
 
 export default async function ContactPage({
   params,
