@@ -63,7 +63,7 @@ export function JoinForm() {
       </div>
 
       {status === "done" && (
-        <p className="rounded-lg bg-bd-green/15 px-4 py-3 text-sm text-foreground">
+        <p aria-live="polite" className="rounded-lg bg-bd-green/15 px-4 py-3 text-sm text-foreground">
           {f("demoNote")}
         </p>
       )}
@@ -84,7 +84,7 @@ export function JoinForm() {
             aria-invalid={!!errors.name}
             className={inputClass(!!errors.name)}
           />
-          {errors.name && <span className="text-xs text-madder">{errors.name}</span>}
+          {errors.name && <span role="alert" className="text-xs text-madder">{errors.name}</span>}
         </div>
 
         <div className="flex flex-col gap-1.5">
@@ -100,7 +100,7 @@ export function JoinForm() {
             aria-invalid={!!errors.email}
             className={inputClass(!!errors.email)}
           />
-          {errors.email && <span className="text-xs text-madder">{errors.email}</span>}
+          {errors.email && <span role="alert" className="text-xs text-madder">{errors.email}</span>}
         </div>
 
         <div className="flex flex-col gap-1.5">
@@ -115,7 +115,7 @@ export function JoinForm() {
             aria-invalid={!!errors.program}
             className={inputClass(!!errors.program)}
           />
-          {errors.program && <span className="text-xs text-madder">{errors.program}</span>}
+          {errors.program && <span role="alert" className="text-xs text-madder">{errors.program}</span>}
         </div>
 
         <div className="flex flex-col gap-1.5">
@@ -141,7 +141,7 @@ export function JoinForm() {
               <EyeIcon open={show} />
             </button>
           </div>
-          {errors.password && <span className="text-xs text-madder">{errors.password}</span>}
+          {errors.password && <span role="alert" className="text-xs text-madder">{errors.password}</span>}
         </div>
 
         <div className="flex flex-col gap-1.5">
@@ -156,7 +156,7 @@ export function JoinForm() {
             aria-invalid={!!errors.confirm}
             className={inputClass(!!errors.confirm)}
           />
-          {errors.confirm && <span className="text-xs text-madder">{errors.confirm}</span>}
+          {errors.confirm && <span role="alert" className="text-xs text-madder">{errors.confirm}</span>}
         </div>
 
         <button

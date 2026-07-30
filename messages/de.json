@@ -45,6 +45,16 @@
     "forgot": "Passwort vergessen?",
     "noAccount": "Neu hier?"
   },
+  "states": {
+    "loading": "Wird geladen…",
+    "notFoundTitle": "Seite nicht gefunden",
+    "notFoundBody": "Diese Seite wurde vielleicht verschoben, oder der Link führt ins Leere.",
+    "notFoundCta": "Zurück zur Startseite",
+    "errorTitle": "Etwas ist schiefgelaufen",
+    "errorBody": "Auf unserer Seite ist ein unerwarteter Fehler aufgetreten. Bitte versuche es erneut.",
+    "errorRetry": "Erneut versuchen",
+    "errorHome": "Zurück zur Startseite"
+  },
   "auth": {
     "communityTitle": "Willkommen in unserer Gemeinschaft",
     "communitySubtitle": "Kultur, Freundschaft und Unterstützung für bangladeschische Studierende in Chemnitz. Melde dich an, um verbunden zu bleiben.",

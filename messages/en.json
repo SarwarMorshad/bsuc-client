@@ -45,6 +45,16 @@
     "forgot": "Forgot password?",
     "noAccount": "New here?"
   },
+  "states": {
+    "loading": "Loading…",
+    "notFoundTitle": "Page not found",
+    "notFoundBody": "This page may have moved, or the link is no longer stitched to anything.",
+    "notFoundCta": "Back to home",
+    "errorTitle": "Something went wrong",
+    "errorBody": "An unexpected error occurred on our side. Please try again.",
+    "errorRetry": "Try again",
+    "errorHome": "Back to home"
+  },
   "auth": {
     "communityTitle": "Welcome to our community",
     "communitySubtitle": "Culture, friendship and support for Bangladeshi students in Chemnitz. Sign in to stay connected.",
