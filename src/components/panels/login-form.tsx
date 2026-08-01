@@ -2,7 +2,8 @@
 
 import { useState, type FormEvent } from "react";
 import { useTranslations } from "next-intl";
-import { Link } from "@/i18n/navigation";
+import { Link, useRouter } from "@/i18n/navigation";
+import { useSearchParams } from "next/navigation";
 import {
   Divider,
   EMAIL_RE,
@@ -10,6 +11,9 @@ import {
   GoogleButton,
   inputClass,
 } from "@/components/forms/form-ui";
+import { useAuth } from "@/components/auth/auth-provider";
+import { login as apiLogin } from "@/lib/auth";
+import { toApiError } from "@/lib/api";
 
 /** Interactive member login form (client-side only; auth wiring lands in Phase 2). */
 export function LoginForm() {
@@ -24,18 +28,37 @@ export function LoginForm() {
   const [show, setShow] = useState(false);
   const [remember, setRemember] = useState(false);
   const [errors, setErrors] = useState<{ email?: string; password?: string }>({});
-  const [status, setStatus] = useState<"idle" | "submitting" | "done">("idle");
+  const [formError, setFormError] = useState<string | null>(null);
+  const [status, setStatus] = useState<"idle" | "submitting">("idle");
 
-  function submit(e: FormEvent) {
+  const { refresh } = useAuth();
+  const router = useRouter();
+  const searchParams = useSearchParams();
+  // Return the member to the page that sent them here, if any.
+  const next = searchParams.get("next");
+
+  async function submit(e: FormEvent) {
     e.preventDefault();
-    const next: typeof errors = {};
-    if (!email.trim()) next.email = f("required");
-    else if (!EMAIL_RE.test(email)) next.email = f("invalidEmail");
-    if (!password) next.password = f("required");
-    setErrors(next);
-    if (Object.keys(next).length > 0) return;
+    setFormError(null);
+
+    const fieldErrors: typeof errors = {};
+    if (!email.trim()) fieldErrors.email = f("required");
+    else if (!EMAIL_RE.test(email)) fieldErrors.email = f("invalidEmail");
+    if (!password) fieldErrors.password = f("required");
+    setErrors(fieldErrors);
+    if (Object.keys(fieldErrors).length > 0) return;
+
     setStatus("submitting");
-    window.setTimeout(() => setStatus("done"), 700);
+    try {
+      await apiLogin(email, password);
+      await refresh();
+      router.replace(next && next.startsWith("/") ? next : "/");
+    } catch (err) {
+      const apiError = toApiError(err);
+      if (apiError.fields) setErrors(apiError.fields);
+      else setFormError(apiError.error);
+      setStatus("idle");
+    }
   }
 
   return (
@@ -49,13 +72,16 @@ export function LoginForm() {
         </p>
       </div>
 
-      {status === "done" && (
-        <p aria-live="polite" className="rounded-lg bg-bd-green/15 px-4 py-3 text-sm text-foreground">
-          {f("demoNote")}
+      {formError && (
+        <p
+          role="alert"
+          className="rounded-lg bg-madder/10 px-4 py-3 text-sm text-madder"
+        >
+          {formError}
         </p>
       )}
 
-      <GoogleButton label={au("google")} onClick={() => setStatus("done")} />
+      <GoogleButton label={au("google")} />
       <Divider label={au("orEmail")} />
 
       <form onSubmit={submit} noValidate className="flex flex-col gap-4">
