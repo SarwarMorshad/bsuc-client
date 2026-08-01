@@ -9,7 +9,9 @@
     "jobPortal": "Jobbörse",
     "contact": "Kontakt",
     "login": "Anmelden",
-    "join": "Mitmachen"
+    "join": "Mitmachen",
+    "logout": "Abmelden",
+    "account": "Mein Konto"
   },
   "pages": {
     "aboutTitle": "Über uns",

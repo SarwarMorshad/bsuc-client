@@ -9,7 +9,9 @@
     "jobPortal": "Job Portal",
     "contact": "Contact",
     "login": "Log in",
-    "join": "Join"
+    "join": "Join",
+    "logout": "Log out",
+    "account": "My account"
   },
   "pages": {
     "aboutTitle": "About us",

@@ -3,6 +3,7 @@ import { Link } from "@/i18n/navigation";
 import { siteConfig } from "@/config/site";
 import { LanguageSwitcher } from "@/components/layout/language-switcher";
 import { MobileNav } from "@/components/layout/mobile-nav";
+import { AccountMenu } from "@/components/layout/account-menu";
 
 /**
  * Sticky site header: emblem + name, page navigation, language switcher and a
@@ -47,18 +48,7 @@ export function SiteHeader({
 
         <div className="flex items-center gap-2">
           <LanguageSwitcher />
-          <Link
-            href="/login"
-            className="hidden rounded-full border border-indigo/40 px-4 py-2 text-sm font-medium text-indigo transition-colors hover:bg-indigo/5 sm:inline-block"
-          >
-            {loginLabel}
-          </Link>
-          <Link
-            href="/join"
-            className="hidden rounded-full bg-bd-green px-5 py-2 text-sm font-medium text-cream transition-transform hover:scale-[1.03] sm:inline-block"
-          >
-            {joinLabel}
-          </Link>
+          <AccountMenu />
           <MobileNav
             links={links}
             joinLabel={joinLabel}
