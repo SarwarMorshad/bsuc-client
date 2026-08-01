@@ -2,7 +2,7 @@
 
 import { useState, type FormEvent } from "react";
 import { useTranslations } from "next-intl";
-import { Link } from "@/i18n/navigation";
+import { Link, useRouter } from "@/i18n/navigation";
 import {
   Divider,
   EMAIL_RE,
@@ -10,6 +10,9 @@ import {
   GoogleButton,
   inputClass,
 } from "@/components/forms/form-ui";
+import { useAuth } from "@/components/auth/auth-provider";
+import { register as apiRegister } from "@/lib/auth";
+import { toApiError } from "@/lib/api";
 
 type Errors = Partial<
   Record<
@@ -35,15 +38,21 @@ export function JoinForm() {
   });
   const [show, setShow] = useState(false);
   const [errors, setErrors] = useState<Errors>({});
-  const [status, setStatus] = useState<"idle" | "submitting" | "done">("idle");
+  const [formError, setFormError] = useState<string | null>(null);
+  const [status, setStatus] = useState<"idle" | "submitting">("idle");
+
+  const { refresh } = useAuth();
+  const router = useRouter();
 
   const set = (key: keyof typeof values) => (e: { target: { value: string } }) => {
     setValues((v) => ({ ...v, [key]: e.target.value }));
     if (errors[key]) setErrors((pr) => ({ ...pr, [key]: undefined }));
   };
 
-  function submit(e: FormEvent) {
+  async function submit(e: FormEvent) {
     e.preventDefault();
+    setFormError(null);
+
     const next: Errors = {};
     if (!values.name.trim()) next.name = f("required");
     if (!values.email.trim()) next.email = f("required");
@@ -55,8 +64,25 @@ export function JoinForm() {
     if (values.confirm !== values.password) next.confirm = f("passwordMismatch");
     setErrors(next);
     if (Object.keys(next).length > 0) return;
+
     setStatus("submitting");
-    window.setTimeout(() => setStatus("done"), 700);
+    try {
+      await apiRegister({
+        name: values.name,
+        email: values.email,
+        matriculationNumber: values.matriculationNumber,
+        password: values.password,
+        program: values.program,
+      });
+      // Registering signs the member in, so go straight to the site.
+      await refresh();
+      router.replace("/");
+    } catch (err) {
+      const apiError = toApiError(err);
+      if (apiError.fields) setErrors(apiError.fields);
+      else setFormError(apiError.error);
+      setStatus("idle");
+    }
   }
 
   return (
@@ -68,13 +94,16 @@ export function JoinForm() {
         <p className="mt-1.5 text-sm text-muted-foreground">{p("joinSubtitle")}</p>
       </div>
 
-      {status === "done" && (
-        <p aria-live="polite" className="rounded-lg bg-bd-green/15 px-4 py-3 text-sm text-foreground">
-          {f("demoNote")}
+      {formError && (
+        <p
+          role="alert"
+          className="rounded-lg bg-madder/10 px-4 py-3 text-sm text-madder"
+        >
+          {formError}
         </p>
       )}
 
-      <GoogleButton label={au("google")} onClick={() => setStatus("done")} />
+      <GoogleButton label={au("google")} />
       <Divider label={au("orEmail")} />
 
       <form onSubmit={submit} noValidate className="flex flex-col gap-4">
