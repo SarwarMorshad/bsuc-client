@@ -65,7 +65,7 @@
     "google": "Continue with Google",
     "orEmail": "or continue with email",
     "remember": "Remember me",
-    "tagline": "One community · three languages · a home away from home."
+    "tagline": "One community · a home away from home."
   },
   "form": {
     "required": "This field is required.",
@@ -75,7 +75,18 @@
     "submitting": "Please wait…",
     "showPassword": "Show password",
     "hidePassword": "Hide password",
-    "demoNote": "Looks good! The backend is not connected yet, so your details were not saved — accounts go live in the next phase."
+    "demoNote": "Looks good! The backend is not connected yet, so your details were not saved — accounts go live in the next phase.",
+    "pwLength": "At least 8 characters",
+    "pwLower": "One lowercase letter",
+    "pwUpper": "One uppercase letter",
+    "pwNumber": "One number",
+    "pwSpecial": "One special character (!?@#…)",
+    "pwStrength": "Password strength",
+    "pwWeak": "Weak",
+    "pwFair": "Fair",
+    "pwStrong": "Strong",
+    "pwRequirements": "Your password needs:",
+    "passwordWeak": "Password does not meet the requirements below."
   },
   "contact": {
     "emailLabel": "Email us",

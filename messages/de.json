@@ -75,7 +75,18 @@
     "submitting": "Bitte warten…",
     "showPassword": "Passwort anzeigen",
     "hidePassword": "Passwort verbergen",
-    "demoNote": "Sieht gut aus! Das Backend ist noch nicht verbunden, deine Daten wurden nicht gespeichert — Konten gehen in der nächsten Phase live."
+    "demoNote": "Sieht gut aus! Das Backend ist noch nicht verbunden, deine Daten wurden nicht gespeichert — Konten gehen in der nächsten Phase live.",
+    "pwLength": "Mindestens 8 Zeichen",
+    "pwLower": "Ein Kleinbuchstabe",
+    "pwUpper": "Ein Großbuchstabe",
+    "pwNumber": "Eine Ziffer",
+    "pwSpecial": "Ein Sonderzeichen (!?@#…)",
+    "pwStrength": "Passwortstärke",
+    "pwWeak": "Schwach",
+    "pwFair": "Mittel",
+    "pwStrong": "Stark",
+    "pwRequirements": "Dein Passwort braucht:",
+    "passwordWeak": "Das Passwort erfüllt die unten stehenden Anforderungen nicht."
   },
   "contact": {
     "emailLabel": "Schreib uns",

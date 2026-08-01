@@ -13,6 +13,8 @@ import {
 import { useAuth } from "@/components/auth/auth-provider";
 import { register as apiRegister } from "@/lib/auth";
 import { toApiError } from "@/lib/api";
+import { PasswordRequirements } from "@/components/forms/password-requirements";
+import { isPasswordValid } from "@/lib/password-rules";
 
 type Errors = Partial<
   Record<
@@ -60,7 +62,7 @@ export function JoinForm() {
     if (!values.matriculationNumber.trim())
       next.matriculationNumber = f("required");
     if (!values.program.trim()) next.program = f("required");
-    if (values.password.length < 8) next.password = f("passwordShort");
+    if (!isPasswordValid(values.password)) next.password = f("passwordWeak");
     if (values.confirm !== values.password) next.confirm = f("passwordMismatch");
     setErrors(next);
     if (Object.keys(next).length > 0) return;
@@ -200,6 +202,7 @@ export function JoinForm() {
             </button>
           </div>
           {errors.password && <span role="alert" className="text-xs text-madder">{errors.password}</span>}
+          <PasswordRequirements value={values.password} />
         </div>
 
         <div className="flex flex-col gap-1.5">
