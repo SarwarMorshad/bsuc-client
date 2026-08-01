@@ -27,6 +27,16 @@ export async function register(payload: RegisterPayload): Promise<User> {
   return data.user;
 }
 
+/** Confirms an email address using the token from the verification link. */
+export async function verifyEmail(token: string): Promise<void> {
+  await api.post("/auth/verify", { token });
+}
+
+/** Requests a new verification link. Always resolves, even for unknown emails. */
+export async function resendVerification(email: string): Promise<void> {
+  await api.post("/auth/resend-verification", { email });
+}
+
 export async function login(email: string, password: string): Promise<User> {
   const { data } = await api.post<{ user: User }>("/auth/login", {
     email,

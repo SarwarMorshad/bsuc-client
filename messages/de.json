@@ -193,5 +193,19 @@
     "getInvolved": "Mitmachen",
     "connect": "Verbinden",
     "madeWith": "Mit Herz in Chemnitz gemacht."
+  },
+  "verify": {
+    "title": "Sieh in dein Postfach",
+    "body": "Wir haben einen Bestätigungslink an {email} gesendet. Klicke darauf, um dein Konto zu aktivieren, und melde dich dann an.",
+    "spam": "Nicht zu finden? Sieh im Spam-Ordner nach.",
+    "resend": "E-Mail erneut senden",
+    "resent": "Gesendet! Sieh noch einmal in dein Postfach.",
+    "verifying": "E-Mail wird bestätigt…",
+    "successTitle": "E-Mail bestätigt",
+    "successBody": "Dein Konto ist aktiv. Du kannst dich jetzt anmelden.",
+    "failTitle": "Link ungültig",
+    "failBody": "Dieser Bestätigungslink ist ungültig oder abgelaufen. Fordere unten einen neuen an.",
+    "emailPrompt": "Deine E-Mail-Adresse",
+    "goLogin": "Zur Anmeldung"
   }
 }

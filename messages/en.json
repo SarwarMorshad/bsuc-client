@@ -193,5 +193,19 @@
     "getInvolved": "Get involved",
     "connect": "Connect",
     "madeWith": "Made with care in Chemnitz."
+  },
+  "verify": {
+    "title": "Check your inbox",
+    "body": "We sent a confirmation link to {email}. Click it to activate your account, then sign in.",
+    "spam": "Cannot find it? Check your spam folder.",
+    "resend": "Resend the email",
+    "resent": "Sent! Check your inbox again.",
+    "verifying": "Confirming your email…",
+    "successTitle": "Email confirmed",
+    "successBody": "Your account is active. You can sign in now.",
+    "failTitle": "Link not valid",
+    "failBody": "This confirmation link is invalid or has expired. Request a new one below.",
+    "emailPrompt": "Your email address",
+    "goLogin": "Go to login"
   }
 }

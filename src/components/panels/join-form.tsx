@@ -2,7 +2,7 @@
 
 import { useState, type FormEvent } from "react";
 import { useTranslations } from "next-intl";
-import { Link, useRouter } from "@/i18n/navigation";
+import { Link } from "@/i18n/navigation";
 import {
   Divider,
   EMAIL_RE,
@@ -10,7 +10,7 @@ import {
   GoogleButton,
   inputClass,
 } from "@/components/forms/form-ui";
-import { useAuth } from "@/components/auth/auth-provider";
+import { CheckInbox } from "@/components/auth/check-inbox";
 import { register as apiRegister } from "@/lib/auth";
 import { toApiError } from "@/lib/api";
 import { PasswordRequirements } from "@/components/forms/password-requirements";
@@ -43,9 +43,7 @@ export function JoinForm() {
   const [errors, setErrors] = useState<Errors>({});
   const [formError, setFormError] = useState<string | null>(null);
   const [status, setStatus] = useState<"idle" | "submitting">("idle");
-
-  const { refresh } = useAuth();
-  const router = useRouter();
+  const [registeredEmail, setRegisteredEmail] = useState<string | null>(null);
 
   const set = (key: keyof typeof values) => (e: { target: { value: string } }) => {
     setValues((v) => ({ ...v, [key]: e.target.value }));
@@ -77,15 +75,19 @@ export function JoinForm() {
         password: values.password,
         program: values.program,
       });
-      // Registering signs the member in, so go straight to the site.
-      await refresh();
-      router.replace("/");
+      // No session is issued until the email is confirmed, so show the
+      // "check your inbox" step rather than signing the member in.
+      setRegisteredEmail(values.email);
     } catch (err) {
       const apiError = toApiError(err);
       if (apiError.fields) setErrors(apiError.fields);
       else setFormError(apiError.error);
       setStatus("idle");
     }
+  }
+
+  if (registeredEmail) {
+    return <CheckInbox email={registeredEmail} />;
   }
 
   return (
