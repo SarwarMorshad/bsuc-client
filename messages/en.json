@@ -162,6 +162,8 @@
     "namePlaceholder": "Your name",
     "emailLabel": "Email",
     "emailPlaceholder": "you@example.com",
+    "matriculationLabel": "Matriculation number",
+    "matriculationPlaceholder": "e.g. 512345",
     "programLabel": "Study programme",
     "programPlaceholder": "e.g. M.Sc. Web Engineering",
     "passwordLabel": "Password",

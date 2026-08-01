@@ -162,6 +162,8 @@
     "namePlaceholder": "আপনার নাম",
     "emailLabel": "ইমেইল",
     "emailPlaceholder": "you@example.com",
+    "matriculationLabel": "ম্যাট্রিকুলেশন নম্বর",
+    "matriculationPlaceholder": "যেমন ৫১২৩৪৫",
     "programLabel": "পড়াশোনার বিষয়",
     "programPlaceholder": "যেমন M.Sc. Web Engineering",
     "passwordLabel": "পাসওয়ার্ড",

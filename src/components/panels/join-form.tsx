@@ -12,7 +12,10 @@ import {
 } from "@/components/forms/form-ui";
 
 type Errors = Partial<
-  Record<"name" | "email" | "program" | "password" | "confirm", string>
+  Record<
+    "name" | "email" | "matriculationNumber" | "program" | "password" | "confirm",
+    string
+  >
 >;
 
 /** Interactive join / sign-up form (client-side only; auth wiring lands in Phase 2). */
@@ -25,6 +28,7 @@ export function JoinForm() {
   const [values, setValues] = useState({
     name: "",
     email: "",
+    matriculationNumber: "",
     program: "",
     password: "",
     confirm: "",
@@ -44,6 +48,8 @@ export function JoinForm() {
     if (!values.name.trim()) next.name = f("required");
     if (!values.email.trim()) next.email = f("required");
     else if (!EMAIL_RE.test(values.email)) next.email = f("invalidEmail");
+    if (!values.matriculationNumber.trim())
+      next.matriculationNumber = f("required");
     if (!values.program.trim()) next.program = f("required");
     if (values.password.length < 8) next.password = f("passwordShort");
     if (values.confirm !== values.password) next.confirm = f("passwordMismatch");
@@ -101,6 +107,29 @@ export function JoinForm() {
             className={inputClass(!!errors.email)}
           />
           {errors.email && <span role="alert" className="text-xs text-madder">{errors.email}</span>}
+        </div>
+
+        <div className="flex flex-col gap-1.5">
+          <label
+            htmlFor="join-matriculation"
+            className="text-sm font-medium text-foreground"
+          >
+            {t("matriculationLabel")}
+          </label>
+          <input
+            id="join-matriculation"
+            inputMode="numeric"
+            value={values.matriculationNumber}
+            onChange={set("matriculationNumber")}
+            placeholder={t("matriculationPlaceholder")}
+            aria-invalid={!!errors.matriculationNumber}
+            className={inputClass(!!errors.matriculationNumber)}
+          />
+          {errors.matriculationNumber && (
+            <span role="alert" className="text-xs text-madder">
+              {errors.matriculationNumber}
+            </span>
+          )}
         </div>
 
         <div className="flex flex-col gap-1.5">

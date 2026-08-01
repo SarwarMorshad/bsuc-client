@@ -162,6 +162,8 @@
     "namePlaceholder": "Dein Name",
     "emailLabel": "E-Mail",
     "emailPlaceholder": "du@beispiel.de",
+    "matriculationLabel": "Matrikelnummer",
+    "matriculationPlaceholder": "z. B. 512345",
     "programLabel": "Studiengang",
     "programPlaceholder": "z. B. M.Sc. Web Engineering",
     "passwordLabel": "Passwort",
