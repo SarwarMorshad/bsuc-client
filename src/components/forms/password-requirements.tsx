@@ -1,10 +1,8 @@
 "use client";
 
+import { AnimatePresence, motion, useReducedMotion } from "motion/react";
 import { useTranslations } from "next-intl";
-import {
-  PASSWORD_RULES,
-  passwordScore,
-} from "@/lib/password-rules";
+import { PASSWORD_RULES, passwordScore } from "@/lib/password-rules";
 
 function Check({ met }: { met: boolean }) {
   return (
@@ -23,11 +21,19 @@ function Check({ met }: { met: boolean }) {
 
 /**
  * Live password feedback: a strength meter plus a checklist that ticks off each
- * requirement as the member types. Announced politely so screen-reader users
- * hear the strength change without being interrupted on every keystroke.
+ * requirement as the member types. Shown while the password field has focus.
+ * Announced politely so screen-reader users hear the strength change without
+ * being interrupted on every keystroke.
  */
-export function PasswordRequirements({ value }: { value: string }) {
+export function PasswordRequirements({
+  value,
+  open,
+}: {
+  value: string;
+  open: boolean;
+}) {
   const f = useTranslations("form");
+  const reduce = useReducedMotion();
   const total = PASSWORD_RULES.length;
   const score = passwordScore(value);
 
@@ -37,39 +43,61 @@ export function PasswordRequirements({ value }: { value: string }) {
     score <= 2 ? "bg-madder" : score < total ? "bg-marigold" : "bg-bd-green";
 
   return (
-    <div className="flex flex-col gap-2.5 rounded-lg border border-dashed border-border bg-cream/60 p-3">
-      {/* Strength meter */}
-      <div className="flex items-center gap-2">
-        <div className="flex flex-1 gap-1" aria-hidden="true">
-          {PASSWORD_RULES.map((_, i) => (
-            <span
-              key={i}
-              className={`h-1.5 flex-1 rounded-full transition-colors ${
-                i < score ? barColor : "bg-muted/40"
-              }`}
-            />
-          ))}
-        </div>
-        <span aria-live="polite" className="text-xs font-medium text-muted-foreground">
-          {value ? label : ""}
-        </span>
-      </div>
-
-      <p className="text-xs text-muted-foreground">{f("pwRequirements")}</p>
-
-      <ul className="flex flex-col gap-1.5">
-        {PASSWORD_RULES.map((rule) => {
-          const met = rule.test(value);
-          return (
-            <li key={rule.key} className="flex items-center gap-2 text-xs">
-              <Check met={met} />
-              <span className={met ? "text-foreground" : "text-muted-foreground"}>
-                {f(rule.key)}
+    <AnimatePresence initial={false}>
+      {open && (
+        <motion.div
+          key="pw-requirements"
+          initial={{ opacity: 0, height: 0, y: -6 }}
+          animate={{ opacity: 1, height: "auto", y: 0 }}
+          exit={{ opacity: 0, height: 0, y: -6 }}
+          transition={{ duration: reduce ? 0 : 0.25, ease: "easeOut" }}
+          className="overflow-hidden"
+        >
+          <div className="mt-1.5 flex flex-col gap-2.5 rounded-lg border border-dashed border-border bg-cream/60 p-3">
+            {/* Strength meter */}
+            <div className="flex items-center gap-2">
+              <div className="flex flex-1 gap-1" aria-hidden="true">
+                {PASSWORD_RULES.map((_, i) => (
+                  <span
+                    key={i}
+                    className={`h-1.5 flex-1 rounded-full transition-colors ${
+                      i < score ? barColor : "bg-muted/40"
+                    }`}
+                  />
+                ))}
+              </div>
+              <span
+                aria-live="polite"
+                className="text-xs font-medium text-muted-foreground"
+              >
+                {value ? label : ""}
               </span>
-            </li>
-          );
-        })}
-      </ul>
-    </div>
+            </div>
+
+            <p className="text-xs text-muted-foreground">
+              {f("pwRequirements")}
+            </p>
+
+            <ul className="flex flex-col gap-1.5">
+              {PASSWORD_RULES.map((rule) => {
+                const met = rule.test(value);
+                return (
+                  <li key={rule.key} className="flex items-center gap-2 text-xs">
+                    <Check met={met} />
+                    <span
+                      className={
+                        met ? "text-foreground" : "text-muted-foreground"
+                      }
+                    >
+                      {f(rule.key)}
+                    </span>
+                  </li>
+                );
+              })}
+            </ul>
+          </div>
+        </motion.div>
+      )}
+    </AnimatePresence>
   );
 }

@@ -39,6 +39,7 @@ export function JoinForm() {
     confirm: "",
   });
   const [show, setShow] = useState(false);
+  const [passwordFocused, setPasswordFocused] = useState(false);
   const [errors, setErrors] = useState<Errors>({});
   const [formError, setFormError] = useState<string | null>(null);
   const [status, setStatus] = useState<"idle" | "submitting">("idle");
@@ -188,8 +189,11 @@ export function JoinForm() {
               type={show ? "text" : "password"}
               value={values.password}
               onChange={set("password")}
+              onFocus={() => setPasswordFocused(true)}
+              onBlur={() => setPasswordFocused(false)}
               placeholder={t("passwordPlaceholder")}
               aria-invalid={!!errors.password}
+              aria-describedby="password-requirements"
               className={`${inputClass(!!errors.password)} pr-10`}
             />
             <button
@@ -202,7 +206,15 @@ export function JoinForm() {
             </button>
           </div>
           {errors.password && <span role="alert" className="text-xs text-madder">{errors.password}</span>}
-          <PasswordRequirements value={values.password} />
+          {/* Also stays open after blurring while the password is still invalid,
+              so the member can see what is missing. */}
+          <PasswordRequirements
+            value={values.password}
+            open={
+              passwordFocused ||
+              (values.password.length > 0 && !isPasswordValid(values.password))
+            }
+          />
         </div>
 
         <div className="flex flex-col gap-1.5">
