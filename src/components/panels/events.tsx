@@ -1,25 +1,24 @@
 import { KanthaField } from "@/components/motifs/kantha-field";
 import { MotifIcon } from "@/components/motifs/motif-icon";
 import { RunningStitch } from "@/components/motifs/running-stitch";
+import { formatEventDate, type Event } from "@/lib/events";
 
-export type EventItem = {
-  title: string;
-  date: string;
-  place: string;
-  accent: string;
-};
+/** Rotates through the thread colours so consecutive cards differ. */
+const ACCENTS = ["text-bd-green", "text-madder", "text-indigo", "text-marigold"];
 
-/** Cream panel with embroidered field and stitched event cards. */
+/** Events from the database, with an empty state when none are scheduled. */
 export function Events({
   title,
   subtitle,
-  items,
-  cta,
+  emptyMessage,
+  events,
+  locale,
 }: {
   title: string;
   subtitle: string;
-  items: EventItem[];
-  cta: string;
+  emptyMessage: string;
+  events: Event[];
+  locale: string;
 }) {
   return (
     <section id="events" className="relative overflow-hidden py-20 sm:py-24">
@@ -34,31 +33,60 @@ export function Events({
           <p className="max-w-xl text-muted-foreground">{subtitle}</p>
         </div>
 
-        <div className="mt-12 grid gap-5 sm:grid-cols-3">
-          {items.map((e) => (
-            <article
-              key={e.title}
-              className="flex flex-col gap-3 rounded-lg border-2 border-dashed border-border bg-background p-6 shadow-sm"
-            >
-              <MotifIcon name="flower" className={`h-8 w-8 ${e.accent}`} />
-              <h3 className="font-display text-xl font-semibold text-foreground">
-                {e.title}
-              </h3>
-              <dl className="text-sm text-muted-foreground">
-                <div className="flex gap-2">
-                  <dt className="font-medium text-foreground">{e.date}</dt>
-                  <dd>· {e.place}</dd>
-                </div>
-              </dl>
-            </article>
-          ))}
-        </div>
+        {events.length === 0 ? (
+          <p className="mt-12 rounded-xl border border-dashed border-border bg-background/70 px-6 py-10 text-center text-muted-foreground">
+            {emptyMessage}
+          </p>
+        ) : (
+          <div className="mt-12 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+            {events.map((e, i) => (
+              <article
+                key={e.id}
+                className="flex flex-col overflow-hidden rounded-lg border-2 border-dashed border-border bg-background shadow-sm"
+              >
+                {e.imageUrl && (
+                  // eslint-disable-next-line @next/next/no-img-element
+                  <img
+                    src={e.imageUrl}
+                    alt=""
+                    className="h-40 w-full object-cover"
+                  />
+                )}
 
-        <div className="mt-10 flex justify-center">
-          <span className="rounded-full border border-dashed border-primary px-6 py-2.5 text-sm font-medium text-primary">
-            {cta}
-          </span>
-        </div>
+                <div className="flex flex-1 flex-col gap-3 p-6">
+                  <MotifIcon
+                    name="flower"
+                    className={`h-8 w-8 ${ACCENTS[i % ACCENTS.length]}`}
+                  />
+                  <h3 className="font-display text-xl font-semibold text-foreground">
+                    {e.title}
+                  </h3>
+
+                  <dl className="text-sm text-muted-foreground">
+                    <dt className="sr-only">Date</dt>
+                    <dd className="font-medium text-foreground">
+                      <time dateTime={e.date}>
+                        {formatEventDate(e.date, locale)}
+                      </time>
+                    </dd>
+                    {e.location && (
+                      <>
+                        <dt className="sr-only">Location</dt>
+                        <dd className="mt-0.5">{e.location}</dd>
+                      </>
+                    )}
+                  </dl>
+
+                  {e.description && (
+                    <p className="text-sm leading-relaxed text-muted-foreground">
+                      {e.description}
+                    </p>
+                  )}
+                </div>
+              </article>
+            ))}
+          </div>
+        )}
       </div>
     </section>
   );

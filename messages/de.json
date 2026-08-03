@@ -140,16 +140,8 @@
   "events": {
     "title": "Kommende Veranstaltungen",
     "subtitle": "Komm, wie du bist — alle sind willkommen.",
-    "e1Title": "Willkommensessen",
-    "e1Date": "Wintersemester",
-    "e1Place": "TU Chemnitz",
-    "e2Title": "Pohela Boishakh",
-    "e2Date": "April",
-    "e2Place": "Chemnitz",
-    "e3Title": "Gemeinschaftspicknick",
-    "e3Date": "Sommer",
-    "e3Place": "Küchwald-Park",
-    "cta": "Alle Veranstaltungen"
+    "cta": "Alle Veranstaltungen",
+    "empty": "Derzeit sind keine Veranstaltungen geplant. Schau bald wieder vorbei — oder folge uns für Ankündigungen."
   },
   "support": {
     "title": "Neu in Chemnitz?",
