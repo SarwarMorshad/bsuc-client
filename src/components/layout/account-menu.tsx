@@ -65,9 +65,18 @@ export function AccountMenu() {
         aria-label={t("account")}
         className="flex items-center gap-2 rounded-full border border-border py-1 pr-3 pl-1 transition-colors hover:bg-muted/30"
       >
-        <span className="flex h-7 w-7 items-center justify-center rounded-full bg-bd-green text-xs font-semibold text-cream">
-          {initials}
-        </span>
+        {user.avatarUrl ? (
+          // eslint-disable-next-line @next/next/no-img-element
+          <img
+            src={user.avatarUrl}
+            alt=""
+            className="h-7 w-7 rounded-full object-cover"
+          />
+        ) : (
+          <span className="flex h-7 w-7 items-center justify-center rounded-full bg-bd-green text-xs font-semibold text-cream">
+            {initials}
+          </span>
+        )}
         <span className="max-w-[8rem] truncate text-sm text-foreground">
           {user.name.split(" ")[0]}
         </span>
