@@ -1,8 +1,8 @@
 import { setRequestLocale, getTranslations } from "next-intl/server";
 import { AdminShell } from "@/components/admin/admin-shell";
-import { DashboardOverview } from "@/components/admin/dashboard-overview";
+import { MembersManager } from "@/components/admin/members-manager";
 
-export default async function AdminPage({
+export default async function AdminMembersPage({
   params,
 }: {
   params: Promise<{ locale: string }>;
@@ -12,8 +12,8 @@ export default async function AdminPage({
   const t = await getTranslations("admin");
 
   return (
-    <AdminShell title={t("overview")}>
-      <DashboardOverview />
+    <AdminShell title={t("members")}>
+      <MembersManager />
     </AdminShell>
   );
 }

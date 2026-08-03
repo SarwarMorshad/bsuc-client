@@ -81,16 +81,6 @@ export default async function LocaleLayout({
   }
   setRequestLocale(locale);
 
-  const tn = await getTranslations("nav");
-  const navLinks = [
-    { href: "/events", label: tn("events") },
-    { href: "/new-students", label: tn("newStudents") },
-    { href: "/gallery", label: tn("gallery") },
-    { href: "/jobs", label: tn("jobPortal") },
-  ];
-  const joinLabel = tn("join");
-  const loginLabel = tn("login");
-
   return (
     <html
       lang={locale}
@@ -98,17 +88,9 @@ export default async function LocaleLayout({
     >
       <body className="min-h-full flex flex-col">
         <NextIntlClientProvider>
-          <Providers>
-            <SmoothScroll>
-              <SiteHeader
-                links={navLinks}
-                joinLabel={joinLabel}
-                loginLabel={loginLabel}
-              />
-              <main className="flex-1">{children}</main>
-              <SiteFooter />
-            </SmoothScroll>
-          </Providers>
+          {/* The public site chrome lives in the (site) layout, so the admin
+              dashboard can render its own full-screen shell instead. */}
+          <Providers>{children}</Providers>
         </NextIntlClientProvider>
       </body>
     </html>
