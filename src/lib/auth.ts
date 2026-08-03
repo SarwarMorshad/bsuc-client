@@ -19,6 +19,7 @@ export type User = {
   pendingEmail: string | null;
   role: "MEMBER" | "ADMIN";
   avatarUrl: string | null;
+  avatarPublicId: string | null;
   /** Timestamp of email confirmation, or null while still pending. */
   emailVerified: string | null;
   createdAt: string;
@@ -69,6 +70,23 @@ export async function requestEmailChange(
   password: string,
 ): Promise<void> {
   await api.post("/profile/email", { newEmail, password });
+}
+
+/** Uploads a new profile photo. */
+export async function uploadAvatar(file: File): Promise<User> {
+  const form = new FormData();
+  form.append("avatar", file);
+  // Let the browser set the multipart boundary itself.
+  const { data } = await api.post<{ user: User }>("/profile/avatar", form, {
+    headers: { "Content-Type": undefined },
+  });
+  return data.user;
+}
+
+/** Removes the profile photo, falling back to initials. */
+export async function removeAvatar(): Promise<User> {
+  const { data } = await api.delete<{ user: User }>("/profile/avatar");
+  return data.user;
 }
 
 /** Permanently deletes the signed-in member's account. */

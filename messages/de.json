@@ -257,7 +257,15 @@
     "deletePasswordLabel": "Dein Passwort",
     "deleteButton": "Mein Konto löschen",
     "deleteMismatch": "Bitte tippe genau DELETE.",
-    "privacyLink": "Wie wir mit deinen Daten umgehen"
+    "privacyLink": "Wie wir mit deinen Daten umgehen",
+    "photoLabel": "Profilfoto",
+    "photoHint": "JPEG, PNG oder WebP, bis 5 MB. Wird quadratisch zugeschnitten.",
+    "uploadPhoto": "Foto hochladen",
+    "changePhoto": "Foto ändern",
+    "removePhoto": "Entfernen",
+    "uploading": "Wird hochgeladen…",
+    "photoUpdated": "Foto aktualisiert.",
+    "photoRemoved": "Foto entfernt."
   },
   "privacy": {
     "title": "Datenschutz",

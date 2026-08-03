@@ -257,7 +257,15 @@
     "deletePasswordLabel": "আপনার পাসওয়ার্ড",
     "deleteButton": "আমার অ্যাকাউন্ট মুছুন",
     "deleteMismatch": "নিশ্চিত করতে হুবহু DELETE লিখুন।",
-    "privacyLink": "আমরা আপনার তথ্য কীভাবে ব্যবহার করি"
+    "privacyLink": "আমরা আপনার তথ্য কীভাবে ব্যবহার করি",
+    "photoLabel": "প্রোফাইল ছবি",
+    "photoHint": "JPEG, PNG বা WebP, সর্বোচ্চ ৫ এমবি। বর্গাকারে কাটা হবে।",
+    "uploadPhoto": "ছবি আপলোড করুন",
+    "changePhoto": "ছবি পরিবর্তন",
+    "removePhoto": "সরান",
+    "uploading": "আপলোড হচ্ছে…",
+    "photoUpdated": "ছবি হালনাগাদ হয়েছে।",
+    "photoRemoved": "ছবি সরানো হয়েছে।"
   },
   "privacy": {
     "title": "গোপনীয়তা",

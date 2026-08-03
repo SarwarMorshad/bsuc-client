@@ -3,6 +3,7 @@
 import { useLocale, useTranslations } from "next-intl";
 import { useAuth } from "@/components/auth/auth-provider";
 import { ProfileDetails } from "@/components/profile/profile-details";
+import { AvatarUpload } from "@/components/profile/avatar-upload";
 import { ChangeEmail } from "@/components/profile/change-email";
 import { ChangePassword } from "@/components/profile/change-password";
 import { DeleteAccount } from "@/components/profile/delete-account";
@@ -28,13 +29,6 @@ export function ProfileView() {
 
   if (!user) return null;
 
-  const initials = user.name
-    .split(" ")
-    .filter(Boolean)
-    .slice(0, 2)
-    .map((p) => p[0]?.toUpperCase())
-    .join("");
-
   const memberSince = new Intl.DateTimeFormat(locale, {
     year: "numeric",
     month: "long",
@@ -43,14 +37,8 @@ export function ProfileView() {
   return (
     <div className="flex flex-col gap-8">
       {/* Summary */}
-      <div className="flex flex-col items-center gap-4 text-center sm:flex-row sm:items-center sm:gap-6 sm:text-left">
-        {/* Placeholder avatar — real uploads land with Cloudinary later */}
-        <span
-          className="flex h-20 w-20 shrink-0 items-center justify-center rounded-full bg-bd-green font-display text-2xl font-semibold text-cream"
-          aria-hidden="true"
-        >
-          {initials}
-        </span>
+      <div className="flex flex-col items-center gap-4 text-center sm:items-start sm:text-left">
+        <AvatarUpload />
 
         <div className="flex flex-col gap-1.5">
           <h1 className="font-display text-3xl font-semibold text-foreground">
