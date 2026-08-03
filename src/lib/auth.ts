@@ -1,5 +1,7 @@
 import { api } from "@/lib/api";
 
+export type DegreeLevel = "BACHELOR" | "MASTER" | "PHD" | "OTHER";
+
 /** The authenticated member, as returned by the API. */
 export type User = {
   id: string;
@@ -9,6 +11,12 @@ export type User = {
   program: string | null;
   countryRegion: string | null;
   year: number | null;
+  phone: string | null;
+  degreeLevel: DegreeLevel | null;
+  arrivalYear: number | null;
+  bio: string | null;
+  /** Address awaiting confirmation during an email change. */
+  pendingEmail: string | null;
   role: "MEMBER" | "ADMIN";
   avatarUrl: string | null;
   /** Timestamp of email confirmation, or null while still pending. */
@@ -34,6 +42,10 @@ export type UpdateProfilePayload = {
   program?: string | null;
   countryRegion?: string | null;
   year?: number | null;
+  phone?: string | null;
+  degreeLevel?: DegreeLevel | null;
+  arrivalYear?: number | null;
+  bio?: string | null;
 };
 
 /** Updates the signed-in member's own details. */
@@ -49,6 +61,19 @@ export async function changePassword(
   newPassword: string,
 ): Promise<void> {
   await api.post("/profile/password", { currentPassword, newPassword });
+}
+
+/** Starts an email change; the new address must confirm before it applies. */
+export async function requestEmailChange(
+  newEmail: string,
+  password: string,
+): Promise<void> {
+  await api.post("/profile/email", { newEmail, password });
+}
+
+/** Permanently deletes the signed-in member's account. */
+export async function deleteAccount(password: string): Promise<void> {
+  await api.delete("/profile", { data: { password } });
 }
 
 /** Confirms an email address using the token from the verification link. */

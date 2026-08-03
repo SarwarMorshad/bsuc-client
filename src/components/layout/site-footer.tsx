@@ -51,6 +51,7 @@ function SocialIcon({ name }: { name: IconName }) {
 export async function SiteFooter() {
   const t = await getTranslations("footer");
   const n = await getTranslations("nav");
+  const p = await getTranslations("privacy");
 
   const explore = [
     { href: "/about", label: n("about") },
@@ -158,7 +159,12 @@ export async function SiteFooter() {
           <span>
             © {new Date().getFullYear()} {siteConfig.name}. {t("rights")}
           </span>
-          <span>{t("madeWith")}</span>
+          <span className="flex items-center gap-4">
+            <Link href="/privacy" className="underline-offset-4 hover:underline">
+              {p("title")}
+            </Link>
+            <span>{t("madeWith")}</span>
+          </span>
         </div>
       </div>
     </footer>

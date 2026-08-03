@@ -3,7 +3,7 @@
 import { useState, type FormEvent } from "react";
 import { useTranslations } from "next-intl";
 import { useAuth } from "@/components/auth/auth-provider";
-import { updateProfile } from "@/lib/auth";
+import { updateProfile, type DegreeLevel } from "@/lib/auth";
 import { toApiError } from "@/lib/api";
 import { inputClass } from "@/components/forms/form-ui";
 
@@ -39,6 +39,10 @@ export function ProfileDetails() {
     program: user?.program ?? "",
     countryRegion: user?.countryRegion ?? "",
     year: user?.year ? String(user.year) : "",
+    phone: user?.phone ?? "",
+    degreeLevel: user?.degreeLevel ?? "",
+    arrivalYear: user?.arrivalYear ? String(user.arrivalYear) : "",
+    bio: user?.bio ?? "",
   });
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [formError, setFormError] = useState<string | null>(null);
@@ -46,7 +50,8 @@ export function ProfileDetails() {
 
   if (!user) return null;
 
-  const set = (key: keyof typeof values) => (e: { target: { value: string } }) => {
+  const set =
+    (key: keyof typeof values) => (e: { target: { value: string } }) => {
     setValues((v) => ({ ...v, [key]: e.target.value }));
     setStatus("idle");
     if (errors[key]) setErrors((p) => ({ ...p, [key]: "" }));
@@ -68,6 +73,10 @@ export function ProfileDetails() {
         program: values.program || null,
         countryRegion: values.countryRegion || null,
         year: values.year ? Number(values.year) : null,
+        phone: values.phone || null,
+        degreeLevel: (values.degreeLevel || null) as DegreeLevel | null,
+        arrivalYear: values.arrivalYear ? Number(values.arrivalYear) : null,
+        bio: values.bio || null,
       });
       await refresh();
       setStatus("saved");
@@ -159,6 +168,82 @@ export function ProfileDetails() {
               {errors.year}
             </span>
           )}
+        </div>
+
+        <div className="flex flex-col gap-1.5">
+          <label htmlFor="p-degree" className="text-sm font-medium text-foreground">
+            {t("degreeLabel")}
+          </label>
+          <select
+            id="p-degree"
+            value={values.degreeLevel}
+            onChange={set("degreeLevel")}
+            className={inputClass(false)}
+          >
+            <option value="">{t("choose")}</option>
+            <option value="BACHELOR">{t("bachelor")}</option>
+            <option value="MASTER">{t("master")}</option>
+            <option value="PHD">{t("phd")}</option>
+            <option value="OTHER">{t("otherDegree")}</option>
+          </select>
+        </div>
+
+        <div className="flex flex-col gap-1.5">
+          <label htmlFor="p-arrival" className="text-sm font-medium text-foreground">
+            {t("arrivalLabel")}
+          </label>
+          <input
+            id="p-arrival"
+            type="number"
+            min={1990}
+            max={new Date().getFullYear() + 1}
+            value={values.arrivalYear}
+            onChange={set("arrivalYear")}
+            aria-invalid={!!errors.arrivalYear}
+            className={inputClass(!!errors.arrivalYear)}
+          />
+          {errors.arrivalYear && (
+            <span role="alert" className="text-xs text-madder">
+              {errors.arrivalYear}
+            </span>
+          )}
+        </div>
+
+        <div className="flex flex-col gap-1.5 sm:col-span-2">
+          <label htmlFor="p-phone" className="text-sm font-medium text-foreground">
+            {t("phoneLabel")}
+          </label>
+          <input
+            id="p-phone"
+            type="tel"
+            value={values.phone}
+            onChange={set("phone")}
+            placeholder="+49 …"
+            aria-invalid={!!errors.phone}
+            className={inputClass(!!errors.phone)}
+          />
+          {errors.phone ? (
+            <span role="alert" className="text-xs text-madder">
+              {errors.phone}
+            </span>
+          ) : (
+            <span className="text-xs text-muted-foreground/80">{t("phoneHint")}</span>
+          )}
+        </div>
+
+        <div className="flex flex-col gap-1.5 sm:col-span-2">
+          <label htmlFor="p-bio" className="text-sm font-medium text-foreground">
+            {t("bioLabel")}
+          </label>
+          <textarea
+            id="p-bio"
+            rows={3}
+            maxLength={500}
+            value={values.bio}
+            onChange={set("bio")}
+            className={`${inputClass(!!errors.bio)} resize-y`}
+          />
+          <span className="text-xs text-muted-foreground/80">{t("bioHint")}</span>
         </div>
 
         {/* Not editable here — see the API for why */}

@@ -3,7 +3,9 @@
 import { useLocale, useTranslations } from "next-intl";
 import { useAuth } from "@/components/auth/auth-provider";
 import { ProfileDetails } from "@/components/profile/profile-details";
+import { ChangeEmail } from "@/components/profile/change-email";
 import { ChangePassword } from "@/components/profile/change-password";
+import { DeleteAccount } from "@/components/profile/delete-account";
 import { RunningStitch } from "@/components/motifs/running-stitch";
 
 /**
@@ -76,7 +78,9 @@ export function ProfileView() {
       </div>
 
       <ProfileDetails />
+      <ChangeEmail />
       <ChangePassword />
+      <DeleteAccount />
     </div>
   );
 }
