@@ -30,16 +30,10 @@
      the thread work; red is reserved for key highlights only. */
   --color-cloth-band: #ebe5d3; /* deeper cream for border bands */
 
-  /* ---- Layer 2: semantic tokens (what components use) ---- */
-  --color-background: var(--color-cream);
-  --color-foreground: var(--color-ink);
-  --color-primary: var(--color-brand-blue);
-  --color-primary-foreground: #ffffff;
-  --color-accent: var(--color-bd-green);
-  --color-accent-foreground: #ffffff;
-  --color-muted: var(--color-silver);
-  --color-muted-foreground: #5b5f63;
-  --color-border: #e4e0d6;
+  /* ---- Layer 2: semantic tokens (background, foreground, primary, muted,
+     border, card, popover, destructive, sidebar…) now live in globals.css,
+     where they are shared with shadcn/ui. They are mapped to this palette, so
+     there is still a single place to change the brand colours: this file. ---- */
 
   /* ---- Fonts (self-hosted via next/font; see layout.tsx) ---- */
   --font-sans: var(--font-inter), ui-sans-serif, system-ui, sans-serif;

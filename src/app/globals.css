@@ -1,6 +1,10 @@
 @import "tailwindcss";
 @import "../styles/theme.css";
 @import "../styles/animations.css";
+@import "tw-animate-css";
+@import "shadcn/tailwind.css";
+
+@custom-variant dark (&:is(.dark *));
 
 html {
   scroll-behavior: smooth;
@@ -17,4 +21,119 @@ body {
 /* Bangla-locale text uses the Bengali face. */
 :lang(bn) {
   font-family: var(--font-bangla);
+}
+
+/**
+ * shadcn/ui expects these semantic variables. They are mapped to the BSUC
+ * palette below so its components inherit our brand rather than the default
+ * greys — the site stays cream, buttons stay Bangladesh green, and so on.
+ */
+@theme inline {
+  --font-heading: var(--font-display);
+  --color-sidebar-ring: var(--sidebar-ring);
+  --color-sidebar-border: var(--sidebar-border);
+  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
+  --color-sidebar-accent: var(--sidebar-accent);
+  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
+  --color-sidebar-primary: var(--sidebar-primary);
+  --color-sidebar-foreground: var(--sidebar-foreground);
+  --color-sidebar: var(--sidebar);
+  --color-ring: var(--ring);
+  --color-input: var(--input);
+  --color-border: var(--border);
+  --color-destructive: var(--destructive);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-accent: var(--accent);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-muted: var(--muted);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-secondary: var(--secondary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-primary: var(--primary);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-popover: var(--popover);
+  --color-card-foreground: var(--card-foreground);
+  --color-card: var(--card);
+  --color-foreground: var(--foreground);
+  --color-background: var(--background);
+  --radius-sm: calc(var(--radius) * 0.6);
+  --radius-md: calc(var(--radius) * 0.8);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) * 1.4);
+}
+
+:root {
+  --radius: 0.625rem;
+
+  /* Surfaces — the cream cloth, with white cards lifted above it. */
+  --background: #f5f3ec;
+  --foreground: #1b1b1a;
+  --card: #ffffff;
+  --card-foreground: #1b1b1a;
+  --popover: #ffffff;
+  --popover-foreground: #1b1b1a;
+
+  /* Brand */
+  --primary: #006a4e;
+  --primary-foreground: #f5f3ec;
+  --secondary: #ebe5d3;
+  --secondary-foreground: #1b1b1a;
+  --muted: #ebe5d3;
+  --muted-foreground: #5b5f63;
+  --accent: #efe7d2;
+  --accent-foreground: #1b1b1a;
+  --destructive: #b23a48;
+
+  --border: #e4e0d6;
+  --input: #e4e0d6;
+  --ring: #006a4e;
+
+  /* Admin sidebar — deep indigo with cream text. */
+  --sidebar: #22335c;
+  --sidebar-foreground: #f5f3ec;
+  --sidebar-primary: #006a4e;
+  --sidebar-primary-foreground: #f5f3ec;
+  --sidebar-accent: #2f4472;
+  --sidebar-accent-foreground: #f5f3ec;
+  --sidebar-border: rgba(245, 243, 236, 0.14);
+  --sidebar-ring: #e5a32b;
+}
+
+/* Dark mode is not used on the public site yet; kept coherent for later. */
+.dark {
+  --background: #16181a;
+  --foreground: #f5f3ec;
+  --card: #1f2224;
+  --card-foreground: #f5f3ec;
+  --popover: #1f2224;
+  --popover-foreground: #f5f3ec;
+  --primary: #3aaa35;
+  --primary-foreground: #16181a;
+  --secondary: #262a2d;
+  --secondary-foreground: #f5f3ec;
+  --muted: #262a2d;
+  --muted-foreground: #a8aeb3;
+  --accent: #262a2d;
+  --accent-foreground: #f5f3ec;
+  --destructive: #d4636f;
+  --border: rgba(245, 243, 236, 0.12);
+  --input: rgba(245, 243, 236, 0.16);
+  --ring: #3aaa35;
+  --sidebar: #1b2749;
+  --sidebar-foreground: #f5f3ec;
+  --sidebar-primary: #3aaa35;
+  --sidebar-primary-foreground: #16181a;
+  --sidebar-accent: #26365e;
+  --sidebar-accent-foreground: #f5f3ec;
+  --sidebar-border: rgba(245, 243, 236, 0.14);
+  --sidebar-ring: #e5a32b;
+}
+
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+  }
+  body {
+    @apply bg-background text-foreground;
+  }
 }
