@@ -207,5 +207,31 @@
     "failBody": "This confirmation link is invalid or has expired. Request a new one below.",
     "emailPrompt": "Your email address",
     "goLogin": "Go to login"
+  },
+  "profile": {
+    "title": "My profile",
+    "subtitle": "Your membership details.",
+    "details": "Details",
+    "security": "Security",
+    "nameLabel": "Full name",
+    "emailLabel": "Email",
+    "matriculationLabel": "Matriculation number",
+    "programLabel": "Study programme",
+    "regionLabel": "Where you are from",
+    "regionPlaceholder": "e.g. Dhaka",
+    "yearLabel": "Year of study",
+    "notSet": "Not set",
+    "save": "Save changes",
+    "saved": "Profile updated.",
+    "locked": "Cannot be changed here",
+    "memberSince": "Member since",
+    "roleLabel": "Role",
+    "verified": "Email verified",
+    "changePassword": "Change password",
+    "currentPassword": "Current password",
+    "newPassword": "New password",
+    "confirmNewPassword": "Confirm new password",
+    "updatePassword": "Update password",
+    "passwordUpdated": "Password updated."
   }
 }

@@ -81,6 +81,13 @@ export function AccountMenu() {
             </p>
             <p className="truncate text-xs text-muted-foreground">{user.email}</p>
           </div>
+          <Link
+            href="/profile"
+            onClick={() => setOpen(false)}
+            className="block px-4 py-2.5 text-sm text-foreground transition-colors hover:bg-muted/30"
+          >
+            {t("account")}
+          </Link>
           <button
             type="button"
             onClick={async () => {
@@ -88,7 +95,7 @@ export function AccountMenu() {
               await signOut();
               router.replace("/");
             }}
-            className="w-full px-4 py-2.5 text-left text-sm text-foreground transition-colors hover:bg-muted/30"
+            className="w-full border-t border-border px-4 py-2.5 text-left text-sm text-foreground transition-colors hover:bg-muted/30"
           >
             {t("logout")}
           </button>

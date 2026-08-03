@@ -207,5 +207,31 @@
     "failBody": "এই নিশ্চিতকরণ লিংকটি অবৈধ বা মেয়াদোত্তীর্ণ। নিচে নতুন একটি চান।",
     "emailPrompt": "আপনার ইমেইল ঠিকানা",
     "goLogin": "লগ ইনে যান"
+  },
+  "profile": {
+    "title": "আমার প্রোফাইল",
+    "subtitle": "আপনার সদস্যপদের তথ্য।",
+    "details": "তথ্য",
+    "security": "নিরাপত্তা",
+    "nameLabel": "পুরো নাম",
+    "emailLabel": "ইমেইল",
+    "matriculationLabel": "ম্যাট্রিকুলেশন নম্বর",
+    "programLabel": "পড়াশোনার বিষয়",
+    "regionLabel": "আপনি কোথা থেকে",
+    "regionPlaceholder": "যেমন ঢাকা",
+    "yearLabel": "পড়াশোনার বর্ষ",
+    "notSet": "দেওয়া হয়নি",
+    "save": "পরিবর্তন সংরক্ষণ করুন",
+    "saved": "প্রোফাইল হালনাগাদ হয়েছে।",
+    "locked": "এখানে পরিবর্তন করা যাবে না",
+    "memberSince": "সদস্য হয়েছেন",
+    "roleLabel": "ভূমিকা",
+    "verified": "ইমেইল যাচাই হয়েছে",
+    "changePassword": "পাসওয়ার্ড পরিবর্তন",
+    "currentPassword": "বর্তমান পাসওয়ার্ড",
+    "newPassword": "নতুন পাসওয়ার্ড",
+    "confirmNewPassword": "নতুন পাসওয়ার্ড নিশ্চিত করুন",
+    "updatePassword": "পাসওয়ার্ড হালনাগাদ করুন",
+    "passwordUpdated": "পাসওয়ার্ড হালনাগাদ হয়েছে।"
   }
 }

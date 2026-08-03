@@ -207,5 +207,31 @@
     "failBody": "Dieser Bestätigungslink ist ungültig oder abgelaufen. Fordere unten einen neuen an.",
     "emailPrompt": "Deine E-Mail-Adresse",
     "goLogin": "Zur Anmeldung"
+  },
+  "profile": {
+    "title": "Mein Profil",
+    "subtitle": "Deine Mitgliedsdaten.",
+    "details": "Angaben",
+    "security": "Sicherheit",
+    "nameLabel": "Vollständiger Name",
+    "emailLabel": "E-Mail",
+    "matriculationLabel": "Matrikelnummer",
+    "programLabel": "Studiengang",
+    "regionLabel": "Woher du kommst",
+    "regionPlaceholder": "z. B. Dhaka",
+    "yearLabel": "Studienjahr",
+    "notSet": "Nicht angegeben",
+    "save": "Änderungen speichern",
+    "saved": "Profil aktualisiert.",
+    "locked": "Hier nicht änderbar",
+    "memberSince": "Mitglied seit",
+    "roleLabel": "Rolle",
+    "verified": "E-Mail bestätigt",
+    "changePassword": "Passwort ändern",
+    "currentPassword": "Aktuelles Passwort",
+    "newPassword": "Neues Passwort",
+    "confirmNewPassword": "Neues Passwort bestätigen",
+    "updatePassword": "Passwort aktualisieren",
+    "passwordUpdated": "Passwort aktualisiert."
   }
 }
