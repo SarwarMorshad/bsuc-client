@@ -1,9 +1,14 @@
 "use client";
 
 import { useState } from "react";
-import { Link } from "@/i18n/navigation";
+import { useTranslations } from "next-intl";
+import { Link, useRouter } from "@/i18n/navigation";
+import { useAuth } from "@/components/auth/auth-provider";
 
-/** Hamburger menu for small screens: nav links + Join CTA in a dropdown. */
+/**
+ * Hamburger menu for small screens. Signed-out visitors get the nav links plus
+ * Log in / Join; signed-in members see their photo, account link and Log out.
+ */
 export function MobileNav({
   links,
   joinLabel,
@@ -14,6 +19,20 @@ export function MobileNav({
   loginLabel: string;
 }) {
   const [open, setOpen] = useState(false);
+  const t = useTranslations("nav");
+  const { user, loading, signOut } = useAuth();
+  const router = useRouter();
+
+  const close = () => setOpen(false);
+
+  const initials = user
+    ? user.name
+        .split(" ")
+        .filter(Boolean)
+        .slice(0, 2)
+        .map((p) => p[0]?.toUpperCase())
+        .join("")
+    : "";
 
   return (
     <div className="md:hidden">
@@ -32,30 +51,83 @@ export function MobileNav({
       {open && (
         <div className="absolute inset-x-0 top-full border-b border-border bg-background shadow-md">
           <nav className="mx-auto flex max-w-6xl flex-col gap-1 px-5 py-4">
+            {/* Signed-in member: photo, name and email */}
+            {user && (
+              <Link
+                href="/profile"
+                onClick={close}
+                className="mb-2 flex items-center gap-3 rounded-lg border border-border p-3 hover:bg-muted/30"
+              >
+                {user.avatarUrl ? (
+                  // eslint-disable-next-line @next/next/no-img-element
+                  <img
+                    src={user.avatarUrl}
+                    alt=""
+                    className="h-10 w-10 shrink-0 rounded-full object-cover"
+                  />
+                ) : (
+                  <span
+                    className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-bd-green text-sm font-semibold text-cream"
+                    aria-hidden="true"
+                  >
+                    {initials}
+                  </span>
+                )}
+                <span className="min-w-0">
+                  <span className="block truncate text-sm font-medium text-foreground">
+                    {user.name}
+                  </span>
+                  <span className="block truncate text-xs text-muted-foreground">
+                    {user.email}
+                  </span>
+                </span>
+              </Link>
+            )}
+
             {links.map((l) => (
               <Link
                 key={l.href}
                 href={l.href}
-                onClick={() => setOpen(false)}
+                onClick={close}
                 className="rounded-md px-3 py-2.5 text-sm text-foreground hover:bg-muted/30"
               >
                 {l.label}
               </Link>
             ))}
-            <Link
-              href="/login"
-              onClick={() => setOpen(false)}
-              className="mt-2 rounded-full border border-indigo/40 px-5 py-2.5 text-center text-sm font-medium text-indigo"
-            >
-              {loginLabel}
-            </Link>
-            <Link
-              href="/join"
-              onClick={() => setOpen(false)}
-              className="rounded-full bg-bd-green px-5 py-2.5 text-center text-sm font-medium text-cream"
-            >
-              {joinLabel}
-            </Link>
+
+            {/* Account actions — hidden until the session resolves, so the
+                menu never flashes the wrong state. */}
+            {!loading &&
+              (user ? (
+                <button
+                  type="button"
+                  onClick={async () => {
+                    close();
+                    await signOut();
+                    router.replace("/");
+                  }}
+                  className="mt-2 rounded-full border border-madder/40 px-5 py-2.5 text-center text-sm font-medium text-madder"
+                >
+                  {t("logout")}
+                </button>
+              ) : (
+                <>
+                  <Link
+                    href="/login"
+                    onClick={close}
+                    className="mt-2 rounded-full border border-indigo/40 px-5 py-2.5 text-center text-sm font-medium text-indigo"
+                  >
+                    {loginLabel}
+                  </Link>
+                  <Link
+                    href="/join"
+                    onClick={close}
+                    className="rounded-full bg-bd-green px-5 py-2.5 text-center text-sm font-medium text-cream"
+                  >
+                    {joinLabel}
+                  </Link>
+                </>
+              ))}
           </nav>
         </div>
       )}
