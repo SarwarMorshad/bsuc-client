@@ -11,6 +11,7 @@ import { useAuth } from "@/components/auth/auth-provider";
  */
 export function AccountMenu() {
   const t = useTranslations("nav");
+  const a = useTranslations("admin");
   const { user, loading, signOut } = useAuth();
   const [open, setOpen] = useState(false);
   const ref = useRef<HTMLDivElement>(null);
@@ -97,6 +98,15 @@ export function AccountMenu() {
           >
             {t("account")}
           </Link>
+          {user.role === "ADMIN" && (
+            <Link
+              href="/admin/events"
+              onClick={() => setOpen(false)}
+              className="block px-4 py-2.5 text-sm font-medium text-brand-blue transition-colors hover:bg-muted/30"
+            >
+              {a("title")}
+            </Link>
+          )}
           <button
             type="button"
             onClick={async () => {
