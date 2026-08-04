@@ -19,8 +19,6 @@ import { toApiError } from "@/lib/api";
 import { listJobs } from "@/lib/admin-jobs";
 import { formatJobDate, formatPay, type Job, type JobType } from "@/lib/jobs";
 
-const TYPES: JobType[] = ["HIWI", "WERKSTUDENT", "INTERNSHIP", "PART_TIME"];
-
 /** The members-only job portal. Adverts are German; the chrome is translated. */
 export function Jobs() {
   const t = useTranslations("jobs");
@@ -48,6 +46,10 @@ export function Jobs() {
   }, [load]);
 
   const shown = filter === "ALL" ? jobs : jobs.filter((j) => j.type === filter);
+
+  // Only offer filters for types that are actually on the board — there are
+  // twelve possible, and empty chips are just noise.
+  const presentTypes = [...new Set(jobs.map((j) => j.type))] as JobType[];
 
   return (
     <section className="py-16 sm:py-20">
@@ -93,7 +95,7 @@ export function Jobs() {
                 active={filter === "ALL"}
                 onClick={() => setFilter("ALL")}
               />
-              {TYPES.map((type) => (
+              {presentTypes.map((type) => (
                 <FilterChip
                   key={type}
                   label={t(`type${type}`)}

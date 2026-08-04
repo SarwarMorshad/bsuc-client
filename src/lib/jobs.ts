@@ -1,4 +1,16 @@
-export type JobType = "HIWI" | "WERKSTUDENT" | "INTERNSHIP" | "PART_TIME";
+export type JobType =
+  | "HIWI"
+  | "WERKSTUDENT"
+  | "INTERNSHIP"
+  | "MINIJOB"
+  | "PART_TIME"
+  | "THESIS"
+  | "DUAL_STUDY"
+  | "ENTRY_LEVEL"
+  | "TRAINEE"
+  | "FULL_TIME"
+  | "PHD"
+  | "FREELANCE";
 export type JobStatus = "PENDING" | "APPROVED" | "REJECTED";
 export type PayUnit = "HOUR" | "MONTH";
 export type GermanLevel =

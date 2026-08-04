@@ -78,7 +78,7 @@
     "typeHIWI": "Student assistant (HiWi)",
     "typeWERKSTUDENT": "Working student",
     "typeINTERNSHIP": "Internship",
-    "typePART_TIME": "Part-time / Mini-job",
+    "typePART_TIME": "Part-time / side job",
     "reviewedOn": "Reviewed",
     "deleteJob": "Delete",
     "confirmDeleteJob": "Delete “{title}”? This cannot be undone.",
@@ -87,7 +87,18 @@
     "workRules": "As a non-EU student you may work 140 full days or 280 half-days per year, or 20 hours a week during lectures. HiWi jobs at the university do not count towards this.",
     "filterAll": "All",
     "postJob": "Post a job",
-    "postJobHint": "Are you an employer? Submit a listing for our members."
+    "postJobHint": "Are you an employer? Submit a listing for our members.",
+    "typeMINIJOB": "Mini-job",
+    "typeTHESIS": "Thesis project",
+    "typeDUAL_STUDY": "Dual study programme",
+    "typeENTRY_LEVEL": "Entry level",
+    "typeTRAINEE": "Trainee programme",
+    "typeFULL_TIME": "Full-time",
+    "typePHD": "Doctoral position",
+    "typeFREELANCE": "Freelance",
+    "groupStudying": "While studying",
+    "groupGraduating": "After graduating",
+    "groupOther": "Other"
   },
   "login": {
     "emailLabel": "Email",

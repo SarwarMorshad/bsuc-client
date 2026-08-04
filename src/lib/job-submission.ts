@@ -1,4 +1,5 @@
 import { api } from "@/lib/api";
+import type { JobType } from "@/lib/jobs";
 
 export type JobSubmission = {
   title: string;
@@ -6,7 +7,7 @@ export type JobSubmission = {
   companyWebsite?: string | null;
   location?: string | null;
   remote?: boolean;
-  type: "HIWI" | "WERKSTUDENT" | "INTERNSHIP" | "PART_TIME";
+  type: JobType;
   startDate?: string | null;
   until?: string | null;
   hoursPerWeek?: number | null;

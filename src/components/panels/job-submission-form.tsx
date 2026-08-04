@@ -16,12 +16,40 @@ import { euroToCents, submitJob } from "@/lib/job-submission";
  * to German employers.
  */
 
-/** Job types keep their German names — they are legal categories, not labels. */
-const TYPES = [
-  { value: "WERKSTUDENT", label: "Werkstudent:in" },
-  { value: "HIWI", label: "Studentische Hilfskraft (HiWi)" },
-  { value: "INTERNSHIP", label: "Praktikum" },
-  { value: "PART_TIME", label: "Teilzeit / Minijob" },
+/**
+ * Job types keep their German names — they are legal categories an employer
+ * recognises, not labels to translate. Grouped so a list of twelve stays
+ * readable.
+ */
+const TYPE_GROUPS = [
+  {
+    key: "groupStudying",
+    types: [
+      { value: "WERKSTUDENT", label: "Werkstudent:in" },
+      {
+        value: "HIWI",
+        label: "Studentische / Wissenschaftliche Hilfskraft (HiWi)",
+      },
+      { value: "INTERNSHIP", label: "Praktikum" },
+      { value: "MINIJOB", label: "Minijob" },
+      { value: "PART_TIME", label: "Nebenjob / Teilzeit" },
+      { value: "THESIS", label: "Abschlussarbeit" },
+      { value: "DUAL_STUDY", label: "Duales Studium" },
+    ],
+  },
+  {
+    key: "groupGraduating",
+    types: [
+      { value: "ENTRY_LEVEL", label: "Berufseinstieg" },
+      { value: "TRAINEE", label: "Trainee-Programm" },
+      { value: "FULL_TIME", label: "Vollzeit" },
+      { value: "PHD", label: "Promotion" },
+    ],
+  },
+  {
+    key: "groupOther",
+    types: [{ value: "FREELANCE", label: "Freiberuflich / Werkvertrag" }],
+  },
 ] as const;
 
 const CEFR = ["A1", "A2", "B1", "B2", "C1", "C2"] as const;
@@ -56,6 +84,7 @@ const EMPTY = {
 
 export function JobSubmissionForm() {
   const t = useTranslations("postJob");
+  const tj = useTranslations("jobs");
   const [v, setV] = useState(EMPTY);
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [formError, setFormError] = useState<string | null>(null);
@@ -139,10 +168,10 @@ export function JobSubmissionForm() {
     <form
       onSubmit={submit}
       noValidate
-      className="mx-auto flex max-w-3xl flex-col gap-8"
+      className="mx-auto flex max-w-3xl flex-col gap-6"
     >
       {/* What we will and will not publish — stated before anyone types. */}
-      <div className="flex gap-3 rounded-2xl border border-marigold/40 bg-marigold/10 p-4">
+      <div className="flex gap-3.5 rounded-2xl border border-marigold/40 bg-marigold/10 p-5">
         <Info className="mt-0.5 size-5 shrink-0 text-madder" aria-hidden />
         <div className="text-sm text-foreground">
           <p className="font-medium">{t("noticeTitle")}</p>
@@ -164,7 +193,7 @@ export function JobSubmissionForm() {
         </p>
       )}
 
-      <Section title={t("secPosition")}>
+      <Section step={1} title={t("secPosition")}>
         <Field
           id="title"
           label={t("fTitle")}
@@ -217,10 +246,14 @@ export function JobSubmissionForm() {
               onChange={set("type")}
               className={inputClass(!!errors.type)}
             >
-              {TYPES.map((t) => (
-                <option key={t.value} value={t.value}>
-                  {t.label}
-                </option>
+              {TYPE_GROUPS.map((group) => (
+                <optgroup key={group.key} label={tj(group.key)}>
+                  {group.types.map((option) => (
+                    <option key={option.value} value={option.value}>
+                      {option.label}
+                    </option>
+                  ))}
+                </optgroup>
               ))}
             </select>
           </Field>
@@ -293,7 +326,7 @@ export function JobSubmissionForm() {
         </div>
       </Section>
 
-      <Section title={t("secPay")}>
+      <Section step={2} title={t("secPay")}>
         <div className="grid gap-4 sm:grid-cols-2">
           <Field
             id="pay"
@@ -338,7 +371,7 @@ export function JobSubmissionForm() {
         </Field>
       </Section>
 
-      <Section title={t("secAdvert")} note={t("germanNotice")}>
+      <Section step={3} title={t("secAdvert")} note={t("germanNotice")}>
         <Field
           id="aboutCompany"
           label={t("fAbout")}
@@ -408,7 +441,7 @@ export function JobSubmissionForm() {
         </Field>
       </Section>
 
-      <Section title={t("secApply")}>
+      <Section step={4} title={t("secApply")}>
         <div className="grid gap-4 sm:grid-cols-2">
           <Field
             id="applyEmail"
@@ -457,7 +490,7 @@ export function JobSubmissionForm() {
         </div>
       </Section>
 
-      <Section title="Ihre Kontaktdaten" note={t("contactNote")}>
+      <Section step={5} title={t("secContact")} note={t("contactNote")}>
         <div className="grid gap-4 sm:grid-cols-3">
           <Field
             id="submitterName"
@@ -516,7 +549,7 @@ export function JobSubmissionForm() {
         />
       </div>
 
-      <div className="flex flex-wrap items-center gap-4">
+      <div className="sticky bottom-0 -mx-1 flex flex-wrap items-center gap-4 rounded-2xl border border-border bg-background/95 p-4 shadow-lg backdrop-blur">
         <Button type="submit" size="lg" disabled={saving}>
           {saving && <Loader2 className="animate-spin" aria-hidden />}
           {saving ? t("submitting") : t("submit")}
@@ -530,21 +563,35 @@ export function JobSubmissionForm() {
 type JobTypeValue = "HIWI" | "WERKSTUDENT" | "INTERNSHIP" | "PART_TIME";
 
 function Section({
+  step,
   title,
   note,
   children,
 }: {
+  step: number;
   title: string;
   note?: string;
   children: React.ReactNode;
 }) {
   return (
-    <fieldset className="flex flex-col gap-4">
-      <legend className="font-display text-xl font-semibold text-foreground">
-        {title}
+    <fieldset className="rounded-2xl border border-border bg-card p-5 shadow-sm sm:p-7">
+      <legend className="flex items-center gap-3 px-2">
+        <span
+          aria-hidden
+          className="flex size-7 shrink-0 items-center justify-center rounded-full bg-bd-green text-sm font-semibold text-cream"
+        >
+          {step}
+        </span>
+        <span className="font-display text-lg font-semibold text-foreground sm:text-xl">
+          {title}
+        </span>
       </legend>
-      {note && <p className="text-sm text-muted-foreground">{note}</p>}
-      {children}
+      {note && (
+        <p className="mt-3 rounded-lg bg-secondary/60 px-3 py-2 text-sm text-muted-foreground">
+          {note}
+        </p>
+      )}
+      <div className="mt-5 flex flex-col gap-4">{children}</div>
     </fieldset>
   );
 }
