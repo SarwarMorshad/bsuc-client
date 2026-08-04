@@ -335,6 +335,20 @@
     "filterAll": "Alle",
     "filterPublished": "Veröffentlicht",
     "filterDraft": "Entwürfe",
-    "matriculation": "Matrikelnr."
+    "matriculation": "Matrikelnr.",
+    "eventPhoto": "Veranstaltungsfoto",
+    "uploadPhoto": "Foto hochladen",
+    "changePhoto": "Foto ändern",
+    "removePhoto": "Foto entfernen",
+    "uploadingPhoto": "Wird hochgeladen…",
+    "photoHint": "JPEG, PNG oder WebP, bis 5 MB. Wird als breites Banner zugeschnitten.",
+    "liveNow": "Live auf der Website",
+    "liveNowHint": "Veröffentlicht und noch bevorstehend — für alle sichtbar.",
+    "draftsSection": "Entwürfe",
+    "draftsHint": "Nur du siehst diese.",
+    "pastSection": "Vergangene Veranstaltungen",
+    "pastHint": "Bereits vorbei. Weiter veröffentlicht, aber nicht mehr gelistet.",
+    "noLive": "Derzeit ist nichts live.",
+    "viewOnSite": "Auf der Website ansehen"
   }
 }

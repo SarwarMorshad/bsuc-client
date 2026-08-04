@@ -335,6 +335,20 @@
     "filterAll": "সব",
     "filterPublished": "প্রকাশিত",
     "filterDraft": "খসড়া",
-    "matriculation": "ম্যাট্রিকুলেশন"
+    "matriculation": "ম্যাট্রিকুলেশন",
+    "eventPhoto": "আয়োজনের ছবি",
+    "uploadPhoto": "ছবি আপলোড করুন",
+    "changePhoto": "ছবি পরিবর্তন",
+    "removePhoto": "ছবি সরান",
+    "uploadingPhoto": "আপলোড হচ্ছে…",
+    "photoHint": "JPEG, PNG বা WebP, সর্বোচ্চ ৫ এমবি। চওড়া ব্যানার আকারে কাটা হবে।",
+    "liveNow": "ওয়েবসাইটে সরাসরি",
+    "liveNowHint": "প্রকাশিত ও আসন্ন — সবাই দেখতে পাচ্ছে।",
+    "draftsSection": "খসড়া",
+    "draftsHint": "শুধু আপনি দেখতে পাচ্ছেন।",
+    "pastSection": "অতীত আয়োজন",
+    "pastHint": "হয়ে গেছে। প্রকাশিত থাকলেও আর তালিকায় নেই।",
+    "noLive": "এই মুহূর্তে কিছু সরাসরি নেই।",
+    "viewOnSite": "সাইটে দেখুন"
   }
 }

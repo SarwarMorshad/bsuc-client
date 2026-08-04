@@ -8,6 +8,7 @@ export type EventInput = {
   location?: string | null;
   description?: string | null;
   imageUrl?: string | null;
+  imagePublicId?: string | null;
   published?: boolean;
 };
 
@@ -32,4 +33,22 @@ export async function updateEvent(
 
 export async function deleteEvent(id: string): Promise<void> {
   await api.delete(`/events/${id}`);
+}
+
+/**
+ * Sends a photo to Cloudinary before the event itself is saved, so a new event
+ * can be created with a picture already attached.
+ */
+export async function uploadEventImage(
+  file: File,
+): Promise<{ imageUrl: string; imagePublicId: string }> {
+  const body = new FormData();
+  body.append("image", file);
+  const { data } = await api.post<{ imageUrl: string; imagePublicId: string }>(
+    "/events/image",
+    body,
+    // Let the browser set the multipart boundary itself.
+    { headers: { "Content-Type": undefined } },
+  );
+  return data;
 }

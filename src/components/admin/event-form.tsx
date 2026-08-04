@@ -1,10 +1,15 @@
 "use client";
 
-import { useState, type FormEvent } from "react";
+import { useRef, useState, type ChangeEvent, type FormEvent } from "react";
 import { useTranslations } from "next-intl";
 import { inputClass } from "@/components/forms/form-ui";
 import { toApiError } from "@/lib/api";
-import { createEvent, updateEvent, type EventInput } from "@/lib/admin-events";
+import {
+  createEvent,
+  updateEvent,
+  uploadEventImage,
+  type EventInput,
+} from "@/lib/admin-events";
 import type { Event } from "@/lib/events";
 
 /** ISO timestamp -> value for <input type="datetime-local"> in local time. */
@@ -33,16 +38,47 @@ export function EventForm({
     location: event?.location ?? "",
     description: event?.description ?? "",
     imageUrl: event?.imageUrl ?? "",
+    imagePublicId: event?.imagePublicId ?? "",
     published: event?.published ?? false,
   });
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [formError, setFormError] = useState<string | null>(null);
   const [saving, setSaving] = useState(false);
+  const [uploading, setUploading] = useState(false);
+  const fileRef = useRef<HTMLInputElement>(null);
 
-  const set = (key: keyof typeof values) => (e: { target: { value: string } }) => {
-    setValues((v) => ({ ...v, [key]: e.target.value }));
-    if (errors[key]) setErrors((p) => ({ ...p, [key]: "" }));
-  };
+  const set =
+    (key: keyof typeof values) => (e: { target: { value: string } }) => {
+      setValues((v) => ({ ...v, [key]: e.target.value }));
+      if (errors[key]) setErrors((p) => ({ ...p, [key]: "" }));
+    };
+
+  /**
+   * Uploads immediately on pick so the admin sees the real Cloudinary image
+   * before saving, rather than a local preview that might fail later.
+   */
+  async function pickPhoto(e: ChangeEvent<HTMLInputElement>) {
+    const file = e.target.files?.[0];
+    // Reset so re-picking the same file fires change again.
+    e.target.value = "";
+    if (!file) return;
+
+    setErrors((p) => ({ ...p, imageUrl: "" }));
+    setUploading(true);
+    try {
+      const { imageUrl, imagePublicId } = await uploadEventImage(file);
+      setValues((v) => ({ ...v, imageUrl, imagePublicId }));
+    } catch (err) {
+      setErrors((p) => ({ ...p, imageUrl: toApiError(err).error }));
+    } finally {
+      setUploading(false);
+    }
+  }
+
+  function removePhoto() {
+    // The old file is cleaned up server-side once the change is saved.
+    setValues((v) => ({ ...v, imageUrl: "", imagePublicId: "" }));
+  }
 
   async function submit(e: FormEvent) {
     e.preventDefault();
@@ -61,6 +97,7 @@ export function EventForm({
       location: values.location || null,
       description: values.description || null,
       imageUrl: values.imageUrl || null,
+      imagePublicId: values.imagePublicId || null,
       published: values.published,
     };
 
@@ -88,14 +125,20 @@ export function EventForm({
       </h2>
 
       {formError && (
-        <p role="alert" className="rounded-lg bg-madder/10 px-4 py-3 text-sm text-madder">
+        <p
+          role="alert"
+          className="rounded-lg bg-madder/10 px-4 py-3 text-sm text-madder"
+        >
           {formError}
         </p>
       )}
 
       <div className="grid gap-4 sm:grid-cols-2">
         <div className="flex flex-col gap-1.5 sm:col-span-2">
-          <label htmlFor="ev-title" className="text-sm font-medium text-foreground">
+          <label
+            htmlFor="ev-title"
+            className="text-sm font-medium text-foreground"
+          >
             {t("eventTitle")}
           </label>
           <input
@@ -113,7 +156,10 @@ export function EventForm({
         </div>
 
         <div className="flex flex-col gap-1.5">
-          <label htmlFor="ev-date" className="text-sm font-medium text-foreground">
+          <label
+            htmlFor="ev-date"
+            className="text-sm font-medium text-foreground"
+          >
             {t("eventDate")}
           </label>
           <input
@@ -132,7 +178,10 @@ export function EventForm({
         </div>
 
         <div className="flex flex-col gap-1.5">
-          <label htmlFor="ev-location" className="text-sm font-medium text-foreground">
+          <label
+            htmlFor="ev-location"
+            className="text-sm font-medium text-foreground"
+          >
             {t("eventLocation")}
           </label>
           <input
@@ -144,7 +193,10 @@ export function EventForm({
         </div>
 
         <div className="flex flex-col gap-1.5 sm:col-span-2">
-          <label htmlFor="ev-description" className="text-sm font-medium text-foreground">
+          <label
+            htmlFor="ev-description"
+            className="text-sm font-medium text-foreground"
+          >
             {t("eventDescription")}
           </label>
           <textarea
@@ -156,19 +208,64 @@ export function EventForm({
           />
         </div>
 
-        <div className="flex flex-col gap-1.5 sm:col-span-2">
-          <label htmlFor="ev-image" className="text-sm font-medium text-foreground">
-            {t("eventImage")}
-          </label>
-          <input
-            id="ev-image"
-            type="url"
-            placeholder="https://…"
-            value={values.imageUrl}
-            onChange={set("imageUrl")}
-            aria-invalid={!!errors.imageUrl}
-            className={inputClass(!!errors.imageUrl)}
-          />
+        <div className="flex flex-col gap-2 sm:col-span-2">
+          <span className="text-sm font-medium text-foreground">
+            {t("eventPhoto")}
+          </span>
+
+          <div className="flex flex-wrap items-center gap-4">
+            <div className="relative aspect-video w-48 shrink-0 overflow-hidden rounded-xl border border-border bg-secondary">
+              {values.imageUrl ? (
+                // Cloudinary host is not in next.config images; a plain img keeps
+                // this admin-only preview simple.
+                // eslint-disable-next-line @next/next/no-img-element
+                <img
+                  src={values.imageUrl}
+                  alt=""
+                  className="h-full w-full object-cover"
+                />
+              ) : (
+                <span className="absolute inset-0 grid place-items-center text-xs text-muted-foreground">
+                  {t("eventPhoto")}
+                </span>
+              )}
+              {uploading && (
+                <span className="absolute inset-0 grid place-items-center bg-foreground/50 text-xs font-medium text-cream">
+                  {t("uploadingPhoto")}
+                </span>
+              )}
+            </div>
+
+            <div className="flex flex-col gap-2">
+              <input
+                ref={fileRef}
+                id="ev-photo"
+                type="file"
+                accept="image/jpeg,image/png,image/webp"
+                onChange={pickPhoto}
+                className="hidden"
+              />
+              <button
+                type="button"
+                onClick={() => fileRef.current?.click()}
+                disabled={uploading}
+                className="rounded-full border border-border px-4 py-2 text-sm font-medium text-foreground hover:bg-secondary disabled:opacity-60"
+              >
+                {values.imageUrl ? t("changePhoto") : t("uploadPhoto")}
+              </button>
+              {values.imageUrl && !uploading && (
+                <button
+                  type="button"
+                  onClick={removePhoto}
+                  className="text-xs text-madder hover:underline"
+                >
+                  {t("removePhoto")}
+                </button>
+              )}
+            </div>
+          </div>
+
+          <p className="text-xs text-muted-foreground">{t("photoHint")}</p>
           {errors.imageUrl && (
             <span role="alert" className="text-xs text-madder">
               {errors.imageUrl}
@@ -192,7 +289,7 @@ export function EventForm({
       <div className="flex items-center gap-3">
         <button
           type="submit"
-          disabled={saving}
+          disabled={saving || uploading}
           className="rounded-full bg-bd-green px-6 py-2.5 text-sm font-medium text-cream disabled:opacity-60"
         >
           {saving ? f("submitting") : event ? t("save") : t("create")}

@@ -6,6 +6,7 @@ export type Event = {
   location: string | null;
   description: string | null;
   imageUrl: string | null;
+  imagePublicId: string | null;
   published: boolean;
   createdAt: string;
 };

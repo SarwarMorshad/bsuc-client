@@ -335,6 +335,20 @@
     "filterAll": "All",
     "filterPublished": "Published",
     "filterDraft": "Drafts",
-    "matriculation": "Matriculation"
+    "matriculation": "Matriculation",
+    "eventPhoto": "Event photo",
+    "uploadPhoto": "Upload photo",
+    "changePhoto": "Change photo",
+    "removePhoto": "Remove photo",
+    "uploadingPhoto": "Uploading…",
+    "photoHint": "JPEG, PNG or WebP, up to 5 MB. Cropped to a wide banner.",
+    "liveNow": "Live on the website",
+    "liveNowHint": "Published and still upcoming — visible to everyone.",
+    "draftsSection": "Drafts",
+    "draftsHint": "Only you can see these.",
+    "pastSection": "Past events",
+    "pastHint": "Already happened. Still published, but no longer listed.",
+    "noLive": "Nothing is live right now.",
+    "viewOnSite": "View on site"
   }
 }
