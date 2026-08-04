@@ -1,7 +1,7 @@
 import { setRequestLocale, getTranslations } from "next-intl/server";
 import { AdminShell } from "@/components/admin/admin-shell";
+import { JobsManager } from "@/components/admin/jobs-manager";
 
-/** Placeholder until the jobs feature is built. */
 export default async function AdminJobsPage({
   params,
 }: {
@@ -13,9 +13,7 @@ export default async function AdminJobsPage({
 
   return (
     <AdminShell title={t("jobs")}>
-      <p className="rounded-xl border border-dashed border-border px-6 py-10 text-center text-muted-foreground">
-        {t("jobsComingSoon")}
-      </p>
+      <JobsManager />
     </AdminShell>
   );
 }
