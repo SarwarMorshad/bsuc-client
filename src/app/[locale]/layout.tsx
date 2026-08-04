@@ -86,7 +86,13 @@ export default async function LocaleLayout({
       lang={locale}
       className={`${inter.variable} ${fraunces.variable} ${tiroBangla.variable} h-full antialiased`}
     >
-      <body className="min-h-full flex flex-col">
+      {/*
+        Browser extensions (Grammarly and similar) add attributes to <body>
+        before React hydrates, which otherwise reports a hydration mismatch.
+        This only suppresses warnings for this element's own attributes, so
+        genuine mismatches inside the app are still reported.
+      */}
+      <body className="min-h-full flex flex-col" suppressHydrationWarning>
         <NextIntlClientProvider>
           {/* The public site chrome lives in the (site) layout, so the admin
               dashboard can render its own full-screen shell instead. */}
