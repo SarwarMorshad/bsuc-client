@@ -50,7 +50,7 @@ export function LoginForm() {
 
     setStatus("submitting");
     try {
-      await apiLogin(email, password);
+      await apiLogin(email, password, remember);
       await refresh();
       router.replace(next && next.startsWith("/") ? next : "/");
     } catch (err) {

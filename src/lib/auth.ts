@@ -104,10 +104,19 @@ export async function resendVerification(email: string): Promise<void> {
   await api.post("/auth/resend-verification", { email });
 }
 
-export async function login(email: string, password: string): Promise<User> {
+/**
+ * `remember` decides whether the session survives closing the browser. Left
+ * off, the API issues a short-lived, non-persistent cookie.
+ */
+export async function login(
+  email: string,
+  password: string,
+  remember = false,
+): Promise<User> {
   const { data } = await api.post<{ user: User }>("/auth/login", {
     email,
     password,
+    remember,
   });
   return data.user;
 }
