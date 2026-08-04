@@ -62,7 +62,7 @@ export function NavDropdown({
           role="menu"
           // pt-2 keeps the gap under the trigger inside the hover area, so the
           // menu does not close while the pointer travels down to it.
-          className="absolute top-full left-1/2 z-50 w-56 -translate-x-1/2 pt-2"
+          className="absolute top-full left-1/2 z-50 w-max min-w-56 -translate-x-1/2 pt-2"
         >
           <div className="overflow-hidden rounded-xl border border-border bg-background shadow-lg">
             {items.map((item) => (
@@ -74,6 +74,9 @@ export function NavDropdown({
                 className="block px-4 py-2.5 text-sm text-foreground transition-colors hover:bg-muted/40"
               >
                 {item.label}
+                {item.note && (
+                  <span className="text-muted-foreground"> ({item.note})</span>
+                )}
               </Link>
             ))}
           </div>

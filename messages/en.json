@@ -13,8 +13,9 @@
     "logout": "Log out",
     "account": "My account",
     "jobs": "Jobs",
-    "forEmployers": "Post a job",
-    "forStudents": "For students"
+    "forEmployers": "For employers",
+    "forStudents": "For students",
+    "forEmployersNote": "Post a job"
   },
   "pages": {
     "aboutTitle": "About us",

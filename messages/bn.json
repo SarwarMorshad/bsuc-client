@@ -13,8 +13,9 @@
     "logout": "লগ আউট",
     "account": "আমার অ্যাকাউন্ট",
     "jobs": "চাকরি",
-    "forEmployers": "চাকরির বিজ্ঞপ্তি দিন",
-    "forStudents": "শিক্ষার্থীদের জন্য"
+    "forEmployers": "নিয়োগকর্তাদের জন্য",
+    "forStudents": "শিক্ষার্থীদের জন্য",
+    "forEmployersNote": "চাকরির বিজ্ঞপ্তি দিন"
   },
   "pages": {
     "aboutTitle": "আমাদের সম্পর্কে",

@@ -4,5 +4,6 @@ export type NavLink =
   | {
       label: string;
       href?: never;
-      children: { href: string; label: string; hint?: string }[];
+      /** `note` renders after the label as a short clarifier. */
+      children: { href: string; label: string; note?: string }[];
     };
