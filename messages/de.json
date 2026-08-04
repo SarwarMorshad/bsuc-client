@@ -141,7 +141,13 @@
     "title": "Kommende Veranstaltungen",
     "subtitle": "Komm, wie du bist — alle sind willkommen.",
     "cta": "Alle Veranstaltungen",
-    "empty": "Derzeit sind keine Veranstaltungen geplant. Schau bald wieder vorbei — oder folge uns für Ankündigungen."
+    "empty": "Derzeit sind keine Veranstaltungen geplant. Schau bald wieder vorbei — oder folge uns für Ankündigungen.",
+    "nextUp": "Als Nächstes",
+    "alsoComing": "Ebenfalls geplant",
+    "pastTitle": "Rückblick",
+    "pastSubtitle": "Momente von Veranstaltungen, die wir bereits geteilt haben.",
+    "addToCalendar": "Zum Kalender hinzufügen",
+    "allWelcome": "Alle sind willkommen"
   },
   "support": {
     "title": "Neu in Chemnitz?",

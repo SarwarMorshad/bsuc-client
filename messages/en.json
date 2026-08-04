@@ -141,7 +141,13 @@
     "title": "Upcoming events",
     "subtitle": "Come as you are — everyone is welcome.",
     "cta": "See all events",
-    "empty": "No events scheduled right now. Check back soon — or follow us for announcements."
+    "empty": "No events scheduled right now. Check back soon — or follow us for announcements.",
+    "nextUp": "Next up",
+    "alsoComing": "Also coming up",
+    "pastTitle": "Looking back",
+    "pastSubtitle": "Moments from events we have already shared.",
+    "addToCalendar": "Add to calendar",
+    "allWelcome": "Everyone welcome"
   },
   "support": {
     "title": "New in Chemnitz?",

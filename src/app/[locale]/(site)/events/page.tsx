@@ -30,7 +30,10 @@ export default async function EventsPage({
   const p = await getTranslations("pages");
   const e = await getTranslations("events");
 
-  const events = await getPublicEvents();
+  const [events, pastEvents] = await Promise.all([
+    getPublicEvents(),
+    getPublicEvents({ past: true }),
+  ]);
 
   return (
     <>
@@ -39,7 +42,15 @@ export default async function EventsPage({
         title={e("title")}
         subtitle={e("subtitle")}
         emptyMessage={e("empty")}
+        labels={{
+          nextUp: e("nextUp"),
+          alsoComing: e("alsoComing"),
+          pastTitle: e("pastTitle"),
+          pastSubtitle: e("pastSubtitle"),
+          allWelcome: e("allWelcome"),
+        }}
         events={events}
+        pastEvents={pastEvents}
         locale={locale}
       />
     </>
