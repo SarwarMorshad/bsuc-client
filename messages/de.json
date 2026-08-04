@@ -97,7 +97,17 @@
     "typeFREELANCE": "Freiberuflich",
     "groupStudying": "Während des Studiums",
     "groupGraduating": "Nach dem Abschluss",
-    "groupOther": "Sonstiges"
+    "groupOther": "Sonstiges",
+    "searchPlaceholder": "Titel, Unternehmen oder Einsender suchen",
+    "noResults": "Keine Treffer für diese Suche.",
+    "clearSearch": "Zurücksetzen",
+    "prevPage": "Zurück",
+    "nextPage": "Weiter",
+    "pageOf": "Seite {page} von {pages}",
+    "showing": "{from}–{to} von {total}",
+    "details": "Details",
+    "detailsOf": "Eingereicht am {date}",
+    "loadingDetails": "Wird geladen…"
   },
   "login": {
     "emailLabel": "E-Mail",

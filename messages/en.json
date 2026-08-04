@@ -97,7 +97,17 @@
     "typeFREELANCE": "Freelance",
     "groupStudying": "While studying",
     "groupGraduating": "After graduating",
-    "groupOther": "Other"
+    "groupOther": "Other",
+    "searchPlaceholder": "Search title, company or submitter",
+    "noResults": "Nothing matches that search.",
+    "clearSearch": "Clear",
+    "prevPage": "Previous",
+    "nextPage": "Next",
+    "pageOf": "Page {page} of {pages}",
+    "showing": "{from}–{to} of {total}",
+    "details": "Details",
+    "detailsOf": "Submitted {date}",
+    "loadingDetails": "Loading…"
   },
   "login": {
     "emailLabel": "Email",

@@ -45,17 +45,37 @@ export type Job = {
   createdAt: string;
 };
 
-/** Everything the admin sees, including who sent it in. */
-export type AdminJob = Job & {
+/** Moderation fields shared by the list row and the full record. */
+type AdminFields = {
   status: JobStatus;
   rejectionReason: string | null;
   reviewedAt: string | null;
-  reviewedById: string | null;
   submitterName: string;
   submitterEmail: string;
   submitterPhone: string | null;
-  updatedAt: string;
 };
+
+/**
+ * A row in the moderation list. The four advert bodies are absent on purpose —
+ * they are fetched per listing when the details modal opens.
+ */
+export type AdminJobSummary = Omit<
+  Job,
+  | "aboutCompany"
+  | "tasks"
+  | "profile"
+  | "offer"
+  | "startDate"
+  | "until"
+  | "contactName"
+  | "applyEmail"
+  | "applyUrl"
+> &
+  AdminFields;
+
+/** One listing in full, for the details modal. */
+export type AdminJob = Job &
+  AdminFields & { reviewedById: string | null; updatedAt: string };
 
 export type JobCounts = {
   pending: number;

@@ -97,7 +97,17 @@
     "typeFREELANCE": "ফ্রিল্যান্স",
     "groupStudying": "পড়াশোনার সময়",
     "groupGraduating": "স্নাতকের পর",
-    "groupOther": "অন্যান্য"
+    "groupOther": "অন্যান্য",
+    "searchPlaceholder": "শিরোনাম, প্রতিষ্ঠান বা প্রেরক খুঁজুন",
+    "noResults": "এই খোঁজে কিছু মেলেনি।",
+    "clearSearch": "মুছুন",
+    "prevPage": "পূর্ববর্তী",
+    "nextPage": "পরবর্তী",
+    "pageOf": "পৃষ্ঠা {page} / {pages}",
+    "showing": "{total}-এর মধ্যে {from}–{to}",
+    "details": "বিস্তারিত",
+    "detailsOf": "জমা দেওয়া হয়েছে {date}",
+    "loadingDetails": "লোড হচ্ছে…"
   },
   "login": {
     "emailLabel": "ইমেইল",

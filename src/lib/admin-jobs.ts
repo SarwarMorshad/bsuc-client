@@ -1,5 +1,11 @@
 import { api } from "@/lib/api";
-import type { AdminJob, Job, JobCounts } from "@/lib/jobs";
+import type {
+  AdminJob,
+  AdminJobSummary,
+  Job,
+  JobCounts,
+  JobStatus,
+} from "@/lib/jobs";
 
 /** Approved, unexpired listings. Members only — the API enforces it. */
 export async function listJobs(): Promise<Job[]> {
@@ -7,15 +13,36 @@ export async function listJobs(): Promise<Job[]> {
   return data.jobs;
 }
 
-/** Every listing including submitter details. Admin only. */
-export async function listAllJobs(): Promise<{
-  jobs: AdminJob[];
+export type AdminJobQuery = {
+  status?: JobStatus;
+  q?: string;
+  page?: number;
+  pageSize?: number;
+};
+
+export type AdminJobPage = {
+  jobs: AdminJobSummary[];
+  total: number;
+  page: number;
+  pageSize: number;
   counts: JobCounts;
-}> {
-  const { data } = await api.get<{ jobs: AdminJob[]; counts: JobCounts }>(
-    "/jobs/all",
-  );
+};
+
+/**
+ * One page of the moderation queue. Filtering, searching and paging all happen
+ * in the database, so the browser never holds the whole board.
+ */
+export async function listAllJobs(
+  params: AdminJobQuery = {},
+): Promise<AdminJobPage> {
+  const { data } = await api.get<AdminJobPage>("/jobs/all", { params });
   return data;
+}
+
+/** The full record, including the advert text the list omits. */
+export async function getAdminJob(id: string): Promise<AdminJob> {
+  const { data } = await api.get<{ job: AdminJob }>(`/jobs/${id}`);
+  return data.job;
 }
 
 export async function reviewJob(
