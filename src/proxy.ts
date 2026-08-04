@@ -14,7 +14,8 @@ const PROTECTED = ["/jobs", "/dashboard", "/profile", "/admin"];
 function stripLocale(pathname: string) {
   for (const locale of routing.locales) {
     if (pathname === `/${locale}`) return "/";
-    if (pathname.startsWith(`/${locale}/`)) return pathname.slice(locale.length + 1);
+    if (pathname.startsWith(`/${locale}/`))
+      return pathname.slice(locale.length + 1);
   }
   return pathname;
 }
@@ -23,9 +24,16 @@ function stripLocale(pathname: string) {
  * Next.js 16 "proxy" (formerly middleware): resolves the locale, then guards
  * member-only routes.
  *
- * The guard checks for the session cookie only — it gates the UI so signed-out
- * visitors are sent to the login page. It is not the security boundary: the
- * data itself is protected by the API, which verifies the JWT on every request.
+ * The guard here only checks that a session cookie is present, which is enough
+ * to send signed-out visitors to the login page cheaply and keep the ?next
+ * parameter. It deliberately does not verify the token: that would mean
+ * duplicating the secret and the role lookup at the edge.
+ *
+ * Authorisation happens twice behind it, both authoritative:
+ *  - server-side in the admin layout and /jobs, via getServerUser(), so a
+ *    forged cookie never gets the page rendered;
+ *  - on every API request, which verifies the JWT and reads the current role
+ *    from the database.
  */
 export default function proxy(request: NextRequest) {
   const { pathname } = request.nextUrl;

@@ -3,6 +3,8 @@ import { setRequestLocale, getTranslations } from "next-intl/server";
 import { PageHeader } from "@/components/layout/page-header";
 import { Jobs } from "@/components/panels/jobs";
 import { buildMetadata } from "@/lib/metadata";
+import { redirect } from "@/i18n/navigation";
+import { getServerUser } from "@/lib/server-auth";
 
 export async function generateMetadata({
   params,
@@ -26,6 +28,11 @@ export default async function JobsPage({
 }) {
   const { locale } = await params;
   setRequestLocale(locale);
+
+  // Members only: the listings are for our community, not the open web.
+  const user = await getServerUser();
+  if (!user) redirect({ href: "/login", locale });
+
   const p = await getTranslations("pages");
   const j = await getTranslations("jobs");
   const n = await getTranslations("nav");
