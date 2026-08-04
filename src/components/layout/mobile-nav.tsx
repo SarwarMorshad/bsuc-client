@@ -21,6 +21,7 @@ export function MobileNav({
 }) {
   const [open, setOpen] = useState(false);
   const t = useTranslations("nav");
+  const a = useTranslations("admin");
   const { user, loading, signOut } = useAuth();
   const router = useRouter();
 
@@ -140,17 +141,35 @@ export function MobileNav({
                 menu never flashes the wrong state. */}
             {!loading &&
               (user ? (
-                <button
-                  type="button"
-                  onClick={async () => {
-                    close();
-                    await signOut();
-                    router.replace("/");
-                  }}
-                  className="mt-2 rounded-full border border-madder/40 px-5 py-2.5 text-center text-sm font-medium text-madder"
-                >
-                  {t("logout")}
-                </button>
+                <>
+                  <Link
+                    href="/profile"
+                    onClick={close}
+                    className="rounded-md px-3 py-2.5 text-sm text-foreground hover:bg-muted/30"
+                  >
+                    {t("account")}
+                  </Link>
+                  {user.role === "ADMIN" && (
+                    <Link
+                      href="/admin/events"
+                      onClick={close}
+                      className="rounded-md px-3 py-2.5 text-sm font-medium text-brand-blue hover:bg-muted/30"
+                    >
+                      {a("title")}
+                    </Link>
+                  )}
+                  <button
+                    type="button"
+                    onClick={async () => {
+                      close();
+                      await signOut();
+                      router.replace("/");
+                    }}
+                    className="mt-2 rounded-full border border-madder/40 px-5 py-2.5 text-center text-sm font-medium text-madder"
+                  >
+                    {t("logout")}
+                  </button>
+                </>
               ) : (
                 <>
                   <Link
