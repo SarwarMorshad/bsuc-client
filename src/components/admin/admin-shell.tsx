@@ -3,12 +3,18 @@
 import { useState } from "react";
 import Image from "next/image";
 import { useTranslations } from "next-intl";
-import { Link, usePathname } from "@/i18n/navigation";
+import { LogOut } from "lucide-react";
+import { Link, usePathname, useRouter } from "@/i18n/navigation";
 import { useAuth } from "@/components/auth/auth-provider";
 import { siteConfig } from "@/config/site";
 import { cn } from "@/lib/utils";
 import { buttonVariants } from "@/components/ui/button";
-import { Sheet, SheetContent, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
+import {
+  Sheet,
+  SheetContent,
+  SheetTitle,
+  SheetTrigger,
+} from "@/components/ui/sheet";
 
 type IconName = "dashboard" | "events" | "members" | "jobs";
 
@@ -102,11 +108,19 @@ function NavLinks({ onNavigate }: { onNavigate?: () => void }) {
 
 function SidebarContent({ onNavigate }: { onNavigate?: () => void }) {
   const t = useTranslations("admin");
-  const { user } = useAuth();
+  const n = useTranslations("nav");
+  const f = useTranslations("form");
+  const { user, signOut } = useAuth();
+  const router = useRouter();
+  const [signingOut, setSigningOut] = useState(false);
 
   return (
     <div className="flex h-full flex-col gap-6 p-4">
-      <Link href="/" onClick={onNavigate} className="flex items-center gap-2.5 px-2">
+      <Link
+        href="/"
+        onClick={onNavigate}
+        className="flex items-center gap-2.5 px-2"
+      >
         <Image
           src="/logo.png"
           alt=""
@@ -157,6 +171,26 @@ function SidebarContent({ onNavigate }: { onNavigate?: () => void }) {
         >
           ← {t("backToSite")}
         </Link>
+
+        <button
+          type="button"
+          disabled={signingOut}
+          onClick={async () => {
+            setSigningOut(true);
+            onNavigate?.();
+            try {
+              await signOut();
+              router.replace("/");
+            } catch {
+              // Leave the button usable so the admin can try again.
+              setSigningOut(false);
+            }
+          }}
+          className="flex items-center gap-3 rounded-lg border border-sidebar-border/60 px-3 py-2.5 text-sm text-sidebar-foreground/80 transition-colors hover:bg-sidebar-accent/60 hover:text-sidebar-foreground disabled:opacity-60"
+        >
+          <LogOut className="size-4 shrink-0" aria-hidden />
+          {signingOut ? f("submitting") : n("logout")}
+        </button>
       </div>
     </div>
   );
@@ -192,7 +226,16 @@ export function AdminShell({
                 "lg:hidden",
               )}
             >
-              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" aria-hidden="true">
+              <svg
+                width="20"
+                height="20"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2"
+                strokeLinecap="round"
+                aria-hidden="true"
+              >
                 <path d="M4 7h16M4 12h16M4 17h16" />
               </svg>
             </SheetTrigger>
