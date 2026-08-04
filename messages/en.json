@@ -48,7 +48,7 @@
     "approve": "Approve",
     "reject": "Reject",
     "rejectTitle": "Reject this listing",
-    "rejectReason": "Reason (sent to no one — for your records)",
+    "rejectReason": "Reason — this is emailed to the employer",
     "submittedBy": "Submitted by",
     "contact": "Contact",
     "website": "Website",
@@ -80,7 +80,9 @@
     "jobsIntro": "Job listings shared with our community. Adverts are in German, as submitted by the employer.",
     "scamWarning": "BSUC does not vet employers. Never pay a fee to apply, and never send money or bank details to an employer.",
     "workRules": "As a non-EU student you may work 140 full days or 280 half-days per year, or 20 hours a week during lectures. HiWi jobs at the university do not count towards this.",
-    "filterAll": "All"
+    "filterAll": "All",
+    "postJob": "Post a job",
+    "postJobHint": "Are you an employer? Submit a listing for our members."
   },
   "login": {
     "emailLabel": "Email",

@@ -48,7 +48,7 @@
     "approve": "Freigeben",
     "reject": "Ablehnen",
     "rejectTitle": "Diese Anzeige ablehnen",
-    "rejectReason": "Grund (nur für eure Unterlagen)",
+    "rejectReason": "Begründung — wird dem Arbeitgeber per E-Mail mitgeteilt",
     "submittedBy": "Eingereicht von",
     "contact": "Kontakt",
     "website": "Webseite",
@@ -80,7 +80,9 @@
     "jobsIntro": "Stellenanzeigen für unsere Community. Die Anzeigen sind auf Deutsch, so wie vom Arbeitgeber eingereicht.",
     "scamWarning": "BSUC überprüft Arbeitgeber nicht. Zahle niemals Gebühren für eine Bewerbung und sende keinem Arbeitgeber Geld oder Bankdaten.",
     "workRules": "Als Studierende:r aus einem Nicht-EU-Land darfst du 140 volle oder 280 halbe Tage im Jahr arbeiten, oder 20 Stunden pro Woche während der Vorlesungszeit. HiWi-Stellen an der Hochschule zählen nicht dazu.",
-    "filterAll": "Alle"
+    "filterAll": "Alle",
+    "postJob": "Stellenanzeige aufgeben",
+    "postJobHint": "Sie sind Arbeitgeber? Reichen Sie eine Anzeige für unsere Mitglieder ein."
   },
   "login": {
     "emailLabel": "E-Mail",

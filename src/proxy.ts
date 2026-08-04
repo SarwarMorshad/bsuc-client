@@ -10,6 +10,13 @@ const AUTH_COOKIE = "bsuc_token";
 /** Routes that require a signed-in member, without the locale prefix. */
 const PROTECTED = ["/jobs", "/dashboard", "/profile", "/admin"];
 
+/**
+ * Carved out of the rules above. /jobs is members-only, but the form employers
+ * use to submit a listing sits underneath it and has to stay open — asking a
+ * company to register an account first is exactly the friction this avoids.
+ */
+const PUBLIC_EXCEPTIONS = ["/jobs/post"];
+
 /** Strips a leading locale segment so paths can be matched consistently. */
 function stripLocale(pathname: string) {
   for (const locale of routing.locales) {
@@ -39,9 +46,9 @@ export default function proxy(request: NextRequest) {
   const { pathname } = request.nextUrl;
   const path = stripLocale(pathname);
 
-  const isProtected = PROTECTED.some(
-    (p) => path === p || path.startsWith(`${p}/`),
-  );
+  const isProtected =
+    PROTECTED.some((p) => path === p || path.startsWith(`${p}/`)) &&
+    !PUBLIC_EXCEPTIONS.some((p) => path === p || path.startsWith(`${p}/`));
 
   if (isProtected && !request.cookies.get(AUTH_COOKIE)) {
     const url = request.nextUrl.clone();

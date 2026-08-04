@@ -1,0 +1,605 @@
+"use client";
+
+import { useState, type FormEvent } from "react";
+import { CheckCircle2, Info, Loader2 } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { inputClass } from "@/components/forms/form-ui";
+import { toApiError } from "@/lib/api";
+import { euroToCents, submitJob } from "@/lib/job-submission";
+
+/**
+ * The form employers use to submit a listing.
+ *
+ * Deliberately in German throughout, unlike the rest of the site: whoever
+ * fills this in is writing a German Stellenanzeige, and mixing an English
+ * form around German content would only confuse them.
+ */
+
+const TYPES = [
+  { value: "WERKSTUDENT", label: "Werkstudent:in" },
+  { value: "HIWI", label: "Studentische Hilfskraft (HiWi)" },
+  { value: "INTERNSHIP", label: "Praktikum" },
+  { value: "PART_TIME", label: "Teilzeit / Minijob" },
+] as const;
+
+const GERMAN_LEVELS = [
+  { value: "", label: "Keine Angabe" },
+  { value: "ENGLISH_OK", label: "Englisch ausreichend" },
+  { value: "A1", label: "A1 — Anfänger" },
+  { value: "A2", label: "A2 — Grundkenntnisse" },
+  { value: "B1", label: "B1 — Fortgeschritten" },
+  { value: "B2", label: "B2 — Selbstständig" },
+  { value: "C1", label: "C1 — Fachkundig" },
+  { value: "C2", label: "C2 — Muttersprachlich" },
+];
+
+const EMPTY = {
+  title: "",
+  company: "",
+  companyWebsite: "",
+  location: "",
+  remote: false,
+  type: "WERKSTUDENT",
+  startDate: "",
+  until: "",
+  hoursPerWeek: "",
+  pay: "",
+  payUnit: "HOUR",
+  payNote: "",
+  aboutCompany: "",
+  tasks: "",
+  profile: "",
+  offer: "",
+  germanLevel: "",
+  contactName: "",
+  applyEmail: "",
+  applyUrl: "",
+  deadline: "",
+  submitterName: "",
+  submitterEmail: "",
+  submitterPhone: "",
+  website2: "",
+};
+
+export function JobSubmissionForm() {
+  const [v, setV] = useState(EMPTY);
+  const [errors, setErrors] = useState<Record<string, string>>({});
+  const [formError, setFormError] = useState<string | null>(null);
+  const [saving, setSaving] = useState(false);
+  const [done, setDone] = useState(false);
+
+  const set =
+    (key: keyof typeof EMPTY) => (e: { target: { value: string } }) => {
+      setV((p) => ({ ...p, [key]: e.target.value }));
+      if (errors[key]) setErrors((p) => ({ ...p, [key]: "" }));
+    };
+
+  async function submit(e: FormEvent) {
+    e.preventDefault();
+    setFormError(null);
+    setErrors({});
+
+    const payCents = euroToCents(v.pay);
+    if (v.pay.trim() !== "" && payCents === null) {
+      setErrors({
+        payCents: "Bitte einen gültigen Betrag angeben, z. B. 14,50",
+      });
+      return;
+    }
+
+    setSaving(true);
+    try {
+      await submitJob({
+        title: v.title,
+        company: v.company,
+        companyWebsite: v.companyWebsite || null,
+        location: v.location || null,
+        remote: v.remote,
+        type: v.type as JobTypeValue,
+        startDate: v.startDate || null,
+        until: v.until || null,
+        hoursPerWeek: v.hoursPerWeek ? Number(v.hoursPerWeek) : null,
+        payCents,
+        payUnit: v.payUnit as "HOUR" | "MONTH",
+        payNote: v.payNote || null,
+        aboutCompany: v.aboutCompany,
+        tasks: v.tasks,
+        profile: v.profile,
+        offer: v.offer || null,
+        germanLevel: v.germanLevel || null,
+        contactName: v.contactName || null,
+        applyEmail: v.applyEmail || null,
+        applyUrl: v.applyUrl || null,
+        deadline: v.deadline || null,
+        submitterName: v.submitterName,
+        submitterEmail: v.submitterEmail,
+        submitterPhone: v.submitterPhone || null,
+        website2: v.website2,
+      });
+      setDone(true);
+    } catch (err) {
+      const apiError = toApiError(err);
+      if (apiError.fields) {
+        setErrors(apiError.fields);
+        setFormError("Bitte prüfen Sie die markierten Felder.");
+      } else {
+        setFormError(apiError.error);
+      }
+      setSaving(false);
+    }
+  }
+
+  if (done) {
+    return (
+      <div className="mx-auto flex max-w-2xl flex-col items-center gap-4 rounded-2xl border border-bd-green/40 bg-bd-green/5 px-6 py-14 text-center">
+        <CheckCircle2 className="size-10 text-bd-green" aria-hidden />
+        <h2 className="font-display text-2xl font-semibold text-foreground">
+          Vielen Dank — Ihre Anzeige ist eingegangen
+        </h2>
+        <p className="max-w-md text-muted-foreground">
+          Wir prüfen jede Anzeige, bevor sie für unsere Mitglieder sichtbar
+          wird. Sie erhalten eine E-Mail, sobald die Anzeige freigegeben wurde.
+        </p>
+      </div>
+    );
+  }
+
+  return (
+    <form
+      onSubmit={submit}
+      noValidate
+      className="mx-auto flex max-w-3xl flex-col gap-8"
+    >
+      {/* What we will and will not publish — stated before anyone types. */}
+      <div className="flex gap-3 rounded-2xl border border-marigold/40 bg-marigold/10 p-4">
+        <Info className="mt-0.5 size-5 shrink-0 text-madder" aria-hidden />
+        <div className="text-sm text-foreground">
+          <p className="font-medium">Bitte beachten Sie</p>
+          <ul className="mt-2 list-disc space-y-1 pl-5 text-muted-foreground">
+            <li>
+              Der Stellentitel muss <strong>(m/w/d)</strong> enthalten — das AGG
+              verbietet geschlechtsbezogene Ausschreibungen.
+            </li>
+            <li>
+              Die Vergütung ist Pflichtangabe und muss mindestens dem
+              gesetzlichen Mindestlohn entsprechen.
+            </li>
+            <li>
+              Keine Anzeigen auf reiner Provisionsbasis und keine Stellen, für
+              die Studierende in Vorleistung gehen müssen.
+            </li>
+            <li>Jede Anzeige wird vor der Veröffentlichung von uns geprüft.</li>
+          </ul>
+        </div>
+      </div>
+
+      {formError && (
+        <p
+          role="alert"
+          className="rounded-lg bg-destructive/10 px-4 py-3 text-sm text-destructive"
+        >
+          {formError}
+        </p>
+      )}
+
+      <Section title="Die Stelle">
+        <Field
+          id="title"
+          label="Stellentitel"
+          hint="z. B. Werkstudent:in Softwareentwicklung (m/w/d)"
+          error={errors.title}
+          required
+        >
+          <input
+            id="title"
+            value={v.title}
+            onChange={set("title")}
+            className={inputClass(!!errors.title)}
+          />
+        </Field>
+
+        <div className="grid gap-4 sm:grid-cols-2">
+          <Field
+            id="company"
+            label="Unternehmen"
+            error={errors.company}
+            required
+          >
+            <input
+              id="company"
+              value={v.company}
+              onChange={set("company")}
+              className={inputClass(!!errors.company)}
+            />
+          </Field>
+
+          <Field
+            id="companyWebsite"
+            label="Webseite"
+            error={errors.companyWebsite}
+          >
+            <input
+              id="companyWebsite"
+              type="url"
+              placeholder="https://"
+              value={v.companyWebsite}
+              onChange={set("companyWebsite")}
+              className={inputClass(!!errors.companyWebsite)}
+            />
+          </Field>
+
+          <Field id="type" label="Art der Stelle" error={errors.type} required>
+            <select
+              id="type"
+              value={v.type}
+              onChange={set("type")}
+              className={inputClass(!!errors.type)}
+            >
+              {TYPES.map((t) => (
+                <option key={t.value} value={t.value}>
+                  {t.label}
+                </option>
+              ))}
+            </select>
+          </Field>
+
+          <Field id="location" label="Einsatzort" error={errors.location}>
+            <input
+              id="location"
+              value={v.location}
+              onChange={set("location")}
+              className={inputClass(!!errors.location)}
+            />
+          </Field>
+        </div>
+
+        <label className="flex items-center gap-2.5 text-sm text-foreground">
+          <input
+            type="checkbox"
+            checked={v.remote}
+            onChange={(e) => setV((p) => ({ ...p, remote: e.target.checked }))}
+            className="size-4 rounded border-border accent-bd-green"
+          />
+          Remote-Arbeit möglich
+        </label>
+
+        <div className="grid gap-4 sm:grid-cols-3">
+          <Field
+            id="startDate"
+            label="Beginn"
+            hint="leer = ab sofort"
+            error={errors.startDate}
+          >
+            <input
+              id="startDate"
+              type="date"
+              value={v.startDate}
+              onChange={set("startDate")}
+              className={inputClass(!!errors.startDate)}
+            />
+          </Field>
+          <Field
+            id="until"
+            label="Befristet bis"
+            hint="leer = unbefristet"
+            error={errors.until}
+          >
+            <input
+              id="until"
+              type="date"
+              value={v.until}
+              onChange={set("until")}
+              className={inputClass(!!errors.until)}
+            />
+          </Field>
+          <Field
+            id="hoursPerWeek"
+            label="Wochenstunden"
+            hint="max. 20 in der Vorlesungszeit"
+            error={errors.hoursPerWeek}
+          >
+            <input
+              id="hoursPerWeek"
+              type="number"
+              min={1}
+              max={40}
+              value={v.hoursPerWeek}
+              onChange={set("hoursPerWeek")}
+              className={inputClass(!!errors.hoursPerWeek)}
+            />
+          </Field>
+        </div>
+      </Section>
+
+      <Section title="Vergütung">
+        <div className="grid gap-4 sm:grid-cols-2">
+          <Field
+            id="pay"
+            label="Betrag in Euro"
+            hint="Mindestlohn 2026: 13,90 €/Stunde"
+            error={errors.payCents}
+            required
+          >
+            <input
+              id="pay"
+              inputMode="decimal"
+              placeholder="14,50"
+              value={v.pay}
+              onChange={set("pay")}
+              className={inputClass(!!errors.payCents)}
+            />
+          </Field>
+          <Field id="payUnit" label="je" error={errors.payUnit}>
+            <select
+              id="payUnit"
+              value={v.payUnit}
+              onChange={set("payUnit")}
+              className={inputClass(false)}
+            >
+              <option value="HOUR">pro Stunde</option>
+              <option value="MONTH">pro Monat</option>
+            </select>
+          </Field>
+        </div>
+        <Field
+          id="payNote"
+          label="Hinweis zur Vergütung"
+          hint="z. B. Pflichtpraktikum im Rahmen des Studiums"
+          error={errors.payNote}
+        >
+          <input
+            id="payNote"
+            value={v.payNote}
+            onChange={set("payNote")}
+            className={inputClass(!!errors.payNote)}
+          />
+        </Field>
+      </Section>
+
+      <Section title="Die Anzeige">
+        <Field
+          id="aboutCompany"
+          label="Über uns"
+          error={errors.aboutCompany}
+          required
+        >
+          <textarea
+            id="aboutCompany"
+            rows={3}
+            value={v.aboutCompany}
+            onChange={set("aboutCompany")}
+            className={`${inputClass(!!errors.aboutCompany)} resize-y`}
+          />
+        </Field>
+        <Field id="tasks" label="Deine Aufgaben" error={errors.tasks} required>
+          <textarea
+            id="tasks"
+            rows={4}
+            value={v.tasks}
+            onChange={set("tasks")}
+            className={`${inputClass(!!errors.tasks)} resize-y`}
+          />
+        </Field>
+        <Field id="profile" label="Dein Profil" error={errors.profile} required>
+          <textarea
+            id="profile"
+            rows={4}
+            value={v.profile}
+            onChange={set("profile")}
+            className={`${inputClass(!!errors.profile)} resize-y`}
+          />
+        </Field>
+        <Field id="offer" label="Wir bieten" error={errors.offer}>
+          <textarea
+            id="offer"
+            rows={3}
+            value={v.offer}
+            onChange={set("offer")}
+            className={`${inputClass(!!errors.offer)} resize-y`}
+          />
+        </Field>
+        <Field
+          id="germanLevel"
+          label="Erforderliche Deutschkenntnisse"
+          hint="Für unsere Mitglieder die wichtigste Angabe."
+          error={errors.germanLevel}
+        >
+          <select
+            id="germanLevel"
+            value={v.germanLevel}
+            onChange={set("germanLevel")}
+            className={inputClass(false)}
+          >
+            {GERMAN_LEVELS.map((g) => (
+              <option key={g.value} value={g.value}>
+                {g.label}
+              </option>
+            ))}
+          </select>
+        </Field>
+      </Section>
+
+      <Section title="Bewerbung">
+        <div className="grid gap-4 sm:grid-cols-2">
+          <Field
+            id="applyEmail"
+            label="Bewerbung per E-Mail"
+            error={errors.applyEmail}
+          >
+            <input
+              id="applyEmail"
+              type="email"
+              value={v.applyEmail}
+              onChange={set("applyEmail")}
+              className={inputClass(!!errors.applyEmail)}
+            />
+          </Field>
+          <Field
+            id="applyUrl"
+            label="oder Bewerbungslink"
+            error={errors.applyUrl}
+          >
+            <input
+              id="applyUrl"
+              type="url"
+              placeholder="https://"
+              value={v.applyUrl}
+              onChange={set("applyUrl")}
+              className={inputClass(!!errors.applyUrl)}
+            />
+          </Field>
+          <Field
+            id="contactName"
+            label="Ansprechpartner:in"
+            error={errors.contactName}
+          >
+            <input
+              id="contactName"
+              value={v.contactName}
+              onChange={set("contactName")}
+              className={inputClass(!!errors.contactName)}
+            />
+          </Field>
+          <Field id="deadline" label="Bewerbungsfrist" error={errors.deadline}>
+            <input
+              id="deadline"
+              type="date"
+              value={v.deadline}
+              onChange={set("deadline")}
+              className={inputClass(!!errors.deadline)}
+            />
+          </Field>
+        </div>
+      </Section>
+
+      <Section
+        title="Ihre Kontaktdaten"
+        note="Nur für Rückfragen durch unser Team. Diese Angaben erscheinen nicht in der Anzeige."
+      >
+        <div className="grid gap-4 sm:grid-cols-3">
+          <Field
+            id="submitterName"
+            label="Name"
+            error={errors.submitterName}
+            required
+          >
+            <input
+              id="submitterName"
+              value={v.submitterName}
+              onChange={set("submitterName")}
+              className={inputClass(!!errors.submitterName)}
+            />
+          </Field>
+          <Field
+            id="submitterEmail"
+            label="E-Mail"
+            error={errors.submitterEmail}
+            required
+          >
+            <input
+              id="submitterEmail"
+              type="email"
+              value={v.submitterEmail}
+              onChange={set("submitterEmail")}
+              className={inputClass(!!errors.submitterEmail)}
+            />
+          </Field>
+          <Field
+            id="submitterPhone"
+            label="Telefon"
+            error={errors.submitterPhone}
+          >
+            <input
+              id="submitterPhone"
+              value={v.submitterPhone}
+              onChange={set("submitterPhone")}
+              className={inputClass(!!errors.submitterPhone)}
+            />
+          </Field>
+        </div>
+      </Section>
+
+      {/* Honeypot: hidden from people, irresistible to bots. */}
+      <div
+        aria-hidden
+        className="absolute left-[-9999px] h-0 w-0 overflow-hidden"
+      >
+        <label htmlFor="website2">Bitte leer lassen</label>
+        <input
+          id="website2"
+          tabIndex={-1}
+          autoComplete="off"
+          value={v.website2}
+          onChange={set("website2")}
+        />
+      </div>
+
+      <div className="flex flex-wrap items-center gap-4">
+        <Button type="submit" size="lg" disabled={saving}>
+          {saving && <Loader2 className="animate-spin" aria-hidden />}
+          {saving ? "Wird gesendet…" : "Anzeige einreichen"}
+        </Button>
+        <p className="text-sm text-muted-foreground">
+          Wir speichern Ihre Kontaktdaten, um Rückfragen zur Anzeige stellen zu
+          können.
+        </p>
+      </div>
+    </form>
+  );
+}
+
+type JobTypeValue = "HIWI" | "WERKSTUDENT" | "INTERNSHIP" | "PART_TIME";
+
+function Section({
+  title,
+  note,
+  children,
+}: {
+  title: string;
+  note?: string;
+  children: React.ReactNode;
+}) {
+  return (
+    <fieldset className="flex flex-col gap-4">
+      <legend className="font-display text-xl font-semibold text-foreground">
+        {title}
+      </legend>
+      {note && <p className="text-sm text-muted-foreground">{note}</p>}
+      {children}
+    </fieldset>
+  );
+}
+
+function Field({
+  id,
+  label,
+  hint,
+  error,
+  required = false,
+  children,
+}: {
+  id: string;
+  label: string;
+  hint?: string;
+  error?: string;
+  required?: boolean;
+  children: React.ReactNode;
+}) {
+  return (
+    <div className="flex flex-col gap-1.5">
+      <label htmlFor={id} className="text-sm font-medium text-foreground">
+        {label}
+        {required && <span className="text-madder"> *</span>}
+      </label>
+      {children}
+      {hint && !error && (
+        <span className="text-xs text-muted-foreground">{hint}</span>
+      )}
+      {error && (
+        <span role="alert" className="text-xs text-madder">
+          {error}
+        </span>
+      )}
+    </div>
+  );
+}

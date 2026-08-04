@@ -52,6 +52,7 @@ export async function SiteFooter() {
   const t = await getTranslations("footer");
   const n = await getTranslations("nav");
   const p = await getTranslations("privacy");
+  const j = await getTranslations("jobs");
 
   const explore = [
     { href: "/about", label: n("about") },
@@ -62,6 +63,8 @@ export async function SiteFooter() {
   const involved = [
     { href: "/join", label: n("join") },
     { href: "/contact", label: n("contact") },
+    // Employers need a way in that does not require a member account.
+    { href: "/jobs/post", label: j("postJob") },
   ];
   const socials: { name: IconName; href: string; label: string }[] = [
     { name: "mail", href: `mailto:${siteConfig.links.email}`, label: "Email" },
@@ -160,7 +163,10 @@ export async function SiteFooter() {
             © {new Date().getFullYear()} {siteConfig.name}. {t("rights")}
           </span>
           <span className="flex items-center gap-4">
-            <Link href="/privacy" className="underline-offset-4 hover:underline">
+            <Link
+              href="/privacy"
+              className="underline-offset-4 hover:underline"
+            >
               {p("title")}
             </Link>
             <span>{t("madeWith")}</span>
