@@ -13,10 +13,8 @@
     "logout": "Abmelden",
     "account": "Mein Konto",
     "jobs": "Jobs",
-    "forEmployers": "Für Arbeitgeber",
-    "forEmployersHint": "Anzeige aufgeben — ohne Konto",
-    "forStudents": "Für Studierende",
-    "forStudentsHint": "Anzeigen ansehen (nur Mitglieder)"
+    "forEmployers": "Stellenanzeige aufgeben",
+    "forStudents": "Für Studierende"
   },
   "pages": {
     "aboutTitle": "Über uns",

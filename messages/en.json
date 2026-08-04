@@ -13,10 +13,8 @@
     "logout": "Log out",
     "account": "My account",
     "jobs": "Jobs",
-    "forEmployers": "For employers",
-    "forEmployersHint": "Post a job — no account needed",
-    "forStudents": "For students",
-    "forStudentsHint": "Browse listings (members only)"
+    "forEmployers": "Post a job",
+    "forStudents": "For students"
   },
   "pages": {
     "aboutTitle": "About us",

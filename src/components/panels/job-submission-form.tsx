@@ -16,40 +16,25 @@ import { euroToCents, submitJob } from "@/lib/job-submission";
  * to German employers.
  */
 
-/**
- * Job types keep their German names — they are legal categories an employer
- * recognises, not labels to translate. Grouped so a list of twelve stays
- * readable.
- */
+/** Grouped so a list of twelve stays readable. Labels come from messages. */
 const TYPE_GROUPS = [
   {
     key: "groupStudying",
     types: [
-      { value: "WERKSTUDENT", label: "Werkstudent:in" },
-      {
-        value: "HIWI",
-        label: "Studentische / Wissenschaftliche Hilfskraft (HiWi)",
-      },
-      { value: "INTERNSHIP", label: "Praktikum" },
-      { value: "MINIJOB", label: "Minijob" },
-      { value: "PART_TIME", label: "Nebenjob / Teilzeit" },
-      { value: "THESIS", label: "Abschlussarbeit" },
-      { value: "DUAL_STUDY", label: "Duales Studium" },
+      "WERKSTUDENT",
+      "HIWI",
+      "INTERNSHIP",
+      "MINIJOB",
+      "PART_TIME",
+      "THESIS",
+      "DUAL_STUDY",
     ],
   },
   {
     key: "groupGraduating",
-    types: [
-      { value: "ENTRY_LEVEL", label: "Berufseinstieg" },
-      { value: "TRAINEE", label: "Trainee-Programm" },
-      { value: "FULL_TIME", label: "Vollzeit" },
-      { value: "PHD", label: "Promotion" },
-    ],
+    types: ["ENTRY_LEVEL", "TRAINEE", "FULL_TIME", "PHD"],
   },
-  {
-    key: "groupOther",
-    types: [{ value: "FREELANCE", label: "Freiberuflich / Werkvertrag" }],
-  },
+  { key: "groupOther", types: ["FREELANCE"] },
 ] as const;
 
 const CEFR = ["A1", "A2", "B1", "B2", "C1", "C2"] as const;
@@ -248,9 +233,9 @@ export function JobSubmissionForm() {
             >
               {TYPE_GROUPS.map((group) => (
                 <optgroup key={group.key} label={tj(group.key)}>
-                  {group.types.map((option) => (
-                    <option key={option.value} value={option.value}>
-                      {option.label}
+                  {group.types.map((type) => (
+                    <option key={type} value={type}>
+                      {tj(`type${type}`)}
                     </option>
                   ))}
                 </optgroup>
@@ -575,17 +560,18 @@ function Section({
 }) {
   return (
     <fieldset className="rounded-2xl border border-border bg-card p-5 shadow-sm sm:p-7">
-      <legend className="flex items-center gap-3 px-2">
-        <span
-          aria-hidden
-          className="flex size-7 shrink-0 items-center justify-center rounded-full bg-bd-green text-sm font-semibold text-cream"
-        >
+      {/* A native legend renders on the border itself. The group still needs
+          one for screen readers, so it is hidden and the visible heading sits
+          inside the card where it belongs. */}
+      <legend className="sr-only">{title}</legend>
+      <div aria-hidden className="flex items-center gap-3">
+        <span className="flex size-8 shrink-0 items-center justify-center rounded-full bg-bd-green text-sm font-semibold text-cream">
           {step}
         </span>
         <span className="font-display text-lg font-semibold text-foreground sm:text-xl">
           {title}
         </span>
-      </legend>
+      </div>
       {note && (
         <p className="mt-3 rounded-lg bg-secondary/60 px-3 py-2 text-sm text-muted-foreground">
           {note}
