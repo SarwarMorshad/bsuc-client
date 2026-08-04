@@ -4,6 +4,8 @@ import { siteConfig } from "@/config/site";
 import { LanguageSwitcher } from "@/components/layout/language-switcher";
 import { MobileNav } from "@/components/layout/mobile-nav";
 import { AccountMenu } from "@/components/layout/account-menu";
+import { NavDropdown } from "@/components/layout/nav-dropdown";
+import type { NavLink } from "@/components/layout/nav-links";
 
 /**
  * Sticky site header: emblem + name, page navigation, language switcher and a
@@ -14,7 +16,7 @@ export function SiteHeader({
   joinLabel,
   loginLabel,
 }: {
-  links: { href: string; label: string }[];
+  links: NavLink[];
   joinLabel: string;
   loginLabel: string;
 }) {
@@ -35,15 +37,19 @@ export function SiteHeader({
         </Link>
 
         <nav className="hidden items-center gap-6 md:flex">
-          {links.map((l) => (
-            <Link
-              key={l.href}
-              href={l.href}
-              className="text-sm text-muted-foreground transition-colors hover:text-primary"
-            >
-              {l.label}
-            </Link>
-          ))}
+          {links.map((l) =>
+            l.children ? (
+              <NavDropdown key={l.label} label={l.label} items={l.children} />
+            ) : (
+              <Link
+                key={l.href}
+                href={l.href}
+                className="text-sm text-muted-foreground transition-colors hover:text-primary"
+              >
+                {l.label}
+              </Link>
+            ),
+          )}
         </nav>
 
         <div className="flex items-center gap-2">

@@ -11,7 +11,12 @@
     "login": "Log in",
     "join": "Join",
     "logout": "Log out",
-    "account": "My account"
+    "account": "My account",
+    "jobs": "Jobs",
+    "forEmployers": "For employers",
+    "forEmployersHint": "Post a job — no account needed",
+    "forStudents": "For students",
+    "forStudentsHint": "Browse listings (members only)"
   },
   "pages": {
     "aboutTitle": "About us",

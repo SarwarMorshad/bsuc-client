@@ -4,6 +4,7 @@ import { useState } from "react";
 import { useTranslations } from "next-intl";
 import { Link, useRouter } from "@/i18n/navigation";
 import { useAuth } from "@/components/auth/auth-provider";
+import type { NavLink } from "@/components/layout/nav-links";
 
 /**
  * Hamburger menu for small screens. Signed-out visitors get the nav links plus
@@ -14,7 +15,7 @@ export function MobileNav({
   joinLabel,
   loginLabel,
 }: {
-  links: { href: string; label: string }[];
+  links: NavLink[];
   joinLabel: string;
   loginLabel: string;
 }) {
@@ -43,8 +44,21 @@ export function MobileNav({
         aria-expanded={open}
         className="flex h-10 w-10 items-center justify-center rounded-md text-foreground hover:bg-muted/30"
       >
-        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" aria-hidden="true">
-          {open ? <path d="M6 6l12 12M18 6L6 18" /> : <path d="M4 7h16M4 12h16M4 17h16" />}
+        <svg
+          width="22"
+          height="22"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          strokeWidth="2"
+          strokeLinecap="round"
+          aria-hidden="true"
+        >
+          {open ? (
+            <path d="M6 6l12 12M18 6L6 18" />
+          ) : (
+            <path d="M4 7h16M4 12h16M4 17h16" />
+          )}
         </svg>
       </button>
 
@@ -84,16 +98,42 @@ export function MobileNav({
               </Link>
             )}
 
-            {links.map((l) => (
-              <Link
-                key={l.href}
-                href={l.href}
-                onClick={close}
-                className="rounded-md px-3 py-2.5 text-sm text-foreground hover:bg-muted/30"
-              >
-                {l.label}
-              </Link>
-            ))}
+            {links.map((l) =>
+              l.children ? (
+                // Nested items are listed inline rather than behind another
+                // tap — a slide-out menu has room, and hiding them would make
+                // the employer link even harder to find.
+                <div key={l.label} className="flex flex-col">
+                  <span className="px-3 pt-2 pb-1 text-xs font-semibold tracking-wide text-muted-foreground uppercase">
+                    {l.label}
+                  </span>
+                  {l.children.map((c) => (
+                    <Link
+                      key={c.href}
+                      href={c.href}
+                      onClick={close}
+                      className="rounded-md px-3 py-2 pl-5 text-sm text-foreground hover:bg-muted/30"
+                    >
+                      {c.label}
+                      {c.hint && (
+                        <span className="block text-xs text-muted-foreground">
+                          {c.hint}
+                        </span>
+                      )}
+                    </Link>
+                  ))}
+                </div>
+              ) : (
+                <Link
+                  key={l.href}
+                  href={l.href}
+                  onClick={close}
+                  className="rounded-md px-3 py-2.5 text-sm text-foreground hover:bg-muted/30"
+                >
+                  {l.label}
+                </Link>
+              ),
+            )}
 
             {/* Account actions — hidden until the session resolves, so the
                 menu never flashes the wrong state. */}

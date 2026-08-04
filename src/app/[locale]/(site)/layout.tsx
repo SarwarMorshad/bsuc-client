@@ -22,7 +22,23 @@ export default async function SiteLayout({
     { href: "/events", label: tn("events") },
     { href: "/new-students", label: tn("newStudents") },
     { href: "/gallery", label: tn("gallery") },
-    { href: "/jobs", label: tn("jobPortal") },
+    // Jobs splits in two: employers submit without an account, members browse
+    // the listings after signing in.
+    {
+      label: tn("jobs"),
+      children: [
+        {
+          href: "/jobs/post",
+          label: tn("forEmployers"),
+          hint: tn("forEmployersHint"),
+        },
+        {
+          href: "/jobs",
+          label: tn("forStudents"),
+          hint: tn("forStudentsHint"),
+        },
+      ],
+    },
   ];
 
   return (
