@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, type FormEvent } from "react";
+import { useTranslations } from "next-intl";
 import { CheckCircle2, Info, Loader2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { inputClass } from "@/components/forms/form-ui";
@@ -10,11 +11,12 @@ import { euroToCents, submitJob } from "@/lib/job-submission";
 /**
  * The form employers use to submit a listing.
  *
- * Deliberately in German throughout, unlike the rest of the site: whoever
- * fills this in is writing a German Stellenanzeige, and mixing an English
- * form around German content would only confuse them.
+ * The interface follows the site language, but the advert itself must be
+ * written in German — a notice at the top says so — because our members apply
+ * to German employers.
  */
 
+/** Job types keep their German names — they are legal categories, not labels. */
 const TYPES = [
   { value: "WERKSTUDENT", label: "Werkstudent:in" },
   { value: "HIWI", label: "Studentische Hilfskraft (HiWi)" },
@@ -22,16 +24,7 @@ const TYPES = [
   { value: "PART_TIME", label: "Teilzeit / Minijob" },
 ] as const;
 
-const GERMAN_LEVELS = [
-  { value: "", label: "Keine Angabe" },
-  { value: "ENGLISH_OK", label: "Englisch ausreichend" },
-  { value: "A1", label: "A1 — Anfänger" },
-  { value: "A2", label: "A2 — Grundkenntnisse" },
-  { value: "B1", label: "B1 — Fortgeschritten" },
-  { value: "B2", label: "B2 — Selbstständig" },
-  { value: "C1", label: "C1 — Fachkundig" },
-  { value: "C2", label: "C2 — Muttersprachlich" },
-];
+const CEFR = ["A1", "A2", "B1", "B2", "C1", "C2"] as const;
 
 const EMPTY = {
   title: "",
@@ -62,6 +55,7 @@ const EMPTY = {
 };
 
 export function JobSubmissionForm() {
+  const t = useTranslations("postJob");
   const [v, setV] = useState(EMPTY);
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [formError, setFormError] = useState<string | null>(null);
@@ -82,7 +76,7 @@ export function JobSubmissionForm() {
     const payCents = euroToCents(v.pay);
     if (v.pay.trim() !== "" && payCents === null) {
       setErrors({
-        payCents: "Bitte einen gültigen Betrag angeben, z. B. 14,50",
+        payCents: t("invalidAmount"),
       });
       return;
     }
@@ -121,7 +115,7 @@ export function JobSubmissionForm() {
       const apiError = toApiError(err);
       if (apiError.fields) {
         setErrors(apiError.fields);
-        setFormError("Bitte prüfen Sie die markierten Felder.");
+        setFormError(t("checkFields"));
       } else {
         setFormError(apiError.error);
       }
@@ -134,12 +128,9 @@ export function JobSubmissionForm() {
       <div className="mx-auto flex max-w-2xl flex-col items-center gap-4 rounded-2xl border border-bd-green/40 bg-bd-green/5 px-6 py-14 text-center">
         <CheckCircle2 className="size-10 text-bd-green" aria-hidden />
         <h2 className="font-display text-2xl font-semibold text-foreground">
-          Vielen Dank — Ihre Anzeige ist eingegangen
+          {t("doneTitle")}
         </h2>
-        <p className="max-w-md text-muted-foreground">
-          Wir prüfen jede Anzeige, bevor sie für unsere Mitglieder sichtbar
-          wird. Sie erhalten eine E-Mail, sobald die Anzeige freigegeben wurde.
-        </p>
+        <p className="max-w-md text-muted-foreground">{t("doneBody")}</p>
       </div>
     );
   }
@@ -154,21 +145,12 @@ export function JobSubmissionForm() {
       <div className="flex gap-3 rounded-2xl border border-marigold/40 bg-marigold/10 p-4">
         <Info className="mt-0.5 size-5 shrink-0 text-madder" aria-hidden />
         <div className="text-sm text-foreground">
-          <p className="font-medium">Bitte beachten Sie</p>
+          <p className="font-medium">{t("noticeTitle")}</p>
           <ul className="mt-2 list-disc space-y-1 pl-5 text-muted-foreground">
-            <li>
-              Der Stellentitel muss <strong>(m/w/d)</strong> enthalten — das AGG
-              verbietet geschlechtsbezogene Ausschreibungen.
-            </li>
-            <li>
-              Die Vergütung ist Pflichtangabe und muss mindestens dem
-              gesetzlichen Mindestlohn entsprechen.
-            </li>
-            <li>
-              Keine Anzeigen auf reiner Provisionsbasis und keine Stellen, für
-              die Studierende in Vorleistung gehen müssen.
-            </li>
-            <li>Jede Anzeige wird vor der Veröffentlichung von uns geprüft.</li>
+            <li>{t("rule1")}</li>
+            <li>{t("rule2")}</li>
+            <li>{t("rule3")}</li>
+            <li>{t("rule4")}</li>
           </ul>
         </div>
       </div>
@@ -182,11 +164,11 @@ export function JobSubmissionForm() {
         </p>
       )}
 
-      <Section title="Die Stelle">
+      <Section title={t("secPosition")}>
         <Field
           id="title"
-          label="Stellentitel"
-          hint="z. B. Werkstudent:in Softwareentwicklung (m/w/d)"
+          label={t("fTitle")}
+          hint={t("fTitleHint")}
           error={errors.title}
           required
         >
@@ -201,7 +183,7 @@ export function JobSubmissionForm() {
         <div className="grid gap-4 sm:grid-cols-2">
           <Field
             id="company"
-            label="Unternehmen"
+            label={t("fCompany")}
             error={errors.company}
             required
           >
@@ -215,7 +197,7 @@ export function JobSubmissionForm() {
 
           <Field
             id="companyWebsite"
-            label="Webseite"
+            label={t("fWebsite")}
             error={errors.companyWebsite}
           >
             <input
@@ -228,7 +210,7 @@ export function JobSubmissionForm() {
             />
           </Field>
 
-          <Field id="type" label="Art der Stelle" error={errors.type} required>
+          <Field id="type" label={t("fType")} error={errors.type} required>
             <select
               id="type"
               value={v.type}
@@ -243,7 +225,7 @@ export function JobSubmissionForm() {
             </select>
           </Field>
 
-          <Field id="location" label="Einsatzort" error={errors.location}>
+          <Field id="location" label={t("fLocation")} error={errors.location}>
             <input
               id="location"
               value={v.location}
@@ -260,14 +242,14 @@ export function JobSubmissionForm() {
             onChange={(e) => setV((p) => ({ ...p, remote: e.target.checked }))}
             className="size-4 rounded border-border accent-bd-green"
           />
-          Remote-Arbeit möglich
+          {t("fRemote")}
         </label>
 
         <div className="grid gap-4 sm:grid-cols-3">
           <Field
             id="startDate"
-            label="Beginn"
-            hint="leer = ab sofort"
+            label={t("fStart")}
+            hint={t("fStartHint")}
             error={errors.startDate}
           >
             <input
@@ -280,8 +262,8 @@ export function JobSubmissionForm() {
           </Field>
           <Field
             id="until"
-            label="Befristet bis"
-            hint="leer = unbefristet"
+            label={t("fUntil")}
+            hint={t("fUntilHint")}
             error={errors.until}
           >
             <input
@@ -294,8 +276,8 @@ export function JobSubmissionForm() {
           </Field>
           <Field
             id="hoursPerWeek"
-            label="Wochenstunden"
-            hint="max. 20 in der Vorlesungszeit"
+            label={t("fHours")}
+            hint={t("fHoursHint")}
             error={errors.hoursPerWeek}
           >
             <input
@@ -311,12 +293,12 @@ export function JobSubmissionForm() {
         </div>
       </Section>
 
-      <Section title="Vergütung">
+      <Section title={t("secPay")}>
         <div className="grid gap-4 sm:grid-cols-2">
           <Field
             id="pay"
-            label="Betrag in Euro"
-            hint="Mindestlohn 2026: 13,90 €/Stunde"
+            label={t("fPay")}
+            hint={t("fPayHint")}
             error={errors.payCents}
             required
           >
@@ -329,22 +311,22 @@ export function JobSubmissionForm() {
               className={inputClass(!!errors.payCents)}
             />
           </Field>
-          <Field id="payUnit" label="je" error={errors.payUnit}>
+          <Field id="payUnit" label={t("fPayUnit")} error={errors.payUnit}>
             <select
               id="payUnit"
               value={v.payUnit}
               onChange={set("payUnit")}
               className={inputClass(false)}
             >
-              <option value="HOUR">pro Stunde</option>
-              <option value="MONTH">pro Monat</option>
+              <option value="HOUR">{t("perHour")}</option>
+              <option value="MONTH">{t("perMonth")}</option>
             </select>
           </Field>
         </div>
         <Field
           id="payNote"
-          label="Hinweis zur Vergütung"
-          hint="z. B. Pflichtpraktikum im Rahmen des Studiums"
+          label={t("fPayNote")}
+          hint={t("fPayNoteHint")}
           error={errors.payNote}
         >
           <input
@@ -356,10 +338,10 @@ export function JobSubmissionForm() {
         </Field>
       </Section>
 
-      <Section title="Die Anzeige">
+      <Section title={t("secAdvert")} note={t("germanNotice")}>
         <Field
           id="aboutCompany"
-          label="Über uns"
+          label={t("fAbout")}
           error={errors.aboutCompany}
           required
         >
@@ -371,7 +353,7 @@ export function JobSubmissionForm() {
             className={`${inputClass(!!errors.aboutCompany)} resize-y`}
           />
         </Field>
-        <Field id="tasks" label="Deine Aufgaben" error={errors.tasks} required>
+        <Field id="tasks" label={t("fTasks")} error={errors.tasks} required>
           <textarea
             id="tasks"
             rows={4}
@@ -380,7 +362,12 @@ export function JobSubmissionForm() {
             className={`${inputClass(!!errors.tasks)} resize-y`}
           />
         </Field>
-        <Field id="profile" label="Dein Profil" error={errors.profile} required>
+        <Field
+          id="profile"
+          label={t("fProfile")}
+          error={errors.profile}
+          required
+        >
           <textarea
             id="profile"
             rows={4}
@@ -389,7 +376,7 @@ export function JobSubmissionForm() {
             className={`${inputClass(!!errors.profile)} resize-y`}
           />
         </Field>
-        <Field id="offer" label="Wir bieten" error={errors.offer}>
+        <Field id="offer" label={t("fOffer")} error={errors.offer}>
           <textarea
             id="offer"
             rows={3}
@@ -400,8 +387,8 @@ export function JobSubmissionForm() {
         </Field>
         <Field
           id="germanLevel"
-          label="Erforderliche Deutschkenntnisse"
-          hint="Für unsere Mitglieder die wichtigste Angabe."
+          label={t("fGerman")}
+          hint={t("fGermanHint")}
           error={errors.germanLevel}
         >
           <select
@@ -410,20 +397,22 @@ export function JobSubmissionForm() {
             onChange={set("germanLevel")}
             className={inputClass(false)}
           >
-            {GERMAN_LEVELS.map((g) => (
-              <option key={g.value} value={g.value}>
-                {g.label}
+            <option value="">{t("levelNone")}</option>
+            <option value="ENGLISH_OK">{t("levelEnglish")}</option>
+            {CEFR.map((level) => (
+              <option key={level} value={level}>
+                {level}
               </option>
             ))}
           </select>
         </Field>
       </Section>
 
-      <Section title="Bewerbung">
+      <Section title={t("secApply")}>
         <div className="grid gap-4 sm:grid-cols-2">
           <Field
             id="applyEmail"
-            label="Bewerbung per E-Mail"
+            label={t("fApplyEmail")}
             error={errors.applyEmail}
           >
             <input
@@ -434,11 +423,7 @@ export function JobSubmissionForm() {
               className={inputClass(!!errors.applyEmail)}
             />
           </Field>
-          <Field
-            id="applyUrl"
-            label="oder Bewerbungslink"
-            error={errors.applyUrl}
-          >
+          <Field id="applyUrl" label={t("fApplyUrl")} error={errors.applyUrl}>
             <input
               id="applyUrl"
               type="url"
@@ -450,7 +435,7 @@ export function JobSubmissionForm() {
           </Field>
           <Field
             id="contactName"
-            label="Ansprechpartner:in"
+            label={t("fContactName")}
             error={errors.contactName}
           >
             <input
@@ -460,7 +445,7 @@ export function JobSubmissionForm() {
               className={inputClass(!!errors.contactName)}
             />
           </Field>
-          <Field id="deadline" label="Bewerbungsfrist" error={errors.deadline}>
+          <Field id="deadline" label={t("fDeadline")} error={errors.deadline}>
             <input
               id="deadline"
               type="date"
@@ -472,14 +457,11 @@ export function JobSubmissionForm() {
         </div>
       </Section>
 
-      <Section
-        title="Ihre Kontaktdaten"
-        note="Nur für Rückfragen durch unser Team. Diese Angaben erscheinen nicht in der Anzeige."
-      >
+      <Section title="Ihre Kontaktdaten" note={t("contactNote")}>
         <div className="grid gap-4 sm:grid-cols-3">
           <Field
             id="submitterName"
-            label="Name"
+            label={t("fName")}
             error={errors.submitterName}
             required
           >
@@ -492,7 +474,7 @@ export function JobSubmissionForm() {
           </Field>
           <Field
             id="submitterEmail"
-            label="E-Mail"
+            label={t("fEmail")}
             error={errors.submitterEmail}
             required
           >
@@ -506,7 +488,7 @@ export function JobSubmissionForm() {
           </Field>
           <Field
             id="submitterPhone"
-            label="Telefon"
+            label={t("fPhone")}
             error={errors.submitterPhone}
           >
             <input
@@ -524,7 +506,7 @@ export function JobSubmissionForm() {
         aria-hidden
         className="absolute left-[-9999px] h-0 w-0 overflow-hidden"
       >
-        <label htmlFor="website2">Bitte leer lassen</label>
+        <label htmlFor="website2">Leave this empty</label>
         <input
           id="website2"
           tabIndex={-1}
@@ -537,12 +519,9 @@ export function JobSubmissionForm() {
       <div className="flex flex-wrap items-center gap-4">
         <Button type="submit" size="lg" disabled={saving}>
           {saving && <Loader2 className="animate-spin" aria-hidden />}
-          {saving ? "Wird gesendet…" : "Anzeige einreichen"}
+          {saving ? t("submitting") : t("submit")}
         </Button>
-        <p className="text-sm text-muted-foreground">
-          Wir speichern Ihre Kontaktdaten, um Rückfragen zur Anzeige stellen zu
-          können.
-        </p>
+        <p className="text-sm text-muted-foreground">{t("privacyNote")}</p>
       </div>
     </form>
   );

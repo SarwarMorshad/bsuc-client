@@ -22,23 +22,27 @@ export function NavDropdown({
   useEffect(() => {
     if (!open) return;
 
-    const onPointerDown = (e: PointerEvent) => {
-      if (!wrapper.current?.contains(e.target as Node)) setOpen(false);
-    };
     const onKeyDown = (e: KeyboardEvent) => {
       if (e.key === "Escape") setOpen(false);
     };
 
-    document.addEventListener("pointerdown", onPointerDown);
     document.addEventListener("keydown", onKeyDown);
-    return () => {
-      document.removeEventListener("pointerdown", onPointerDown);
-      document.removeEventListener("keydown", onKeyDown);
-    };
+    return () => document.removeEventListener("keydown", onKeyDown);
   }, [open]);
 
   return (
-    <div ref={wrapper} className="relative">
+    // Opens on hover, but focus and click still work, so it stays usable from
+    // the keyboard and on touch screens where there is no hover at all.
+    <div
+      ref={wrapper}
+      onMouseEnter={() => setOpen(true)}
+      onMouseLeave={() => setOpen(false)}
+      onFocus={() => setOpen(true)}
+      onBlur={(e) => {
+        if (!e.currentTarget.contains(e.relatedTarget as Node)) setOpen(false);
+      }}
+      className="relative"
+    >
       <button
         type="button"
         onClick={() => setOpen((v) => !v)}
@@ -56,26 +60,23 @@ export function NavDropdown({
       {open && (
         <div
           role="menu"
-          className="absolute top-full left-1/2 z-50 mt-2 w-64 -translate-x-1/2 overflow-hidden rounded-xl border border-border bg-background shadow-lg"
+          // pt-2 keeps the gap under the trigger inside the hover area, so the
+          // menu does not close while the pointer travels down to it.
+          className="absolute top-full left-1/2 z-50 w-56 -translate-x-1/2 pt-2"
         >
-          {items.map((item) => (
-            <Link
-              key={item.href}
-              href={item.href}
-              role="menuitem"
-              onClick={() => setOpen(false)}
-              className="block px-4 py-3 transition-colors hover:bg-muted/40"
-            >
-              <span className="block text-sm font-medium text-foreground">
+          <div className="overflow-hidden rounded-xl border border-border bg-background shadow-lg">
+            {items.map((item) => (
+              <Link
+                key={item.href}
+                href={item.href}
+                role="menuitem"
+                onClick={() => setOpen(false)}
+                className="block px-4 py-2.5 text-sm text-foreground transition-colors hover:bg-muted/40"
+              >
                 {item.label}
-              </span>
-              {item.hint && (
-                <span className="mt-0.5 block text-xs text-muted-foreground">
-                  {item.hint}
-                </span>
-              )}
-            </Link>
-          ))}
+              </Link>
+            ))}
+          </div>
         </div>
       )}
     </div>

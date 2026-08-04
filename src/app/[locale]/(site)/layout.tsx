@@ -27,16 +27,8 @@ export default async function SiteLayout({
     {
       label: tn("jobs"),
       children: [
-        {
-          href: "/jobs/post",
-          label: tn("forEmployers"),
-          hint: tn("forEmployersHint"),
-        },
-        {
-          href: "/jobs",
-          label: tn("forStudents"),
-          hint: tn("forStudentsHint"),
-        },
+        { href: "/jobs/post", label: tn("forEmployers") },
+        { href: "/jobs", label: tn("forStudents") },
       ],
     },
   ];

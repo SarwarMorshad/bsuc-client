@@ -115,11 +115,6 @@ export function MobileNav({
                       className="rounded-md px-3 py-2 pl-5 text-sm text-foreground hover:bg-muted/30"
                     >
                       {c.label}
-                      {c.hint && (
-                        <span className="block text-xs text-muted-foreground">
-                          {c.hint}
-                        </span>
-                      )}
                     </Link>
                   ))}
                 </div>
