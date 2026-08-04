@@ -86,6 +86,9 @@ export function JobsManager() {
   const [rejectReason, setRejectReason] = useState("");
   const [confirming, setConfirming] = useState<AdminJobSummary | null>(null);
   const [detailsId, setDetailsId] = useState<string | null>(null);
+  // Captured on load rather than during render, so "expired" is a stable
+  // value and rendering a row stays pure.
+  const [now, setNow] = useState(0);
 
   const load = useCallback(async () => {
     try {
@@ -96,6 +99,7 @@ export function JobsManager() {
         pageSize: PAGE_SIZE,
       });
       setJobs(data.jobs);
+      setNow(Date.now());
       setTotal(data.total);
       setCounts(data.counts);
       setError(null);
@@ -253,6 +257,7 @@ export function JobsManager() {
             <JobRow
               key={job.id}
               job={job}
+              now={now}
               busy={busyId === job.id}
               onApprove={() => review(job, "APPROVED")}
               onReject={() => {
@@ -383,6 +388,7 @@ export function JobsManager() {
 /** One compact row. Everything long lives behind Details. */
 function JobRow({
   job,
+  now,
   busy,
   onApprove,
   onReject,
@@ -390,6 +396,7 @@ function JobRow({
   onDetails,
 }: {
   job: AdminJobSummary;
+  now: number;
   busy: boolean;
   onApprove: () => void;
   onReject: () => void;
@@ -402,7 +409,7 @@ function JobRow({
     perMonth: t("perMonth"),
   });
   const expired =
-    job.deadline !== null && new Date(job.deadline).getTime() < Date.now();
+    job.deadline !== null && new Date(job.deadline).getTime() < now;
 
   return (
     <li
