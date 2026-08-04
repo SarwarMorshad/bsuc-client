@@ -349,6 +349,9 @@
     "pastSection": "Past events",
     "pastHint": "Already happened. Still published, but no longer listed.",
     "noLive": "Nothing is live right now.",
-    "viewOnSite": "View on site"
+    "viewOnSite": "View on site",
+    "eventFormHint": "Fill in the details below. Drafts stay hidden until you publish them.",
+    "publishedHint": "Published events appear on the public events page.",
+    "confirmDeleteNamed": "Delete “{title}”? This also removes its photo and cannot be undone."
   }
 }

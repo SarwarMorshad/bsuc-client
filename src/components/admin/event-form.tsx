@@ -2,6 +2,16 @@
 
 import { useRef, useState, type ChangeEvent, type FormEvent } from "react";
 import { useTranslations } from "next-intl";
+import { ImageIcon, Loader2, Trash2, Upload } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
 import { inputClass } from "@/components/forms/form-ui";
 import { toApiError } from "@/lib/api";
 import {
@@ -19,20 +29,9 @@ function toLocalInput(iso: string) {
   return `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}T${pad(d.getHours())}:${pad(d.getMinutes())}`;
 }
 
-/** Create or edit an event. Passing `event` switches the form to edit mode. */
-export function EventForm({
-  event,
-  onDone,
-  onCancel,
-}: {
-  event?: Event;
-  onDone: () => void;
-  onCancel: () => void;
-}) {
-  const t = useTranslations("admin");
-  const f = useTranslations("form");
-
-  const [values, setValues] = useState({
+/** Fields the form edits, seeded from an existing event when editing. */
+function initialValues(event?: Event) {
+  return {
     title: event?.title ?? "",
     date: event ? toLocalInput(event.date) : "",
     location: event?.location ?? "",
@@ -40,12 +39,51 @@ export function EventForm({
     imageUrl: event?.imageUrl ?? "",
     imagePublicId: event?.imagePublicId ?? "",
     published: event?.published ?? false,
-  });
+  };
+}
+
+/**
+ * Create or edit an event in a modal. Passing `event` switches to edit mode.
+ *
+ * Stays mounted while closed so Base UI sees a real closed -> open transition
+ * and moves focus into the dialog; the fields reset on each opening instead.
+ */
+export function EventFormDialog({
+  event,
+  open,
+  onOpenChange,
+  onSaved,
+}: {
+  event?: Event;
+  open: boolean;
+  onOpenChange: (open: boolean) => void;
+  onSaved: () => void;
+}) {
+  const t = useTranslations("admin");
+  const f = useTranslations("form");
+
+  const [values, setValues] = useState(() => initialValues(event));
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [formError, setFormError] = useState<string | null>(null);
   const [saving, setSaving] = useState(false);
   const [uploading, setUploading] = useState(false);
   const fileRef = useRef<HTMLInputElement>(null);
+  const titleRef = useRef<HTMLInputElement>(null);
+
+  // Reset each time the dialog opens, so a cancelled edit does not leak into
+  // the next one. Adjusting state during render is React's documented
+  // alternative to doing this in an effect.
+  const [wasOpen, setWasOpen] = useState(open);
+  if (open !== wasOpen) {
+    setWasOpen(open);
+    if (open) {
+      setValues(initialValues(event));
+      setErrors({});
+      setFormError(null);
+      setSaving(false);
+      setUploading(false);
+    }
+  }
 
   const set =
     (key: keyof typeof values) => (e: { target: { value: string } }) => {
@@ -54,8 +92,8 @@ export function EventForm({
     };
 
   /**
-   * Uploads immediately on pick so the admin sees the real Cloudinary image
-   * before saving, rather than a local preview that might fail later.
+   * Uploads on pick so the admin sees the real Cloudinary image before saving,
+   * rather than a local preview that might fail later.
    */
   async function pickPhoto(e: ChangeEvent<HTMLInputElement>) {
     const file = e.target.files?.[0];
@@ -105,7 +143,7 @@ export function EventForm({
     try {
       if (event) await updateEvent(event.id, payload);
       else await createEvent(payload);
-      onDone();
+      onSaved();
     } catch (err) {
       const apiError = toApiError(err);
       if (apiError.fields) setErrors(apiError.fields);
@@ -114,194 +152,217 @@ export function EventForm({
     }
   }
 
+  const busy = saving || uploading;
+
   return (
-    <form
-      onSubmit={submit}
-      noValidate
-      className="flex flex-col gap-4 rounded-2xl border border-border bg-cream p-6"
-    >
-      <h2 className="font-display text-xl font-semibold text-foreground">
-        {event ? t("editEvent") : t("newEvent")}
-      </h2>
+    <Dialog open={open} onOpenChange={onOpenChange}>
+      {/* Focus the title rather than whatever happens to be first tabbable. */}
+      <DialogContent className="sm:max-w-2xl" initialFocus={titleRef}>
+        <DialogHeader>
+          <DialogTitle className="font-display text-lg">
+            {event ? t("editEvent") : t("newEvent")}
+          </DialogTitle>
+          <DialogDescription>{t("eventFormHint")}</DialogDescription>
+        </DialogHeader>
 
-      {formError && (
-        <p
-          role="alert"
-          className="rounded-lg bg-madder/10 px-4 py-3 text-sm text-madder"
+        <form
+          id="event-form"
+          onSubmit={submit}
+          noValidate
+          className="flex max-h-[60vh] flex-col gap-4 overflow-y-auto px-1 py-1"
         >
-          {formError}
-        </p>
-      )}
-
-      <div className="grid gap-4 sm:grid-cols-2">
-        <div className="flex flex-col gap-1.5 sm:col-span-2">
-          <label
-            htmlFor="ev-title"
-            className="text-sm font-medium text-foreground"
-          >
-            {t("eventTitle")}
-          </label>
-          <input
-            id="ev-title"
-            value={values.title}
-            onChange={set("title")}
-            aria-invalid={!!errors.title}
-            className={inputClass(!!errors.title)}
-          />
-          {errors.title && (
-            <span role="alert" className="text-xs text-madder">
-              {errors.title}
-            </span>
+          {formError && (
+            <p
+              role="alert"
+              className="rounded-lg bg-destructive/10 px-4 py-3 text-sm text-destructive"
+            >
+              {formError}
+            </p>
           )}
-        </div>
 
-        <div className="flex flex-col gap-1.5">
-          <label
-            htmlFor="ev-date"
-            className="text-sm font-medium text-foreground"
-          >
-            {t("eventDate")}
-          </label>
-          <input
-            id="ev-date"
-            type="datetime-local"
-            value={values.date}
-            onChange={set("date")}
-            aria-invalid={!!errors.date}
-            className={inputClass(!!errors.date)}
-          />
-          {errors.date && (
-            <span role="alert" className="text-xs text-madder">
-              {errors.date}
-            </span>
-          )}
-        </div>
-
-        <div className="flex flex-col gap-1.5">
-          <label
-            htmlFor="ev-location"
-            className="text-sm font-medium text-foreground"
-          >
-            {t("eventLocation")}
-          </label>
-          <input
-            id="ev-location"
-            value={values.location}
-            onChange={set("location")}
-            className={inputClass(!!errors.location)}
-          />
-        </div>
-
-        <div className="flex flex-col gap-1.5 sm:col-span-2">
-          <label
-            htmlFor="ev-description"
-            className="text-sm font-medium text-foreground"
-          >
-            {t("eventDescription")}
-          </label>
-          <textarea
-            id="ev-description"
-            rows={4}
-            value={values.description}
-            onChange={set("description")}
-            className={`${inputClass(!!errors.description)} resize-y`}
-          />
-        </div>
-
-        <div className="flex flex-col gap-2 sm:col-span-2">
-          <span className="text-sm font-medium text-foreground">
-            {t("eventPhoto")}
-          </span>
-
-          <div className="flex flex-wrap items-center gap-4">
-            <div className="relative aspect-video w-48 shrink-0 overflow-hidden rounded-xl border border-border bg-secondary">
-              {values.imageUrl ? (
-                // Cloudinary host is not in next.config images; a plain img keeps
-                // this admin-only preview simple.
-                // eslint-disable-next-line @next/next/no-img-element
-                <img
-                  src={values.imageUrl}
-                  alt=""
-                  className="h-full w-full object-cover"
-                />
-              ) : (
-                <span className="absolute inset-0 grid place-items-center text-xs text-muted-foreground">
-                  {t("eventPhoto")}
-                </span>
-              )}
-              {uploading && (
-                <span className="absolute inset-0 grid place-items-center bg-foreground/50 text-xs font-medium text-cream">
-                  {t("uploadingPhoto")}
+          <div className="grid gap-4 sm:grid-cols-2">
+            <div className="flex flex-col gap-1.5 sm:col-span-2">
+              <label
+                htmlFor="ev-title"
+                className="text-sm font-medium text-foreground"
+              >
+                {t("eventTitle")}
+              </label>
+              <input
+                id="ev-title"
+                ref={titleRef}
+                value={values.title}
+                onChange={set("title")}
+                aria-invalid={!!errors.title}
+                className={inputClass(!!errors.title)}
+              />
+              {errors.title && (
+                <span role="alert" className="text-xs text-destructive">
+                  {errors.title}
                 </span>
               )}
             </div>
 
-            <div className="flex flex-col gap-2">
-              <input
-                ref={fileRef}
-                id="ev-photo"
-                type="file"
-                accept="image/jpeg,image/png,image/webp"
-                onChange={pickPhoto}
-                className="hidden"
-              />
-              <button
-                type="button"
-                onClick={() => fileRef.current?.click()}
-                disabled={uploading}
-                className="rounded-full border border-border px-4 py-2 text-sm font-medium text-foreground hover:bg-secondary disabled:opacity-60"
+            <div className="flex flex-col gap-1.5">
+              <label
+                htmlFor="ev-date"
+                className="text-sm font-medium text-foreground"
               >
-                {values.imageUrl ? t("changePhoto") : t("uploadPhoto")}
-              </button>
-              {values.imageUrl && !uploading && (
-                <button
-                  type="button"
-                  onClick={removePhoto}
-                  className="text-xs text-madder hover:underline"
-                >
-                  {t("removePhoto")}
-                </button>
+                {t("eventDate")}
+              </label>
+              <input
+                id="ev-date"
+                type="datetime-local"
+                value={values.date}
+                onChange={set("date")}
+                aria-invalid={!!errors.date}
+                className={inputClass(!!errors.date)}
+              />
+              {errors.date && (
+                <span role="alert" className="text-xs text-destructive">
+                  {errors.date}
+                </span>
+              )}
+            </div>
+
+            <div className="flex flex-col gap-1.5">
+              <label
+                htmlFor="ev-location"
+                className="text-sm font-medium text-foreground"
+              >
+                {t("eventLocation")}
+              </label>
+              <input
+                id="ev-location"
+                value={values.location}
+                onChange={set("location")}
+                className={inputClass(!!errors.location)}
+              />
+            </div>
+
+            <div className="flex flex-col gap-1.5 sm:col-span-2">
+              <label
+                htmlFor="ev-description"
+                className="text-sm font-medium text-foreground"
+              >
+                {t("eventDescription")}
+              </label>
+              <textarea
+                id="ev-description"
+                rows={4}
+                value={values.description}
+                onChange={set("description")}
+                className={`${inputClass(!!errors.description)} resize-y`}
+              />
+            </div>
+
+            <div className="flex flex-col gap-2 sm:col-span-2">
+              <span className="text-sm font-medium text-foreground">
+                {t("eventPhoto")}
+              </span>
+
+              <div className="flex flex-wrap items-center gap-4">
+                <div className="relative aspect-video w-48 shrink-0 overflow-hidden rounded-xl border border-border bg-muted">
+                  {values.imageUrl ? (
+                    // Cloudinary is not configured in next.config images; a plain
+                    // img keeps this admin-only preview simple.
+                    // eslint-disable-next-line @next/next/no-img-element
+                    <img
+                      src={values.imageUrl}
+                      alt=""
+                      className="h-full w-full object-cover"
+                    />
+                  ) : (
+                    <span className="absolute inset-0 grid place-items-center text-muted-foreground">
+                      <ImageIcon className="size-6" aria-hidden />
+                    </span>
+                  )}
+                  {uploading && (
+                    <span className="absolute inset-0 grid place-items-center bg-foreground/50 text-cream">
+                      <Loader2 className="size-5 animate-spin" aria-hidden />
+                      <span className="sr-only">{t("uploadingPhoto")}</span>
+                    </span>
+                  )}
+                </div>
+
+                <div className="flex flex-col items-start gap-2">
+                  <input
+                    ref={fileRef}
+                    id="ev-photo"
+                    type="file"
+                    accept="image/jpeg,image/png,image/webp"
+                    onChange={pickPhoto}
+                    className="hidden"
+                  />
+                  <Button
+                    type="button"
+                    variant="outline"
+                    size="sm"
+                    disabled={uploading}
+                    onClick={() => fileRef.current?.click()}
+                  >
+                    <Upload aria-hidden />
+                    {values.imageUrl ? t("changePhoto") : t("uploadPhoto")}
+                  </Button>
+                  {values.imageUrl && !uploading && (
+                    <Button
+                      type="button"
+                      variant="ghost"
+                      size="sm"
+                      className="text-destructive"
+                      onClick={removePhoto}
+                    >
+                      <Trash2 aria-hidden />
+                      {t("removePhoto")}
+                    </Button>
+                  )}
+                </div>
+              </div>
+
+              <p className="text-xs text-muted-foreground">{t("photoHint")}</p>
+              {errors.imageUrl && (
+                <span role="alert" className="text-xs text-destructive">
+                  {errors.imageUrl}
+                </span>
               )}
             </div>
           </div>
 
-          <p className="text-xs text-muted-foreground">{t("photoHint")}</p>
-          {errors.imageUrl && (
-            <span role="alert" className="text-xs text-madder">
-              {errors.imageUrl}
+          <label className="flex items-start gap-3 rounded-xl border border-border bg-muted/40 p-3">
+            <input
+              type="checkbox"
+              checked={values.published}
+              onChange={(e) =>
+                setValues((v) => ({ ...v, published: e.target.checked }))
+              }
+              className="mt-0.5 size-4 rounded border-border accent-primary"
+            />
+            <span>
+              <span className="block text-sm font-medium text-foreground">
+                {t("published")}
+              </span>
+              <span className="block text-xs text-muted-foreground">
+                {t("publishedHint")}
+              </span>
             </span>
-          )}
-        </div>
-      </div>
+          </label>
+        </form>
 
-      <label className="flex items-center gap-2 text-sm text-foreground">
-        <input
-          type="checkbox"
-          checked={values.published}
-          onChange={(e) =>
-            setValues((v) => ({ ...v, published: e.target.checked }))
-          }
-          className="h-4 w-4 rounded border-border accent-bd-green"
-        />
-        {t("published")}
-      </label>
-
-      <div className="flex items-center gap-3">
-        <button
-          type="submit"
-          disabled={saving || uploading}
-          className="rounded-full bg-bd-green px-6 py-2.5 text-sm font-medium text-cream disabled:opacity-60"
-        >
-          {saving ? f("submitting") : event ? t("save") : t("create")}
-        </button>
-        <button
-          type="button"
-          onClick={onCancel}
-          className="text-sm text-muted-foreground hover:text-foreground"
-        >
-          {t("cancel")}
-        </button>
-      </div>
-    </form>
+        <DialogFooter>
+          <Button
+            type="button"
+            variant="outline"
+            onClick={() => onOpenChange(false)}
+            disabled={saving}
+          >
+            {t("cancel")}
+          </Button>
+          <Button type="submit" form="event-form" disabled={busy}>
+            {saving && <Loader2 className="animate-spin" aria-hidden />}
+            {saving ? f("submitting") : event ? t("save") : t("create")}
+          </Button>
+        </DialogFooter>
+      </DialogContent>
+    </Dialog>
   );
 }

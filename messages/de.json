@@ -349,6 +349,9 @@
     "pastSection": "Vergangene Veranstaltungen",
     "pastHint": "Bereits vorbei. Weiter veröffentlicht, aber nicht mehr gelistet.",
     "noLive": "Derzeit ist nichts live.",
-    "viewOnSite": "Auf der Website ansehen"
+    "viewOnSite": "Auf der Website ansehen",
+    "eventFormHint": "Fülle die Angaben unten aus. Entwürfe bleiben verborgen, bis du sie veröffentlichst.",
+    "publishedHint": "Veröffentlichte Veranstaltungen erscheinen auf der öffentlichen Veranstaltungsseite.",
+    "confirmDeleteNamed": "„{title}\" löschen? Das Foto wird ebenfalls entfernt und kann nicht wiederhergestellt werden."
   }
 }
