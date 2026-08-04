@@ -352,6 +352,9 @@
     "viewOnSite": "Auf der Website ansehen",
     "eventFormHint": "Fülle die Angaben unten aus. Entwürfe bleiben verborgen, bis du sie veröffentlichst.",
     "publishedHint": "Veröffentlichte Veranstaltungen erscheinen auf der öffentlichen Veranstaltungsseite.",
-    "confirmDeleteNamed": "„{title}\" löschen? Das Foto wird ebenfalls entfernt und kann nicht wiederhergestellt werden."
+    "confirmDeleteNamed": "„{title}\" löschen? Das Foto wird ebenfalls entfernt und kann nicht wiederhergestellt werden.",
+    "photoTypeError": "Bitte wähle ein JPEG-, PNG- oder WebP-Bild.",
+    "photoSizeError": "Das Bild darf höchstens 5 MB groß sein.",
+    "photoPending": "Wird beim Speichern hochgeladen."
   }
 }

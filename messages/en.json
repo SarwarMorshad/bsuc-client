@@ -352,6 +352,9 @@
     "viewOnSite": "View on site",
     "eventFormHint": "Fill in the details below. Drafts stay hidden until you publish them.",
     "publishedHint": "Published events appear on the public events page.",
-    "confirmDeleteNamed": "Delete “{title}”? This also removes its photo and cannot be undone."
+    "confirmDeleteNamed": "Delete “{title}”? This also removes its photo and cannot be undone.",
+    "photoTypeError": "Please choose a JPEG, PNG or WebP image.",
+    "photoSizeError": "The image must be 5 MB or smaller.",
+    "photoPending": "Uploads when you save."
   }
 }

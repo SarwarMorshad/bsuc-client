@@ -16,11 +16,15 @@ import { inputClass } from "@/components/forms/form-ui";
 import { toApiError } from "@/lib/api";
 import {
   createEvent,
+  discardEventImage,
   updateEvent,
   uploadEventImage,
   type EventInput,
 } from "@/lib/admin-events";
 import type { Event } from "@/lib/events";
+
+const ALLOWED_TYPES = ["image/jpeg", "image/png", "image/webp"];
+const MAX_PHOTO_BYTES = 5 * 1024 * 1024;
 
 /** ISO timestamp -> value for <input type="datetime-local"> in local time. */
 function toLocalInput(iso: string) {
@@ -67,8 +71,30 @@ export function EventFormDialog({
   const [formError, setFormError] = useState<string | null>(null);
   const [saving, setSaving] = useState(false);
   const [uploading, setUploading] = useState(false);
+  // The chosen file is held locally and only sent to Cloudinary on save, so
+  // cancelling leaves nothing behind.
+  const [photo, setPhoto] = useState<{ file: File; preview: string } | null>(
+    null,
+  );
   const fileRef = useRef<HTMLInputElement>(null);
   const titleRef = useRef<HTMLInputElement>(null);
+  // Set when an upload succeeded but saving then failed: reused on retry so a
+  // second attempt does not orphan a second copy, and cleaned up on cancel.
+  const strandedUpload = useRef<{ url: string; publicId: string } | null>(null);
+
+  function releasePhoto(next: { file: File; preview: string } | null) {
+    setPhoto((prev) => {
+      if (prev) URL.revokeObjectURL(prev.preview);
+      return next;
+    });
+  }
+
+  /** Deletes an upload that never made it onto an event. Best effort. */
+  function discardStranded() {
+    const stranded = strandedUpload.current;
+    strandedUpload.current = null;
+    if (stranded) void discardEventImage(stranded.publicId).catch(() => {});
+  }
 
   // Reset each time the dialog opens, so a cancelled edit does not leak into
   // the next one. Adjusting state during render is React's documented
@@ -82,6 +108,11 @@ export function EventFormDialog({
       setFormError(null);
       setSaving(false);
       setUploading(false);
+      releasePhoto(null);
+    } else {
+      // Closed without saving — drop anything already sent to Cloudinary.
+      discardStranded();
+      releasePhoto(null);
     }
   }
 
@@ -92,29 +123,31 @@ export function EventFormDialog({
     };
 
   /**
-   * Uploads on pick so the admin sees the real Cloudinary image before saving,
-   * rather than a local preview that might fail later.
+   * Shows a local preview only. The file is uploaded when the admin saves, so
+   * cancelling never leaves an orphan in Cloudinary.
    */
-  async function pickPhoto(e: ChangeEvent<HTMLInputElement>) {
+  function pickPhoto(e: ChangeEvent<HTMLInputElement>) {
     const file = e.target.files?.[0];
     // Reset so re-picking the same file fires change again.
     e.target.value = "";
     if (!file) return;
 
-    setErrors((p) => ({ ...p, imageUrl: "" }));
-    setUploading(true);
-    try {
-      const { imageUrl, imagePublicId } = await uploadEventImage(file);
-      setValues((v) => ({ ...v, imageUrl, imagePublicId }));
-    } catch (err) {
-      setErrors((p) => ({ ...p, imageUrl: toApiError(err).error }));
-    } finally {
-      setUploading(false);
+    if (!ALLOWED_TYPES.includes(file.type)) {
+      setErrors((p) => ({ ...p, imageUrl: t("photoTypeError") }));
+      return;
     }
+    if (file.size > MAX_PHOTO_BYTES) {
+      setErrors((p) => ({ ...p, imageUrl: t("photoSizeError") }));
+      return;
+    }
+
+    setErrors((p) => ({ ...p, imageUrl: "" }));
+    releasePhoto({ file, preview: URL.createObjectURL(file) });
   }
 
   function removePhoto() {
-    // The old file is cleaned up server-side once the change is saved.
+    releasePhoto(null);
+    // The previous file is cleaned up server-side once the change is saved.
     setValues((v) => ({ ...v, imageUrl: "", imagePublicId: "" }));
   }
 
@@ -128,21 +161,42 @@ export function EventFormDialog({
     setErrors(next);
     if (Object.keys(next).length > 0) return;
 
+    setSaving(true);
+
+    // Upload now, not on pick — reusing an earlier upload if a previous save
+    // attempt failed after it went through.
+    let image = strandedUpload.current;
+    if (photo && !image) {
+      setUploading(true);
+      try {
+        const { imageUrl, imagePublicId } = await uploadEventImage(photo.file);
+        image = { url: imageUrl, publicId: imagePublicId };
+        strandedUpload.current = image;
+      } catch (err) {
+        setErrors((p) => ({ ...p, imageUrl: toApiError(err).error }));
+        setSaving(false);
+        return;
+      } finally {
+        setUploading(false);
+      }
+    }
+
     const payload: EventInput = {
       title: values.title,
       // datetime-local has no timezone; treat it as the admin's local time.
       date: new Date(values.date).toISOString(),
       location: values.location || null,
       description: values.description || null,
-      imageUrl: values.imageUrl || null,
-      imagePublicId: values.imagePublicId || null,
+      imageUrl: image ? image.url : values.imageUrl || null,
+      imagePublicId: image ? image.publicId : values.imagePublicId || null,
       published: values.published,
     };
 
-    setSaving(true);
     try {
       if (event) await updateEvent(event.id, payload);
       else await createEvent(payload);
+      // Saved — the image now belongs to an event, so nothing to clean up.
+      strandedUpload.current = null;
       onSaved();
     } catch (err) {
       const apiError = toApiError(err);
@@ -153,6 +207,8 @@ export function EventFormDialog({
   }
 
   const busy = saving || uploading;
+  // A freshly picked file wins over whatever the event already had.
+  const previewSrc = photo?.preview ?? values.imageUrl;
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
@@ -263,12 +319,12 @@ export function EventFormDialog({
 
               <div className="flex flex-wrap items-center gap-4">
                 <div className="relative aspect-video w-48 shrink-0 overflow-hidden rounded-xl border border-border bg-muted">
-                  {values.imageUrl ? (
+                  {previewSrc ? (
                     // Cloudinary is not configured in next.config images; a plain
                     // img keeps this admin-only preview simple.
                     // eslint-disable-next-line @next/next/no-img-element
                     <img
-                      src={values.imageUrl}
+                      src={previewSrc}
                       alt=""
                       className="h-full w-full object-cover"
                     />
@@ -302,9 +358,9 @@ export function EventFormDialog({
                     onClick={() => fileRef.current?.click()}
                   >
                     <Upload aria-hidden />
-                    {values.imageUrl ? t("changePhoto") : t("uploadPhoto")}
+                    {previewSrc ? t("changePhoto") : t("uploadPhoto")}
                   </Button>
-                  {values.imageUrl && !uploading && (
+                  {previewSrc && !uploading && (
                     <Button
                       type="button"
                       variant="ghost"
@@ -319,7 +375,9 @@ export function EventFormDialog({
                 </div>
               </div>
 
-              <p className="text-xs text-muted-foreground">{t("photoHint")}</p>
+              <p className="text-xs text-muted-foreground">
+                {photo ? t("photoPending") : t("photoHint")}
+              </p>
               {errors.imageUrl && (
                 <span role="alert" className="text-xs text-destructive">
                   {errors.imageUrl}

@@ -52,3 +52,11 @@ export async function uploadEventImage(
   );
   return data;
 }
+
+/**
+ * Deletes a photo that was uploaded but never saved onto an event. The API
+ * refuses to touch an image any event still references.
+ */
+export async function discardEventImage(publicId: string): Promise<void> {
+  await api.delete("/events/image", { data: { publicId } });
+}
